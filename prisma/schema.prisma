@@ -1,0 +1,446 @@
+// Lumin Aerial CRM - Prisma Schema
+// https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─────────────────────────────────────────
+// AUTH / USERS
+// ─────────────────────────────────────────
+
+enum Role {
+  ADMIN
+  PILOT
+  CLIENT
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  emailVerified DateTime?
+  image         String?
+  password      String?
+  role          Role      @default(CLIENT)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // NextAuth relations
+  accounts      Account[]
+  sessions      Session[]
+
+  // Role-specific profiles
+  pilot         Pilot?
+  client        Client?
+
+  @@map("users")
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verification_tokens")
+}
+
+// ─────────────────────────────────────────
+// PILOTS
+// ─────────────────────────────────────────
+
+enum PilotStatus {
+  ACTIVE
+  INACTIVE
+  PENDING_REVIEW
+  SUSPENDED
+}
+
+model Pilot {
+  id              String      @id @default(cuid())
+  userId          String      @unique
+  user            User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Personal info
+  phone           String?
+  city            String?
+  state           String?
+  zip             String?
+  bio             String?     @db.Text
+
+  // FAA credentials
+  faaPartNumber   String?     // Part 107 cert number
+  faaExpiry       DateTime?
+  faaDocUrl       String?     // uploaded cert document
+
+  // Insurance
+  insuranceCarrier   String?
+  insurancePolicyNum String?
+  insuranceExpiry    DateTime?
+  insuranceDocUrl    String?
+
+  // Business info
+  businessName    String?
+  w9OnFile        Boolean     @default(false)
+  w9DocUrl        String?
+
+  // Operational
+  status          PilotStatus @default(PENDING_REVIEW)
+  rating          Float?      // internal quality rating 1-5
+  notes           String?     @db.Text
+
+  // Timestamps
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+
+  // Relations
+  markets         PilotMarket[]
+  equipment       Equipment[]
+  jobAssignments  JobAssignment[]
+  complianceDocs  ComplianceDoc[]
+  payments        PilotPayment[]
+
+  @@map("pilots")
+}
+
+model PilotMarket {
+  id        String   @id @default(cuid())
+  pilotId   String
+  pilot     Pilot    @relation(fields: [pilotId], references: [id], onDelete: Cascade)
+  state     String
+  city      String?
+  radius    Int?     // miles
+  createdAt DateTime @default(now())
+
+  @@map("pilot_markets")
+}
+
+model Equipment {
+  id           String   @id @default(cuid())
+  pilotId      String
+  pilot        Pilot    @relation(fields: [pilotId], references: [id], onDelete: Cascade)
+  make         String   // e.g. DJI
+  model        String   // e.g. Mavic 3 Pro
+  serialNumber String?
+  cameraSpec   String?
+  verified     Boolean  @default(false)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@map("equipment")
+}
+
+// ─────────────────────────────────────────
+// CLIENTS
+// ─────────────────────────────────────────
+
+enum ClientType {
+  AGENCY
+  COMMERCIAL
+  REAL_ESTATE
+  OTHER
+}
+
+enum ClientStatus {
+  LEAD
+  ACTIVE
+  INACTIVE
+  ARCHIVED
+}
+
+model Client {
+  id          String       @id @default(cuid())
+  userId      String?      @unique
+  user        User?        @relation(fields: [userId], references: [id])
+
+  // Company info
+  companyName String
+  contactName String?
+  email       String?
+  phone       String?
+  website     String?
+  type        ClientType   @default(OTHER)
+  status      ClientStatus @default(LEAD)
+
+  // Address
+  address     String?
+  city        String?
+  state       String?
+  zip         String?
+
+  // Business
+  billingEmail String?
+  notes        String?  @db.Text
+  source       String?  // how they found us
+
+  // Timestamps
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  jobs        Job[]
+  invoices    Invoice[]
+
+  @@map("clients")
+}
+
+// ─────────────────────────────────────────
+// JOBS / PROJECTS
+// ─────────────────────────────────────────
+
+enum JobStatus {
+  DRAFT
+  PENDING_ASSIGNMENT
+  ASSIGNED
+  IN_PROGRESS
+  CAPTURE_COMPLETE
+  DELIVERED
+  COMPLETED
+  CANCELLED
+}
+
+enum JobType {
+  REAL_ESTATE
+  CONSTRUCTION
+  MARKETING
+  INSPECTION
+  MAPPING
+  EVENT
+  OTHER
+}
+
+model Job {
+  id            String    @id @default(cuid())
+  clientId      String
+  client        Client    @relation(fields: [clientId], references: [id])
+
+  // Job details
+  title         String
+  description   String?   @db.Text
+  type          JobType   @default(OTHER)
+  status        JobStatus @default(DRAFT)
+
+  // Location
+  address       String?
+  city          String
+  state         String
+  zip           String?
+  lat           Float?
+  lng           Float?
+
+  // Scope
+  scheduledDate DateTime?
+  completedDate DateTime?
+  duration      Int?      // estimated minutes
+  deliverables  String?   // description of what to capture
+
+  // Pricing
+  clientPrice   Decimal?  @db.Decimal(10, 2)
+  pilotPayout   Decimal?  @db.Decimal(10, 2)
+
+  // Admin
+  priority      Int       @default(2) // 1=high 2=normal 3=low
+  internalNotes String?   @db.Text
+
+  // Timestamps
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // Relations
+  assignments   JobAssignment[]
+  files         JobFile[]
+  invoices      Invoice[]
+
+  @@map("jobs")
+}
+
+model JobAssignment {
+  id        String   @id @default(cuid())
+  jobId     String
+  job       Job      @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  pilotId   String
+  pilot     Pilot    @relation(fields: [pilotId], references: [id])
+
+  assignedAt  DateTime   @default(now())
+  acceptedAt  DateTime?
+  declinedAt  DateTime?
+  notes       String?
+
+  payment     PilotPayment?
+
+  @@unique([jobId, pilotId])
+  @@map("job_assignments")
+}
+
+// ─────────────────────────────────────────
+// DELIVERABLES / FILES
+// ─────────────────────────────────────────
+
+enum FileType {
+  PHOTO
+  VIDEO
+  RAW
+  PROCESSED
+  REPORT
+  OTHER
+}
+
+model JobFile {
+  id          String   @id @default(cuid())
+  jobId       String
+  job         Job      @relation(fields: [jobId], references: [id], onDelete: Cascade)
+
+  name        String
+  url         String
+  type        FileType @default(OTHER)
+  sizeMb      Float?
+  uploadedBy  String?  // user id
+  isDelivered Boolean  @default(false)
+  deliveredAt DateTime?
+  createdAt   DateTime @default(now())
+
+  @@map("job_files")
+}
+
+// ─────────────────────────────────────────
+// INVOICING
+// ─────────────────────────────────────────
+
+enum InvoiceStatus {
+  DRAFT
+  SENT
+  PAID
+  OVERDUE
+  VOID
+}
+
+model Invoice {
+  id            String        @id @default(cuid())
+  clientId      String
+  client        Client        @relation(fields: [clientId], references: [id])
+  jobId         String?
+  job           Job?          @relation(fields: [jobId], references: [id])
+
+  invoiceNumber String        @unique
+  status        InvoiceStatus @default(DRAFT)
+  amount        Decimal       @db.Decimal(10, 2)
+  tax           Decimal?      @db.Decimal(10, 2)
+  totalAmount   Decimal       @db.Decimal(10, 2)
+
+  issueDate     DateTime      @default(now())
+  dueDate       DateTime?
+  paidDate      DateTime?
+
+  notes         String?       @db.Text
+  lineItems     Json?         // array of {description, qty, unitPrice, total}
+
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  @@map("invoices")
+}
+
+enum PaymentStatus {
+  PENDING
+  APPROVED
+  PAID
+  VOID
+}
+
+model PilotPayment {
+  id              String        @id @default(cuid())
+  pilotId         String
+  pilot           Pilot         @relation(fields: [pilotId], references: [id])
+  assignmentId    String        @unique
+  assignment      JobAssignment @relation(fields: [assignmentId], references: [id])
+
+  amount          Decimal       @db.Decimal(10, 2)
+  status          PaymentStatus @default(PENDING)
+  method          String?       // check, zelle, ach, etc.
+
+  approvedAt      DateTime?
+  paidAt          DateTime?
+  notes           String?
+
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  @@map("pilot_payments")
+}
+
+// ─────────────────────────────────────────
+// COMPLIANCE DOCUMENTS
+// ─────────────────────────────────────────
+
+enum ComplianceDocType {
+  FAA_PART107
+  INSURANCE_COI
+  W9
+  BACKGROUND_CHECK
+  EQUIPMENT_CERT
+  OTHER
+}
+
+enum ComplianceDocStatus {
+  PENDING
+  APPROVED
+  EXPIRED
+  REJECTED
+}
+
+model ComplianceDoc {
+  id        String              @id @default(cuid())
+  pilotId   String
+  pilot     Pilot               @relation(fields: [pilotId], references: [id], onDelete: Cascade)
+
+  type      ComplianceDocType
+  status    ComplianceDocStatus @default(PENDING)
+  docUrl    String?
+  docName   String?
+  expiresAt DateTime?
+  notes     String?
+  reviewedBy String?
+  reviewedAt DateTime?
+
+  createdAt DateTime            @default(now())
+  updatedAt DateTime            @updatedAt
+
+  @@map("compliance_docs")
+}
