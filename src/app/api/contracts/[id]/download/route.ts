@@ -4,15 +4,17 @@ import { prisma } from "@/lib/prisma";
 
 export async function GET(
   _req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   const session = await auth();
   if (!session || session.user.role !== "ADMIN") {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
+  const { id } = await params;
+
   const contract = await prisma.contract.findUnique({
-    where: { id: params.id },
+    where: { id },
     include: {
       client: { select: { companyName: true } },
       pilot:  { select: { user: { select: { name: true } } } },
