@@ -1,61 +1,73 @@
-import NextAuth from "next-auth";
-import { authConfig } from "@/lib/auth.config";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
+import { jwtVerify } from "jose";
 
-const { auth } = NextAuth(authConfig);
+const secret = new TextEncoder().encode(
+  process.env.AUTH_SECRET ?? "lumin-aerial-crm-super-secret-key-2026"
+);
 
-export default auth((req) => {
-  const { nextUrl, auth: session } = req;
-  const isLoggedIn = !!session;
-  const role = session?.user?.role;
+function getRoleHome(role?: string) {
+  switch (role) {
+    case "ADMIN": return "/admin/dashboard";
+    case "PILOT": return "/pilot/dashboard";
+    case "CLIENT": return "/client/dashboard";
+    default: return "/login";
+  }
+}
 
-  // Public routes
-  const isPublicRoute =
-    nextUrl.pathname === "/login" ||
-    nextUrl.pathname === "/" ||
-    nextUrl.pathname.startsWith("/api/auth");
+export async function middleware(req: NextRequest) {
+  const { pathname } = req.nextUrl;
 
-  if (isPublicRoute) {
-    // Redirect logged-in users away from login page
-    if (isLoggedIn && nextUrl.pathname === "/login") {
-      const redirectTo = getRoleHome(role);
-      return NextResponse.redirect(new URL(redirectTo, nextUrl));
+  // Public routes — always allow
+  const isPublic =
+    pathname === "/" ||
+    pathname === "/login" ||
+    pathname === "/terms" ||
+    pathname === "/privacy" ||
+    pathname === "/unauthorized" ||
+    pathname.startsWith("/api/auth") ||
+    pathname.startsWith("/_next") ||
+    pathname.startsWith("/favicon");
+
+  // Get session token from cookie (NextAuth v5 cookie names)
+  const token =
+    req.cookies.get("authjs.session-token")?.value ??
+    req.cookies.get("__Secure-authjs.session-token")?.value;
+
+  let role: string | undefined;
+
+  if (token) {
+    try {
+      const { payload } = await jwtVerify(token, secret);
+      role = payload.role as string;
+    } catch {
+      // Invalid/expired token — treat as logged out
+    }
+  }
+
+  const isLoggedIn = !!role;
+
+  if (isPublic) {
+    if (isLoggedIn && pathname === "/login") {
+      return NextResponse.redirect(new URL(getRoleHome(role), req.url));
     }
     return NextResponse.next();
   }
 
-  // Protect all other routes
   if (!isLoggedIn) {
-    return NextResponse.redirect(new URL("/login", nextUrl));
+    return NextResponse.redirect(new URL("/login", req.url));
   }
 
-  // Role-based access
-  if (nextUrl.pathname.startsWith("/admin") && role !== "ADMIN") {
-    return NextResponse.redirect(new URL("/unauthorized", nextUrl));
+  if (pathname.startsWith("/admin") && role !== "ADMIN") {
+    return NextResponse.redirect(new URL("/unauthorized", req.url));
   }
-
-  if (nextUrl.pathname.startsWith("/pilot") && role !== "PILOT" && role !== "ADMIN") {
-    return NextResponse.redirect(new URL("/unauthorized", nextUrl));
+  if (pathname.startsWith("/pilot") && role !== "PILOT" && role !== "ADMIN") {
+    return NextResponse.redirect(new URL("/unauthorized", req.url));
   }
-
-  if (nextUrl.pathname.startsWith("/client") && role !== "CLIENT" && role !== "ADMIN") {
-    return NextResponse.redirect(new URL("/unauthorized", nextUrl));
+  if (pathname.startsWith("/client") && role !== "CLIENT" && role !== "ADMIN") {
+    return NextResponse.redirect(new URL("/unauthorized", req.url));
   }
 
   return NextResponse.next();
-});
-
-function getRoleHome(role?: string) {
-  switch (role) {
-    case "ADMIN":
-      return "/admin/dashboard";
-    case "PILOT":
-      return "/pilot/dashboard";
-    case "CLIENT":
-      return "/client/dashboard";
-    default:
-      return "/login";
-  }
 }
 
 export const config = {
