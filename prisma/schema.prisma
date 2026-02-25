@@ -138,6 +138,7 @@ model Pilot {
   complianceDocs  ComplianceDoc[]
   payments        PilotPayment[]
   contracts       Contract[]
+  activities      Activity[]
 
   @@map("pilots")
 }
@@ -220,6 +221,7 @@ model Client {
   jobs        Job[]
   invoices    Invoice[]
   contracts   Contract[]
+  activities  Activity[]
 
   @@map("clients")
 }
@@ -290,6 +292,7 @@ model Job {
   assignments   JobAssignment[]
   files         JobFile[]
   invoices      Invoice[]
+  activities    Activity[]
 
   @@map("jobs")
 }
@@ -498,3 +501,82 @@ model Contract {
 
   @@map("contracts")
 }
+
+// ── Lead Pipeline ──────────────────────────────────────────────────────────────
+
+enum LeadStatus {
+  NEW
+  CONTACTED
+  QUALIFIED
+  PROPOSAL_SENT
+  NEGOTIATING
+  WON
+  LOST
+}
+
+enum LeadSource {
+  REFERRAL
+  WEBSITE
+  SOCIAL_MEDIA
+  COLD_OUTREACH
+  REPEAT_CLIENT
+  TRADE_SHOW
+  OTHER
+}
+
+model Lead {
+  id           String     @id @default(cuid())
+  companyName  String
+  contactName  String
+  email        String?
+  phone        String?
+  status       LeadStatus @default(NEW)
+  source       LeadSource @default(OTHER)
+  value        Float?     // estimated deal value
+  notes        String?
+  nextFollowUp DateTime?
+  assignedTo   String?    // userId
+  activities   Activity[]
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  @@map("leads")
+}
+
+// ── Activity / CRM Timeline ────────────────────────────────────────────────────
+
+enum ActivityType {
+  CALL
+  EMAIL
+  NOTE
+  MEETING
+  TASK
+  QUOTE_SENT
+  FLIGHT_COMPLETED
+}
+
+model Activity {
+  id          String       @id @default(cuid())
+  type        ActivityType @default(NOTE)
+  title       String
+  body        String?
+  dueDate     DateTime?
+  completed   Boolean      @default(false)
+  createdById String?
+
+  // Link to any entity (all optional — link to what's relevant)
+  leadId      String?
+  lead        Lead?    @relation(fields: [leadId], references: [id])
+  clientId    String?
+  client      Client?  @relation(fields: [clientId], references: [id])
+  pilotId     String?
+  pilot       Pilot?   @relation(fields: [pilotId], references: [id])
+  jobId       String?
+  job         Job?     @relation(fields: [jobId], references: [id])
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("activities")
+}
+
