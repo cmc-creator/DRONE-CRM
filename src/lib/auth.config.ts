@@ -1,5 +1,4 @@
 import type { NextAuthConfig } from "next-auth";
-import type { Role } from "@prisma/client";
 
 // Lightweight auth config used by middleware (no bcrypt, no Prisma = edge-compatible)
 export const authConfig: NextAuthConfig = {
@@ -12,15 +11,15 @@ export const authConfig: NextAuthConfig = {
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
-        token.role = (user as { role: Role }).role;
+        token.role = (user as { role: string }).role;
         token.id = user.id;
       }
       return token;
     },
     async session({ session, token }) {
       if (session.user) {
-        session.user.role = token.role as Role;
-        session.user.id = token.id as string;
+        (session.user as { role?: string; id?: string }).role = token.role as string;
+        (session.user as { role?: string; id?: string }).id = token.id as string;
       }
       return session;
     },
