@@ -9,7 +9,7 @@ export default async function DispatchPage() {
 
   const [pilots, jobs] = await Promise.all([
     prisma.pilot.findMany({
-      where: { isActive: true },
+      where: { status: "ACTIVE" },
       include: {
         user: { select: { name: true, email: true } },
         markets: true,
@@ -19,7 +19,11 @@ export default async function DispatchPage() {
       where: { status: { in: ["PENDING", "SCHEDULED", "IN_PROGRESS"] } },
       include: {
         client: { select: { companyName: true } },
-        pilot: { include: { user: { select: { name: true } } } },
+        assignments: {
+          take: 1,
+          orderBy: { assignedAt: "desc" },
+          include: { pilot: { include: { user: { select: { name: true } } } } },
+        },
       },
       orderBy: { scheduledDate: "asc" },
     }),
@@ -40,16 +44,16 @@ export default async function DispatchPage() {
           email: p.user?.email ?? "",
           markets: p.markets.map((m) => m.name),
           rating: p.rating ?? null,
-          isActive: p.isActive,
+          isActive: p.status === "ACTIVE",
         }))}
         jobs={jobs.map((j) => ({
           id: j.id,
           title: j.title,
-          location: j.location ?? "",
+          location: [j.city, j.state].filter(Boolean).join(", "),
           status: j.status,
           scheduledDate: j.scheduledDate?.toISOString() ?? null,
           client: j.client?.companyName ?? "",
-          pilotName: j.pilot?.user?.name ?? null,
+          pilotName: j.assignments[0]?.pilot?.user?.name ?? null,
         }))}
       />
     </div>

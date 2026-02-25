@@ -1,7 +1,7 @@
 "use client";
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer,
-  PieChart, Pie, Cell, FunnelChart, Funnel, LabelList, Legend,
+  PieChart, Pie, Cell, FunnelChart, Funnel, LabelList, Legend, Line, ComposedChart,
 } from "recharts";
 import { formatCurrency } from "@/lib/utils";
 
@@ -20,7 +20,7 @@ const panelStyle = {
   padding: "20px",
 };
 
-type RevenuePoint   = { name: string; revenue: number; jobs: number };
+type RevenuePoint   = { name: string; revenue: number; jobs: number; forecast?: number | null };
 type TypePoint      = { name: string; value: number };
 type FunnelPoint    = { stage: string; count: number };
 type ClientPoint    = { name: string; revenue: number };
@@ -43,30 +43,22 @@ export default function AnalyticsCharts({ revenueByMonth, jobTypeData, leadFunne
       {/* Revenue + jobs by month */}
       <div style={panelStyle}>
         <p className="text-xs font-bold uppercase tracking-wider mb-4" style={{ color: "rgba(0,212,255,0.5)" }}>
-          Revenue & Jobs — Month by Month
+          Revenue &amp; Jobs — Month by Month
         </p>
         <ResponsiveContainer width="100%" height={220}>
-          <BarChart data={revenueByMonth} barGap={2}>
+          <ComposedChart data={revenueByMonth} barGap={2}>
             <XAxis dataKey="name" tick={{ fill: "rgba(0,212,255,0.4)", fontSize: 11 }} axisLine={false} tickLine={false} />
-            <YAxis
-              yAxisId="revenue" orientation="left"
-              tick={{ fill: "rgba(0,212,255,0.4)", fontSize: 10 }}
-              tickFormatter={(v: number) => `$${(v/1000).toFixed(0)}k`}
-              axisLine={false} tickLine={false}
-            />
-            <YAxis yAxisId="jobs" orientation="right" tick={{ fill: "rgba(251,191,36,0.4)", fontSize: 10 }} axisLine={false} tickLine={false} />
-            <Tooltip
-              {...darkTooltip}
-              formatter={(val: number, name: string) =>
-                name === "revenue"
-                  ? ([formatCurrency(val), "Revenue"] as [string, string])
-                  : ([String(val), "Jobs"] as [string, string])
-              }
-            />
-            <Legend wrapperStyle={{ color: "rgba(0,212,255,0.5)", fontSize: 11 }} />
-            <Bar yAxisId="revenue" dataKey="revenue" fill={CYAN}   radius={[4,4,0,0]} opacity={0.85} name="revenue" />
-            <Bar yAxisId="jobs"    dataKey="jobs"    fill={GOLD}   radius={[4,4,0,0]} opacity={0.75} name="jobs" />
-          </BarChart>
+            <YAxis yAxisId="rev" tickFormatter={(v: number) => `$${(v/1000).toFixed(0)}k`} tick={{ fill: "rgba(0,212,255,0.3)", fontSize: 10 }} axisLine={false} tickLine={false} width={44} />
+            <YAxis yAxisId="jobs" orientation="right" tick={{ fill: "rgba(167,139,250,0.4)", fontSize: 10 }} axisLine={false} tickLine={false} width={28} />
+            <Tooltip {...darkTooltip} formatter={(val: number, name: string) => [
+              name === "revenue" || name === "forecast" ? formatCurrency(val) : val,
+              name === "forecast" ? "Forecast" : name.charAt(0).toUpperCase() + name.slice(1),
+            ]} />
+            <Legend wrapperStyle={{ fontSize: 11, color: "rgba(0,212,255,0.5)" }} />
+            <Bar yAxisId="rev" dataKey="revenue" fill={CYAN} radius={[4,4,0,0]} name="Revenue" fillOpacity={0.85} />
+            <Bar yAxisId="jobs" dataKey="jobs" fill={PURPLE} radius={[4,4,0,0]} name="Jobs" fillOpacity={0.7} />
+            <Line yAxisId="rev" type="monotone" dataKey="forecast" stroke={GOLD} strokeWidth={2} strokeDasharray="5 4" dot={false} name="Forecast" connectNulls />
+          </ComposedChart>
         </ResponsiveContainer>
       </div>
 

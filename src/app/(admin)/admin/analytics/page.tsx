@@ -34,10 +34,12 @@ export default async function AnalyticsPage() {
   } catch { /* table not yet migrated */ }
 
   // ── Revenue by month ──────────────────────────────────────────────
+  const currentMonth = now.getMonth(); // 0-indexed
   const revenueByMonth = Array.from({ length: 12 }, (_, i) => ({
     name: MONTH_NAMES[i],
     revenue: 0,
     jobs: 0,
+    forecast: null as number | null,
   }));
   for (const inv of invoices) {
     if (inv.status === "PAID") {
@@ -48,6 +50,31 @@ export default async function AnalyticsPage() {
   for (const job of jobs) {
     const m = new Date(job.createdAt).getMonth();
     revenueByMonth[m].jobs += 1;
+  }
+
+  // ── Revenue forecast (linear projection) ─────────────────────────
+  // Use completed months to compute an average monthly growth rate,
+  // then project forward for the rest of the year.
+  const completedMonths = revenueByMonth.slice(0, currentMonth + 1).filter((m) => m.revenue > 0);
+  if (completedMonths.length >= 2) {
+    // Simple linear regression: y = a + b*x
+    const n = completedMonths.length;
+    const xs = completedMonths.map((_, i) => i);
+    const ys = completedMonths.map((m) => m.revenue);
+    const sumX = xs.reduce((a, b) => a + b, 0);
+    const sumY = ys.reduce((a, b) => a + b, 0);
+    const sumXY = xs.reduce((s, x, i) => s + x * ys[i], 0);
+    const sumX2 = xs.reduce((s, x) => s + x * x, 0);
+    const denom = n * sumX2 - sumX * sumX;
+    const slope = denom !== 0 ? (n * sumXY - sumX * sumY) / denom : 0;
+    const intercept = (sumY - slope * sumX) / n;
+    // Project remaining months (currentMonth+1 through 11)
+    for (let m = currentMonth + 1; m < 12; m++) {
+      const x = m - (currentMonth - completedMonths.length + 1);
+      revenueByMonth[m].forecast = Math.max(0, Math.round(intercept + slope * x));
+    }
+    // Also mark current month as forecast baseline for visual continuity
+    revenueByMonth[currentMonth].forecast = revenueByMonth[currentMonth].revenue;
   }
 
   // ── Revenue by job type ──────────────────────────────────────────

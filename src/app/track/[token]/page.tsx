@@ -27,10 +27,15 @@ export default async function TrackingPage({
       title: true,
       status: true,
       scheduledDate: true,
-      location: true,
+      city: true,
+      state: true,
       description: true,
       client: { select: { companyName: true } },
-      pilot: { select: { user: { select: { name: true } } } },
+      assignments: {
+        take: 1,
+        orderBy: { assignedAt: "desc" },
+        include: { pilot: { include: { user: { select: { name: true } } } } },
+      },
       files: {
         where: { approvalStatus: "APPROVED", isDelivered: true },
         select: { id: true, name: true, url: true, type: true, sizeMb: true },
@@ -81,10 +86,10 @@ export default async function TrackingPage({
             </div>
           </CardHeader>
           <CardContent className="space-y-3 text-sm">
-            {job.location && (
+            {(job.city || job.state) && (
               <div className="flex items-center gap-2 text-[#5b7a99]">
                 <MapPin className="h-4 w-4" />
-                <span>{job.location}</span>
+                <span>{[job.city, job.state].filter(Boolean).join(", ")}</span>
               </div>
             )}
             {job.scheduledDate && (
@@ -180,9 +185,9 @@ export default async function TrackingPage({
         )}
 
         {/* Pilot info */}
-        {job.pilot?.user?.name && (
+        {job.assignments?.[0]?.pilot?.user?.name && (
           <p className="text-center text-xs text-[#5b7a99]">
-            Pilot: {job.pilot.user.name} · Powered by Lumin Aerial
+            Pilot: {job.assignments[0].pilot.user.name} · Powered by Lumin Aerial
           </p>
         )}
       </main>

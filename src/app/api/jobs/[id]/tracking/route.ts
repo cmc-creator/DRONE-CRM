@@ -19,10 +19,15 @@ export async function GET(
       title: true,
       status: true,
       scheduledDate: true,
-      location: true,
+      city: true,
+      state: true,
       description: true,
       client: { select: { companyName: true } },
-      pilot: { select: { user: { select: { name: true } } } },
+      assignments: {
+        take: 1,
+        orderBy: { assignedAt: "desc" },
+        include: { pilot: { include: { user: { select: { name: true } } } } },
+      },
       files: {
         where: { approvalStatus: "APPROVED" },
         select: { id: true, name: true, url: true, type: true, createdAt: true },
