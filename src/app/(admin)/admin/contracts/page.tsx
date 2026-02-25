@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from "@/components/ui/table";
-import { Plus, FileSignature } from "lucide-react";
+import { Plus, FileSignature, Download } from "lucide-react";
 import { formatDate } from "@/lib/utils";
 
 const statusConfig = {
@@ -110,9 +110,19 @@ export default async function ContractsPage() {
                       <TableCell className="text-sm text-muted-foreground">{formatDate(c.createdAt)}</TableCell>
                       <TableCell className="text-sm text-muted-foreground">{c.signedAt ? formatDate(c.signedAt) : "—"}</TableCell>
                       <TableCell>
-                        <Link href={`/admin/contracts/${c.id}`} className="text-sm text-primary hover:underline">
-                          View
-                        </Link>
+                        <div className="flex items-center gap-3">
+                          <Link href={`/admin/contracts/${c.id}`} className="text-sm text-primary hover:underline">
+                            View
+                          </Link>
+                          <a
+                            href={`/api/contracts/${c.id}/download`}
+                            download
+                            title="Download contract as HTML"
+                            className="text-muted-foreground hover:text-foreground"
+                          >
+                            <Download className="w-3.5 h-3.5" />
+                          </a>
+                        </div>
                       </TableCell>
                     </TableRow>
                   );

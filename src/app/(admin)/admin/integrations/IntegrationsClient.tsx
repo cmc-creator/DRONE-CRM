@@ -287,7 +287,7 @@ export default function IntegrationsClient({ gdriveConnected }: Props) {
               <div>
                 <p className="text-sm font-bold" style={{ color: "#d8e8f4" }}>Contracts</p>
                 <p className="text-xs mt-0.5" style={{ color: "rgba(0,212,255,0.35)" }}>
-                  Export roster — Adobe Sign handles signing workflows
+                  Export metadata log (title, status, party, dates) — not the contract files
                 </p>
               </div>
             </div>
@@ -297,7 +297,7 @@ export default function IntegrationsClient({ gdriveConnected }: Props) {
               className="inline-flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg font-semibold"
               style={{ background: "rgba(248,113,113,0.1)", border: "1px solid rgba(248,113,113,0.2)", color: "#f87171" }}
             >
-              <Download className="w-3.5 h-3.5" /> Export CSV
+              <Download className="w-3.5 h-3.5" /> Export Contract Log
             </a>
           </Card>
         </div>
