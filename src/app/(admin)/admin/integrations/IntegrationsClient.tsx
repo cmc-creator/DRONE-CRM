@@ -79,13 +79,15 @@ function CodeBox({ children }: { children: string }) {
 // ─── Import card with file upload + results ──────────────────────────────────
 
 function ImportCard({
-  label, icon: Icon, endpoint, templateEndpoint, entityColor,
+  label, icon: Icon, endpoint, templateEndpoint, entityColor, exportEndpoint, extraNote,
 }: {
   label: string;
   icon: React.ElementType;
   endpoint: string;
   templateEndpoint?: string;
   entityColor: string;
+  exportEndpoint?: string;  // override derived export URL
+  extraNote?: string;
 }) {
   const [result, setResult]     = useState<ImportResult | null>(null);
   const [loading, setLoading]   = useState(false);
@@ -130,7 +132,7 @@ function ImportCard({
       <div className="flex flex-wrap gap-2">
         {/* Export */}
         <a
-          href={`/api/export/${endpoint.split("/import/")[1]}`}
+          href={exportEndpoint ?? `/api/export/${endpoint.split("/import/")[1]}`}
           download
           className="inline-flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg font-semibold transition-all"
           style={{ background: `${entityColor}12`, border: `1px solid ${entityColor}30`, color: entityColor }}
@@ -169,6 +171,10 @@ function ImportCard({
           onChange={(e) => { const f = e.target.files?.[0]; if (f) handleFile(f); }}
         />
       </div>
+
+      {extraNote && (
+        <p className="mt-3 text-xs leading-relaxed" style={{ color: "rgba(0,212,255,0.35)" }}>{extraNote}</p>
+      )}
 
       {error && (
         <div className="mt-3 text-xs px-3 py-2 rounded-lg flex items-center gap-2"
@@ -277,29 +283,15 @@ export default function IntegrationsClient({ gdriveConnected }: Props) {
             entityColor="#fbbf24"
           />
 
-          {/* Contracts — export only (importing contract bodies is text-heavy) */}
-          <Card>
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0"
-                style={{ background: "rgba(248,113,113,0.1)" }}>
-                <FileSignature className="w-4.5 h-4.5" style={{ color: "#f87171" }} />
-              </div>
-              <div>
-                <p className="text-sm font-bold" style={{ color: "#d8e8f4" }}>Contracts</p>
-                <p className="text-xs mt-0.5" style={{ color: "rgba(0,212,255,0.35)" }}>
-                  Export metadata log (title, status, party, dates) — not the contract files
-                </p>
-              </div>
-            </div>
-            <a
-              href="/api/export/contracts"
-              download
-              className="inline-flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg font-semibold"
-              style={{ background: "rgba(248,113,113,0.1)", border: "1px solid rgba(248,113,113,0.2)", color: "#f87171" }}
-            >
-              <Download className="w-3.5 h-3.5" /> Export Contract Log
-            </a>
-          </Card>
+          <ImportCard
+            label="Contracts"
+            icon={FileSignature}
+            endpoint="/api/contracts/import"
+            templateEndpoint="/api/contracts/import"
+            exportEndpoint="/api/export/contracts"
+            entityColor="#f87171"
+            extraNote="Import existing contracts from any source as a CSV (title, client, type, status, signed info). Download the template to see the exact format. Actual document content (Word, PDF, etc.) can be pasted into each contract record after import."
+          />
         </div>
       </section>
 

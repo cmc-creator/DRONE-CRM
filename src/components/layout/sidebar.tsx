@@ -21,6 +21,7 @@ import {
   Plug,
   Map,
   Settings2,
+  Beaker,
 } from "lucide-react";
 
 interface NavItem {
@@ -80,6 +81,7 @@ const adminGroups: NavGroup[] = [
     items: [
       { label: "Integrations",   href: "/admin/integrations",   icon: Plug },
       { label: "Account & Team", href: "/admin/settings",        icon: Settings2 },
+      { label: "Dev Tools",      href: "/admin/dev-tools",       icon: Beaker },
     ],
   },
 ];
