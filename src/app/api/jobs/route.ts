@@ -101,7 +101,7 @@ export async function POST(req: NextRequest) {
             state: job.state,
             scheduledDate: job.scheduledDate,
             jobId: job.id,
-            payout: job.pilotPayout != null ? Number(job.pilotPayout) : null,
+            payout: job.pilotPayout ? Number(job.pilotPayout) : null,
           });
         }
       })

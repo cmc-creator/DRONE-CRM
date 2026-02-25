@@ -10,7 +10,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Briefcase, FileText, FolderOpen, DollarSign } from "lucide-react";
+import { Briefcase, FolderOpen, DollarSign } from "lucide-react";
 import { formatDate, formatCurrency } from "@/lib/utils";
 import Link from "next/link";
 
