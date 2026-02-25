@@ -9,7 +9,12 @@ export default async function PilotLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const session = await auth();
+  let session;
+  try {
+    session = await auth();
+  } catch {
+    redirect("/login");
+  }
 
   if (!session || (session.user.role !== "PILOT" && session.user.role !== "ADMIN")) {
     redirect("/login");

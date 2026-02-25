@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
+import { sendJobStatusEmail } from "@/lib/email";
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -56,6 +57,28 @@ export async function PATCH(req: Request, { params }: Props) {
         ...(body.clientPrice !== undefined && { clientPrice: body.clientPrice }),
       },
     });
+    // Fire-and-forget status email to assigned pilot
+    if (body.status) {
+      prisma.jobAssignment
+        .findFirst({
+          where: { jobId: id },
+          include: { pilot: { include: { user: { select: { email: true, name: true } } } } },
+        })
+        .then((assignment) => {
+          const email = assignment?.pilot?.user?.email;
+          if (email) {
+            sendJobStatusEmail({
+              pilotEmail: email,
+              pilotName: assignment!.pilot.user?.name ?? "Pilot",
+              jobTitle: updated.title,
+              newStatus: body.status,
+              jobId: updated.id,
+            });
+          }
+        })
+        .catch(() => {});
+    }
+
     return NextResponse.json(updated);
   } catch (error) {
     console.error(error);
