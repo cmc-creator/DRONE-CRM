@@ -229,4 +229,4 @@ npm run db:seed      # Seed demo data
 
 ## Built By
 
-GitHub Copilot — for Lumin Aerial LLC and Blake Sargent.
+GitHub Copilot — for Lumin Aerial LLC and Bailey Sargent.

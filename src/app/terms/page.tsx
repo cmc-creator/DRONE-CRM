@@ -192,7 +192,7 @@ export default function TermsPage() {
               <p>For questions about these Terms, contact:</p>
               <div className="mt-3 bg-slate-50 rounded-lg p-4 border border-slate-200">
                 <p className="font-semibold text-slate-900">Lumin Aerial LLC</p>
-                <p>Blake Sargent, Owner</p>
+                <p>Bailey Sargent, Owner</p>
                 <p>
                   <a href="mailto:bsargent@luminaerial.com" className="text-blue-600 hover:underline">
                     bsargent@luminaerial.com
