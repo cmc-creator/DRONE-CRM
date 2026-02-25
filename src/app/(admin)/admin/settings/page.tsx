@@ -5,7 +5,7 @@ import { SettingsClient } from "./SettingsClient";
 
 export default async function AdminSettingsPage() {
   const session = await auth();
-  if (session?.user?.role !== "admin") redirect("/unauthorized");
+  if (session?.user?.role !== "ADMIN") redirect("/unauthorized");
 
   // Get or create the org record for this admin
   let org = await prisma.organization.findFirst({ orderBy: { createdAt: "asc" } });

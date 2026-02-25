@@ -19,9 +19,9 @@ import Link from "next/link";
 
 const JOB_TYPES = [
   { value: "REAL_ESTATE", label: "Real Estate" },
-  { value: "COMMERCIAL", label: "Commercial" },
+  { value: "CONSTRUCTION", label: "Construction" },
   { value: "MARKETING", label: "Marketing" },
-  { value: "EVENTS", label: "Events" },
+  { value: "EVENT", label: "Event" },
   { value: "INSPECTION", label: "Inspection" },
   { value: "MAPPING", label: "Mapping" },
   { value: "OTHER", label: "Other" },

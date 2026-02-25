@@ -5,7 +5,7 @@ import { DispatchMapClient } from "./DispatchMapClient";
 
 export default async function DispatchPage() {
   const session = await auth();
-  if (session?.user?.role !== "admin") redirect("/unauthorized");
+  if (session?.user?.role !== "ADMIN") redirect("/unauthorized");
 
   const [pilots, jobs] = await Promise.all([
     prisma.pilot.findMany({
@@ -16,7 +16,7 @@ export default async function DispatchPage() {
       },
     }),
     prisma.job.findMany({
-      where: { status: { in: ["PENDING", "SCHEDULED", "IN_PROGRESS"] } },
+      where: { status: { in: ["PENDING_ASSIGNMENT", "ASSIGNED", "IN_PROGRESS"] } },
       include: {
         client: { select: { companyName: true } },
         assignments: {

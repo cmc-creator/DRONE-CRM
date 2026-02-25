@@ -61,9 +61,9 @@ export default async function JobDetailPage({ params }: Props) {
 
   const jobTypeLabel: Record<string, string> = {
     REAL_ESTATE: "Real Estate",
-    COMMERCIAL: "Commercial",
+    CONSTRUCTION: "Construction",
     MARKETING: "Marketing",
-    EVENTS: "Events",
+    EVENT: "Event",
     INSPECTION: "Inspection",
     MAPPING: "Mapping",
     OTHER: "Other",

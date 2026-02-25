@@ -1,4 +1,6 @@
 import { prisma } from "@/lib/prisma";
+import { auth } from "@/lib/auth";
+import { redirect } from "next/navigation";
 import Link from "next/link";
 import { ChevronLeft, ChevronRight, CalendarDays } from "lucide-react";
 
@@ -28,6 +30,9 @@ interface PageProps {
 }
 
 export default async function CalendarPage({ searchParams }: PageProps) {
+  const session = await auth();
+  if (!session || session.user.role !== "ADMIN") redirect("/unauthorized");
+
   const params = await searchParams;
   const now = new Date();
   const year = parseInt(params.year ?? String(now.getFullYear()));
