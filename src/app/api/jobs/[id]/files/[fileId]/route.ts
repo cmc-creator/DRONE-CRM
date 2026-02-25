@@ -34,7 +34,7 @@ export async function PATCH(
   }
 
   // Clients can only approve their own job files
-  if (session.user.role === "client") {
+  if (session.user.role === "CLIENT") {
     const clientRecord = await prisma.client.findFirst({
       where: { userId: session.user.id },
     });
