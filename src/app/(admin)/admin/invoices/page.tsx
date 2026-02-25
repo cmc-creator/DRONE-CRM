@@ -14,6 +14,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Plus, DollarSign, Download } from "lucide-react";
 import { formatDate, formatCurrency } from "@/lib/utils";
 import { SendPaymentLinkButton } from "./SendPaymentLinkButton";
+import { CsvImportButton } from "@/components/admin/csv-import-button";
 
 const statusConfig = {
   DRAFT:    { label: "Draft",    variant: "outline" as const },
@@ -55,6 +56,10 @@ export default async function InvoicesPage() {
           </p>
         </div>
         <div className="flex items-center gap-2">
+          <CsvImportButton
+            endpoint="/api/import/invoices"
+            label="Import Wix CSV"
+          />
           <a href="/api/export/quickbooks" download>
             <Button variant="outline" size="sm">
               <Download className="w-4 h-4 mr-2" />

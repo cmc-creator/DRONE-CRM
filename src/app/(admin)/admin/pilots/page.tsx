@@ -14,6 +14,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Plus, UserCheck, UserX, Clock, Download } from "lucide-react";
 import { formatDate } from "@/lib/utils";
 import { AutoScoreButton } from "./AutoScoreButton";
+import { CsvImportButton } from "@/components/admin/csv-import-button";
 
 const statusConfig = {
   ACTIVE: { label: "Active", variant: "success" as const },
@@ -51,6 +52,11 @@ export default async function PilotsPage() {
         </div>
         <div className="flex items-center gap-2">
           <AutoScoreButton />
+          <CsvImportButton
+            endpoint="/api/import/pilots"
+            templateEndpoint="/api/import/pilots"
+            label="Import CSV"
+          />
           <a href="/api/export/pilots" download>
             <Button variant="outline" size="sm">
               <Download className="w-4 h-4 mr-2" />
