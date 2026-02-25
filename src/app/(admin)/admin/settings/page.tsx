@@ -3,22 +3,39 @@ import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
 import { SettingsClient } from "./SettingsClient";
 
+export const dynamic = "force-dynamic";
+
 export default async function AdminSettingsPage() {
   const session = await auth();
-  if (session?.user?.role !== "ADMIN") redirect("/unauthorized");
+  if (!session || session.user.role !== "ADMIN") redirect("/unauthorized");
 
-  // Get or create the org record for this admin
-  let org = await prisma.organization.findFirst({ orderBy: { createdAt: "asc" } });
+  const [currentUser, org, teamMembers] = await Promise.all([
+    prisma.user.findUnique({
+      where: { id: session.user.id },
+      select: { id: true, name: true, email: true, image: true, preferences: true, createdAt: true },
+    }),
+    prisma.organization.findFirst({ orderBy: { createdAt: "asc" } }),
+    prisma.user.findMany({
+      orderBy: { createdAt: "asc" },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        image: true,
+        role: true,
+        createdAt: true,
+        pilot: { select: { id: true } },
+        client: { select: { id: true, companyName: true } },
+      },
+    }),
+  ]);
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold">White-Label Settings</h1>
-        <p className="text-muted-foreground mt-1">
-          Customize branding for your CRM instance. Changes affect all users.
-        </p>
-      </div>
-      <SettingsClient org={org} />
-    </div>
+    <SettingsClient
+      currentUser={currentUser}
+      org={org}
+      teamMembers={teamMembers}
+      currentUserId={session.user.id}
+    />
   );
 }

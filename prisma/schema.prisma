@@ -53,6 +53,7 @@ model User {
   image         String?
   password      String?
   role          Role      @default(CLIENT)
+  preferences   Json?     // { emailNewJob, emailPayment, emailCompliance, emailWeeklyDigest }
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 

@@ -79,7 +79,7 @@ const adminGroups: NavGroup[] = [
     label: "Settings",
     items: [
       { label: "Integrations",   href: "/admin/integrations",   icon: Plug },
-      { label: "White-Label",    href: "/admin/settings",        icon: Settings2 },
+      { label: "Account & Team", href: "/admin/settings",        icon: Settings2 },
     ],
   },
 ];
