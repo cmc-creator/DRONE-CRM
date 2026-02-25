@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { signIn, useSession } from "next-auth/react";
+import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
 // Deterministic star positions (avoids hydration mismatch with SSR)
@@ -28,22 +28,11 @@ const STARS = [
 
 export default function LoginPage() {
   const router = useRouter();
-  const { data: session, status } = useSession();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [mounted, setMounted] = useState(false);
-
-  // Already signed in → go straight to dashboard
-  useEffect(() => {
-    if (status === "authenticated" && session?.user?.role) {
-      const role = session.user.role;
-      if (role === "ADMIN")  router.replace("/admin/dashboard");
-      else if (role === "PILOT")  router.replace("/pilot/dashboard");
-      else if (role === "CLIENT") router.replace("/client/dashboard");
-    }
-  }, [status, session, router]);
 
   useEffect(() => { setMounted(true); }, []);
 
