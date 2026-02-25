@@ -1,0 +1,8 @@
+#!/bin/sh
+echo ">> Syncing Prisma schema to production DB..."
+npx prisma db push --skip-generate
+if [ $? -ne 0 ]; then
+  echo "FAILED: prisma db push failed. Check DATABASE_URL."
+  exit 1
+fi
+echo "Schema in sync - pushing to GitHub"
