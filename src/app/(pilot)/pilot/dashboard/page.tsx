@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { Briefcase, DollarSign, CheckCircle2, Clock, ChevronRight, AlertTriangle } from "lucide-react";
 import { formatDate, formatCurrency } from "@/lib/utils";
 import Link from "next/link";
+import { DroneWeatherWidget } from "@/components/ui/weather-widget";
 
 const STATUS_CONFIG: Record<string, { label: string; color: string; bg: string }> = {
   DRAFT:              { label: "Draft",       color: "#94a3b8", bg: "rgba(148,163,184,0.1)"  },
@@ -127,6 +128,9 @@ export default async function PilotDashboard() {
           );
         })}
       </div>
+
+      {/* Drone Weather Widget */}
+      <DroneWeatherWidget />
 
       {/* Active missions */}
       {activeJobs.length > 0 && (
