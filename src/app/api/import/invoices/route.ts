@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { InvoiceStatus } from "@prisma/client";
 
 // ─── CSV helpers ────────────────────────────────────────────────────────────
 
@@ -136,11 +137,11 @@ export async function POST(req: NextRequest) {
     const dueDate = dueDateStr ? new Date(dueDateStr) : undefined;
 
     // Map external status strings to our enum
-    const statusMap: Record<string, string> = {
+    const statusMap: Record<string, InvoiceStatus> = {
       PAID: "PAID", UNPAID: "SENT", SENT: "SENT", DRAFT: "DRAFT",
       OVERDUE: "OVERDUE", VOID: "VOID", REFUNDED: "REFUNDED",
     };
-    const invoiceStatus = statusMap[statusRaw] ?? "DRAFT";
+    const invoiceStatus: InvoiceStatus = statusMap[statusRaw] ?? "DRAFT";
 
     // Find matching client
     let clientId = clientByEmail.get(clientEmail) ?? clientByCompany.get(clientName.toLowerCase()) ?? null;
