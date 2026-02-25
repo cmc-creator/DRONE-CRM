@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { formatCurrency } from "@/lib/utils";
 import { RecentJobsTable } from "@/components/admin/recent-jobs-table";
+import { DashboardCharts } from "@/components/admin/dashboard-charts";
 
 async function getDashboardStats() {
   const [
@@ -58,6 +59,45 @@ async function getDashboardStats() {
   };
 }
 
+async function getChartData() {
+  // Last 6 months revenue
+  const sixMonthsAgo = new Date();
+  sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 5);
+  sixMonthsAgo.setDate(1);
+  sixMonthsAgo.setHours(0, 0, 0, 0);
+
+  const paidInvoices = await prisma.invoice.findMany({
+    where: { status: "PAID", paidDate: { gte: sixMonthsAgo } },
+    select: { paidDate: true, totalAmount: true },
+    orderBy: { paidDate: "asc" },
+  });
+
+  const monthMap: Record<string, { revenue: number; invoices: number }> = {};
+  for (let i = 5; i >= 0; i--) {
+    const d = new Date();
+    d.setMonth(d.getMonth() - i);
+    const key = d.toLocaleDateString("en-US", { month: "short", year: "2-digit" });
+    monthMap[key] = { revenue: 0, invoices: 0 };
+  }
+  for (const inv of paidInvoices) {
+    if (!inv.paidDate) continue;
+    const key = new Date(inv.paidDate).toLocaleDateString("en-US", { month: "short", year: "2-digit" });
+    if (monthMap[key]) {
+      monthMap[key].revenue += Number(inv.totalAmount);
+      monthMap[key].invoices += 1;
+    }
+  }
+  const monthlyRevenue = Object.entries(monthMap).map(([month, v]) => ({ month, ...v }));
+
+  // Jobs by status
+  const allStatuses = ["DRAFT","PENDING_ASSIGNMENT","ASSIGNED","IN_PROGRESS","CAPTURE_COMPLETE","DELIVERED","COMPLETED","CANCELLED"];
+  const jobCounts = await prisma.job.groupBy({ by: ["status"], _count: { _all: true } });
+  const countMap = Object.fromEntries(jobCounts.map((j) => [j.status, j._count._all]));
+  const jobsByStatus = allStatuses.map((s) => ({ status: s, count: countMap[s] ?? 0 }));
+
+  return { monthlyRevenue, jobsByStatus };
+}
+
 async function getRecentJobs() {
   return prisma.job.findMany({
     take: 10,
@@ -72,9 +112,10 @@ async function getRecentJobs() {
 }
 
 export default async function AdminDashboard() {
-  const [stats, recentJobs] = await Promise.all([
+  const [stats, recentJobs, chartData] = await Promise.all([
     getDashboardStats(),
     getRecentJobs(),
+    getChartData(),
   ]);
 
   const statCards = [
@@ -168,6 +209,12 @@ export default async function AdminDashboard() {
           );
         })}
       </div>
+
+      {/* Charts */}
+      <DashboardCharts
+        monthlyRevenue={chartData.monthlyRevenue}
+        jobsByStatus={chartData.jobsByStatus}
+      />
 
       {/* Recent Jobs */}
       <Card>

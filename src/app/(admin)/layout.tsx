@@ -1,6 +1,7 @@
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { Sidebar } from "@/components/layout/sidebar";
+import { ChatWidget } from "@/components/ui/chat-widget";
 
 export default async function AdminLayout({
   children,
@@ -23,6 +24,7 @@ export default async function AdminLayout({
       <main className="flex-1 overflow-auto">
         <div className="p-8">{children}</div>
       </main>
+      <ChatWidget />
     </div>
   );
 }

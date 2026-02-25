@@ -10,6 +10,7 @@ import {
   Briefcase,
   Building2,
   FileText,
+  FileSignature,
   ShieldCheck,
   FolderOpen,
   LogOut,
@@ -35,6 +36,7 @@ const adminNav: NavItem[] = [
   { label: "Jobs", href: "/admin/jobs", icon: Briefcase },
   { label: "Deliverables", href: "/admin/deliverables", icon: FolderOpen },
   { label: "Invoices", href: "/admin/invoices", icon: FileText },
+  { label: "Contracts", href: "/admin/contracts", icon: FileSignature },
   { label: "Compliance", href: "/admin/compliance", icon: ShieldCheck },
 ];
 
@@ -51,6 +53,7 @@ const clientNav: NavItem[] = [
   { label: "My Projects", href: "/client/projects", icon: Briefcase },
   { label: "Deliverables", href: "/client/deliverables", icon: FolderOpen },
   { label: "Invoices", href: "/client/invoices", icon: FileText },
+  { label: "Contracts", href: "/client/contracts", icon: FileSignature },
 ];
 
 const navByRole = {

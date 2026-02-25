@@ -137,6 +137,7 @@ model Pilot {
   jobAssignments  JobAssignment[]
   complianceDocs  ComplianceDoc[]
   payments        PilotPayment[]
+  contracts       Contract[]
 
   @@map("pilots")
 }
@@ -218,6 +219,7 @@ model Client {
   // Relations
   jobs        Job[]
   invoices    Invoice[]
+  contracts   Contract[]
 
   @@map("clients")
 }
@@ -444,4 +446,55 @@ model ComplianceDoc {
   updatedAt DateTime            @updatedAt
 
   @@map("compliance_docs")
+}
+
+// ─────────────────────────────────────────
+// CONTRACTS & E-SIGNATURES
+// ─────────────────────────────────────────
+
+enum ContractStatus {
+  DRAFT
+  SENT
+  SIGNED
+  VOID
+}
+
+enum ContractType {
+  PILOT_AGREEMENT
+  CLIENT_SERVICE
+  NDA
+  SUBCONTRACTOR
+  OTHER
+}
+
+model Contract {
+  id              String         @id @default(cuid())
+  title           String
+  type            ContractType   @default(OTHER)
+  status          ContractStatus @default(DRAFT)
+
+  // Parties (optional — can be for pilot, client, or standalone)
+  clientId        String?
+  client          Client?        @relation(fields: [clientId], references: [id])
+  pilotId         String?
+  pilot           Pilot?         @relation(fields: [pilotId], references: [id])
+
+  // Content (plain text or HTML)
+  content         String
+
+  // E-signature
+  signedAt        DateTime?
+  signedByName    String?
+  signedByEmail   String?
+  signatureIp     String?
+
+  // Admin
+  sentAt          DateTime?
+  notes           String?
+
+  // Timestamps
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+
+  @@map("contracts")
 }
