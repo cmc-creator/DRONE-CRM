@@ -152,7 +152,7 @@ export default async function ClientProjectDetailPage({ params }: Props) {
                   {job.files.map((file) => (
                     <div key={file.id} className="flex items-center justify-between p-3 rounded-lg border">
                       <div className="flex items-center gap-3">
-                        <span className="text-xl">{FILE_TYPE_ICON[file.fileType] ?? "📎"}</span>
+                        <span className="text-xl">{FILE_TYPE_ICON[file.type] ?? "📎"}</span>
                         <div>
                           <p className="text-sm font-medium">{file.name}</p>
                           {file.deliveredAt && (
