@@ -138,12 +138,18 @@ const ACTIVITY_ICONS: Record<string, string> = {
   TASK: "✅", QUOTE_SENT: "📄", FLIGHT_COMPLETED: "🚁",
 };
 
+const EMPTY_STATS = {
+  totalPilots: 0, activePilots: 0, totalClients: 0, activeClients: 0,
+  totalJobs: 0, jobsInProgress: 0, completedJobs: 0, pendingJobs: 0,
+  totalRevenue: 0, pendingInvoices: 0, openLeads: 0,
+};
+
 export default async function AdminDashboard() {
   const [stats, recentJobs, chartData, recentActivities] = await Promise.all([
-    getDashboardStats(),
-    getRecentJobs(),
-    getChartData(),
-    getRecentActivities(),
+    getDashboardStats().catch(() => EMPTY_STATS),
+    getRecentJobs().catch(() => []),
+    getChartData().catch(() => ({ monthlyRevenue: [], jobsByStatus: [] })),
+    getRecentActivities().catch(() => []),
   ]);
 
   const statCards = [

@@ -2,7 +2,12 @@ import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 
 export default async function HomePage() {
-  const session = await auth();
+  let session;
+  try {
+    session = await auth();
+  } catch {
+    redirect("/login");
+  }
 
   if (!session) {
     redirect("/login");
