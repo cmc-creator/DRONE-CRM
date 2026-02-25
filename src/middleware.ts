@@ -7,17 +7,17 @@ const secret = new TextEncoder().encode(
 
 function getRoleHome(role?: string) {
   switch (role) {
-    case "ADMIN": return "/admin/dashboard";
-    case "PILOT": return "/pilot/dashboard";
+    case "ADMIN":  return "/admin/dashboard";
+    case "PILOT":  return "/pilot/dashboard";
     case "CLIENT": return "/client/dashboard";
-    default: return "/login";
+    default:       return "/login";
   }
 }
 
-export async function proxy(req: NextRequest) {
+export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
-  // Public routes — always allow
+  // Always allow public routes through — no auto-redirect away from /login
   const isPublic =
     pathname === "/" ||
     pathname === "/login" ||
@@ -28,7 +28,11 @@ export async function proxy(req: NextRequest) {
     pathname.startsWith("/_next") ||
     pathname.startsWith("/favicon");
 
-  // Get session token from cookie (NextAuth v5 cookie names)
+  if (isPublic) {
+    return NextResponse.next();
+  }
+
+  // Resolve session JWT from either cookie variant
   const token =
     req.cookies.get("authjs.session-token")?.value ??
     req.cookies.get("__Secure-authjs.session-token")?.value;
@@ -40,22 +44,21 @@ export async function proxy(req: NextRequest) {
       const { payload } = await jwtVerify(token, secret);
       role = payload.role as string;
     } catch {
-      // Invalid/expired token — treat as logged out
+      // Invalid/expired — treat as logged out
     }
   }
 
   const isLoggedIn = !!role;
 
-  if (isPublic) {
-    return NextResponse.next();
-  }
-
   if (!isLoggedIn) {
-    return NextResponse.redirect(new URL("/login", req.url));
+    const loginUrl = new URL("/login", req.url);
+    loginUrl.searchParams.set("callbackUrl", pathname);
+    return NextResponse.redirect(loginUrl);
   }
 
+  // Role-based access guard
   if (pathname.startsWith("/admin") && role !== "ADMIN") {
-    return NextResponse.redirect(new URL("/unauthorized", req.url));
+    return NextResponse.redirect(new URL(getRoleHome(role), req.url));
   }
   if (pathname.startsWith("/pilot") && role !== "PILOT" && role !== "ADMIN") {
     return NextResponse.redirect(new URL("/unauthorized", req.url));

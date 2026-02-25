@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 // Deterministic star positions (avoids hydration mismatch with SSR)
 const STARS = [
@@ -26,8 +26,9 @@ const STARS = [
   { left: 88, top: 72, delay: 0.5, size: 1 },
 ];
 
-export default function LoginPage() {
+function LoginForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -51,6 +52,14 @@ export default function LoginPage() {
 
     if (result?.error) {
       setError("Invalid email or password.");
+      return;
+    }
+
+    // If middleware sent a callbackUrl, send them there; otherwise use role home
+    const callbackUrl = searchParams.get("callbackUrl");
+    if (callbackUrl && callbackUrl.startsWith("/")) {
+      router.push(callbackUrl);
+      router.refresh();
       return;
     }
 
@@ -612,5 +621,13 @@ export default function LoginPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense>
+      <LoginForm />
+    </Suspense>
   );
 }
