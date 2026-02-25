@@ -11,7 +11,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Plus, DollarSign } from "lucide-react";
+import { Plus, DollarSign, Download } from "lucide-react";
 import { formatDate, formatCurrency } from "@/lib/utils";
 
 const statusConfig = {
@@ -52,12 +52,20 @@ export default async function InvoicesPage() {
             Client billing and revenue tracking
           </p>
         </div>
-        <Link href="/admin/invoices/new">
-          <Button>
-            <Plus className="w-4 h-4 mr-2" />
-            New Invoice
-          </Button>
-        </Link>
+        <div className="flex items-center gap-2">
+          <a href="/api/export/invoices" download>
+            <Button variant="outline" size="sm">
+              <Download className="w-4 h-4 mr-2" />
+              Export CSV
+            </Button>
+          </a>
+          <Link href="/admin/invoices/new">
+            <Button>
+              <Plus className="w-4 h-4 mr-2" />
+              New Invoice
+            </Button>
+          </Link>
+        </div>
       </div>
 
       {/* Revenue Summary */}

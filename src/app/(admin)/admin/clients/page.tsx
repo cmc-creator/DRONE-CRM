@@ -11,7 +11,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Plus } from "lucide-react";
+import { Plus, Download } from "lucide-react";
 import { formatDate } from "@/lib/utils";
 
 const statusConfig = {
@@ -45,12 +45,20 @@ export default async function ClientsPage() {
             Agencies, commercial orgs, and real estate clients
           </p>
         </div>
-        <Link href="/admin/clients/new">
-          <Button>
-            <Plus className="w-4 h-4 mr-2" />
-            Add Client
-          </Button>
-        </Link>
+        <div className="flex items-center gap-2">
+          <a href="/api/export/clients" download>
+            <Button variant="outline" size="sm">
+              <Download className="w-4 h-4 mr-2" />
+              Export CSV
+            </Button>
+          </a>
+          <Link href="/admin/clients/new">
+            <Button>
+              <Plus className="w-4 h-4 mr-2" />
+              Add Client
+            </Button>
+          </Link>
+        </div>
       </div>
 
       <Card>

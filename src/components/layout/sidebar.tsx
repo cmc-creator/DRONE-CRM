@@ -18,6 +18,7 @@ import {
   TrendingUp,
   Target,
   Bell,
+  Plug,
 } from "lucide-react";
 
 interface NavItem {
@@ -69,6 +70,12 @@ const adminGroups: NavGroup[] = [
     items: [
       { label: "Documents",      href: "/admin/compliance",      icon: ShieldCheck },
       { label: "Analytics",      href: "/admin/analytics",       icon: TrendingUp },
+    ],
+  },
+  {
+    label: "Settings",
+    items: [
+      { label: "Integrations",   href: "/admin/integrations",   icon: Plug },
     ],
   },
 ];

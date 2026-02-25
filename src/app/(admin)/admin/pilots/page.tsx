@@ -11,7 +11,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Plus, UserCheck, UserX, Clock } from "lucide-react";
+import { Plus, UserCheck, UserX, Clock, Download } from "lucide-react";
 import { formatDate } from "@/lib/utils";
 
 const statusConfig = {
@@ -48,12 +48,20 @@ export default async function PilotsPage() {
             Manage your nationwide pilot network
           </p>
         </div>
-        <Link href="/admin/pilots/new">
-          <Button>
-            <Plus className="w-4 h-4 mr-2" />
-            Add Pilot
-          </Button>
-        </Link>
+        <div className="flex items-center gap-2">
+          <a href="/api/export/pilots" download>
+            <Button variant="outline" size="sm">
+              <Download className="w-4 h-4 mr-2" />
+              Export CSV
+            </Button>
+          </a>
+          <Link href="/admin/pilots/new">
+            <Button>
+              <Plus className="w-4 h-4 mr-2" />
+              Add Pilot
+            </Button>
+          </Link>
+        </div>
       </div>
 
       {/* Stats */}
