@@ -47,7 +47,14 @@ export default async function AdminSettingsPage() {
 
   return (
     <SettingsClient
-      currentUser={currentUser}
+      currentUser={
+        currentUser
+          ? {
+              ...currentUser,
+              preferences: (currentUser.preferences ?? null) as Record<string, boolean> | null,
+            }
+          : null
+      }
       org={org}
       teamMembers={teamMembers}
       currentUserId={session.user.id}
