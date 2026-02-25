@@ -170,3 +170,120 @@ export async function sendJobStatusEmail({
     console.error("[email] Failed to send status update notification:", err);
   }
 }
+
+// ── Compliance Expiry ─────────────────────────────────────────────────────────
+
+export async function sendComplianceExpiryEmail({
+  pilotEmail,
+  pilotName,
+  docType,
+  expiresAt,
+  daysLeft,
+}: {
+  pilotEmail: string;
+  pilotName: string;
+  docType: string;
+  expiresAt: Date;
+  daysLeft: number;
+}) {
+  const resend = getResend();
+  if (!resend) return;
+  const urgencyColor = daysLeft <= 7 ? "#f87171" : daysLeft <= 14 ? "#fbbf24" : "#00d4ff";
+  const expiry = expiresAt.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
+  try {
+    await resend.emails.send({
+      from: FROM,
+      to: pilotEmail,
+      subject: `Action Required: ${docType} expires in ${daysLeft} day${daysLeft === 1 ? "" : "s"}`,
+      html: `<div style="font-family: sans-serif; max-width: 480px; margin: 40px auto; background: #080f1e; border: 1px solid ${urgencyColor}40; border-radius: 12px; padding: 28px; color: #d8e8f4;">
+        <p style="margin:0 0 8px; font-size:11px; font-weight:700; letter-spacing:2px; color:${urgencyColor}; text-transform:uppercase;">Lumin Aerial — Compliance Alert</p>
+        <h2 style="margin:0 0 16px; color:#d8e8f4;">Document Expiring Soon</h2>
+        <p>Hi ${pilotName},</p>
+        <p>Your <strong>${docType}</strong> expires on <strong>${expiry}</strong> — that's <strong style="color:${urgencyColor};">${daysLeft} day${daysLeft === 1 ? "" : "s"}</strong> from now.</p>
+        <p>Please upload your renewed document to keep your pilot status active and remain eligible for job assignments.</p>
+        <a href="${APP_URL}/pilot/documents" style="display:inline-block; margin-top:16px; background:${urgencyColor}; color:#04080f; font-weight:900; padding:10px 24px; border-radius:8px; text-decoration:none;">Upload Document</a>
+        <p style="margin-top:24px; font-size:12px; color:#5b7a99;">If you have already uploaded this document, please ensure it is marked as active in your profile.</p>
+      </div>`,
+    });
+  } catch (err) {
+    console.error("[email] Failed to send compliance expiry notification:", err);
+  }
+}
+
+// ── Invoice Payment Link ──────────────────────────────────────────────────────
+
+export async function sendInvoicePaymentLinkEmail({
+  clientEmail,
+  clientName,
+  invoiceNumber,
+  totalAmount,
+  dueDate,
+  paymentUrl,
+}: {
+  clientEmail: string;
+  clientName: string;
+  invoiceNumber: string;
+  totalAmount: number;
+  dueDate?: Date | null;
+  paymentUrl: string;
+}) {
+  const resend = getResend();
+  if (!resend) return;
+  const due = dueDate
+    ? dueDate.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })
+    : "Upon receipt";
+  try {
+    await resend.emails.send({
+      from: FROM,
+      to: clientEmail,
+      subject: `Invoice ${invoiceNumber} — Pay Online`,
+      html: `<div style="font-family: sans-serif; max-width: 480px; margin: 40px auto; background: #080f1e; border: 1px solid rgba(0,212,255,0.15); border-radius: 12px; padding: 28px; color: #d8e8f4;">
+        <p style="margin:0 0 8px; font-size:11px; font-weight:700; letter-spacing:2px; color:#00d4ff; text-transform:uppercase;">Lumin Aerial</p>
+        <h2 style="margin:0 0 16px; color:#d8e8f4;">Invoice Ready for Payment</h2>
+        <p>Hi ${clientName},</p>
+        <p>Invoice <strong>${invoiceNumber}</strong> for <strong>$${totalAmount.toFixed(2)}</strong> is ready. Due date: <strong>${due}</strong>.</p>
+        <p>Click below to pay securely via credit card:</p>
+        <a href="${paymentUrl}" style="display:inline-block; margin-top:16px; background:#00d4ff; color:#04080f; font-weight:900; padding:10px 24px; border-radius:8px; text-decoration:none;">Pay $${totalAmount.toFixed(2)} Now</a>
+        <p style="margin-top:24px; font-size:12px; color:#5b7a99;">Powered by Stripe — your card details are never stored on our servers.</p>
+      </div>`,
+    });
+  } catch (err) {
+    console.error("[email] Failed to send invoice payment link:", err);
+  }
+}
+
+// ── Deliverable Notification ──────────────────────────────────────────────────
+
+export async function sendDeliverableNotificationEmail({
+  clientEmail,
+  clientName,
+  jobTitle,
+  jobId,
+  fileCount,
+}: {
+  clientEmail: string;
+  clientName: string;
+  jobTitle: string;
+  jobId: string;
+  fileCount: number;
+}) {
+  const resend = getResend();
+  if (!resend) return;
+  try {
+    await resend.emails.send({
+      from: FROM,
+      to: clientEmail,
+      subject: `Your deliverables are ready — ${jobTitle}`,
+      html: `<div style="font-family: sans-serif; max-width: 480px; margin: 40px auto; background: #080f1e; border: 1px solid rgba(0,212,255,0.15); border-radius: 12px; padding: 28px; color: #d8e8f4;">
+        <p style="margin:0 0 8px; font-size:11px; font-weight:700; letter-spacing:2px; color:#00d4ff; text-transform:uppercase;">Lumin Aerial</p>
+        <h2 style="margin:0 0 16px; color:#d8e8f4;">Your Files Are Ready</h2>
+        <p>Hi ${clientName},</p>
+        <p>Your aerial deliverables for <strong>${jobTitle}</strong> are ready for review. <strong>${fileCount} file${fileCount === 1 ? "" : "s"}</strong> have been uploaded.</p>
+        <p>Please review and approve (or request revisions) within your client portal.</p>
+        <a href="${APP_URL}/client/deliverables" style="display:inline-block; margin-top:16px; background:#00d4ff; color:#04080f; font-weight:900; padding:10px 24px; border-radius:8px; text-decoration:none;">Review Deliverables</a>
+      </div>`,
+    });
+  } catch (err) {
+    console.error("[email] Failed to send deliverable notification:", err);
+  }
+}

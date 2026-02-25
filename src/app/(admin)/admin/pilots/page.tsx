@@ -13,6 +13,7 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Plus, UserCheck, UserX, Clock, Download } from "lucide-react";
 import { formatDate } from "@/lib/utils";
+import { AutoScoreButton } from "./AutoScoreButton";
 
 const statusConfig = {
   ACTIVE: { label: "Active", variant: "success" as const },
@@ -49,6 +50,7 @@ export default async function PilotsPage() {
           </p>
         </div>
         <div className="flex items-center gap-2">
+          <AutoScoreButton />
           <a href="/api/export/pilots" download>
             <Button variant="outline" size="sm">
               <Download className="w-4 h-4 mr-2" />
@@ -125,6 +127,7 @@ export default async function PilotsPage() {
                   <TableHead>Equipment</TableHead>
                   <TableHead>Jobs</TableHead>
                   <TableHead>Status</TableHead>
+                  <TableHead>Rating</TableHead>
                   <TableHead>Joined</TableHead>
                 </TableRow>
               </TableHeader>
@@ -178,6 +181,11 @@ export default async function PilotsPage() {
                       </TableCell>
                       <TableCell>
                         <Badge variant={sc.variant}>{sc.label}</Badge>
+                      </TableCell>
+                      <TableCell className="text-sm">
+                        {pilot.rating
+                          ? <span className="text-amber-400 font-semibold">★ {pilot.rating.toFixed(1)}</span>
+                          : <span className="text-muted-foreground">—</span>}
                       </TableCell>
                       <TableCell className="text-sm text-muted-foreground">
                         {formatDate(pilot.createdAt)}

@@ -11,6 +11,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { formatDate } from "@/lib/utils";
+import { ApprovalButtons } from "./ApprovalButtons";
 
 const fileTypeConfig: Record<string, { label: string; variant: "default" | "secondary" | "outline" | "success" | "info" }> = {
   PHOTO: { label: "Photo", variant: "info" },
@@ -68,6 +69,7 @@ export default async function ClientDeliverablesPage() {
                   <TableHead>Type</TableHead>
                   <TableHead>Size</TableHead>
                   <TableHead>Delivered</TableHead>
+                  <TableHead>Status</TableHead>
                   <TableHead></TableHead>
                 </TableRow>
               </TableHeader>
@@ -90,6 +92,13 @@ export default async function ClientDeliverablesPage() {
                       </TableCell>
                       <TableCell className="text-sm text-muted-foreground">
                         {file.deliveredAt ? formatDate(file.deliveredAt) : "—"}
+                      </TableCell>
+                      <TableCell>
+                        <ApprovalButtons
+                          jobId={file.jobId}
+                          fileId={file.id}
+                          currentStatus={file.approvalStatus ?? "PENDING"}
+                        />
                       </TableCell>
                       <TableCell>
                         <a

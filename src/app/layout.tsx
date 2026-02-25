@@ -8,6 +8,13 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "Lumin Aerial CRM",
   description: "Operations management for the Lumin Aerial drone pilot network",
+  manifest: "/manifest.json",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: "Lumin CRM",
+  },
+  themeColor: "#00d4ff",
 };
 
 export default function RootLayout({
@@ -17,6 +24,14 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <head>
+        <link rel="manifest" href="/manifest.json" />
+        <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        <meta name="apple-mobile-web-app-title" content="Lumin CRM" />
+        <meta name="theme-color" content="#00d4ff" />
+      </head>
       <body className={inter.className}>
         <Providers>{children}</Providers>
       </body>

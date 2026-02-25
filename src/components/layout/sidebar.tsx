@@ -19,6 +19,8 @@ import {
   Target,
   Bell,
   Plug,
+  Map,
+  Settings2,
 } from "lucide-react";
 
 interface NavItem {
@@ -70,12 +72,14 @@ const adminGroups: NavGroup[] = [
     items: [
       { label: "Documents",      href: "/admin/compliance",      icon: ShieldCheck },
       { label: "Analytics",      href: "/admin/analytics",       icon: TrendingUp },
+      { label: "Dispatch Map",   href: "/admin/dispatch",        icon: Map },
     ],
   },
   {
     label: "Settings",
     items: [
       { label: "Integrations",   href: "/admin/integrations",   icon: Plug },
+      { label: "White-Label",    href: "/admin/settings",        icon: Settings2 },
     ],
   },
 ];

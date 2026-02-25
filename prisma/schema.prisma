@@ -11,6 +11,31 @@ datasource db {
 }
 
 // ─────────────────────────────────────────
+// WHITE-LABEL ORGANIZATION
+// ─────────────────────────────────────────
+
+model Organization {
+  id              String   @id @default(cuid())
+  name            String
+  slug            String   @unique  // subdomain / URL key
+  logoUrl         String?
+  faviconUrl      String?
+  primaryColor    String   @default("#00d4ff")
+  accentColor     String   @default("#fbbf24")
+  customDomain    String?  @unique
+  supportEmail    String?
+  stripeAccountId String?  // Stripe Connect account for payouts
+  planTier        String   @default("starter") // starter | pro | enterprise
+  active          Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  users           User[]
+
+  @@map("organizations")
+}
+
+// ─────────────────────────────────────────
 // AUTH / USERS
 // ─────────────────────────────────────────
 
@@ -30,6 +55,10 @@ model User {
   role          Role      @default(CLIENT)
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
+
+  // White-label org (null = default Lumin Aerial instance)
+  organizationId String?
+  organization   Organization? @relation(fields: [organizationId], references: [id])
 
   // NextAuth relations
   accounts      Account[]
@@ -268,7 +297,8 @@ model Job {
   zip           String?
   lat           Float?
   lng           Float?
-
+  // Public tracking
+  trackingToken String?   @unique
   // Scope
   scheduledDate DateTime?
   completedDate DateTime?
@@ -337,9 +367,15 @@ model JobFile {
   type        FileType @default(OTHER)
   sizeMb      Float?
   uploadedBy  String?  // user id
-  isDelivered Boolean  @default(false)
-  deliveredAt DateTime?
-  createdAt   DateTime @default(now())
+  isDelivered    Boolean  @default(false)
+  deliveredAt    DateTime?
+
+  // Client approval
+  approvalStatus String   @default("PENDING") // PENDING | APPROVED | REVISION_REQUESTED
+  approvalNote   String?
+  reviewedAt     DateTime?
+
+  createdAt      DateTime @default(now())
 
   @@map("job_files")
 }
@@ -354,6 +390,7 @@ enum InvoiceStatus {
   PAID
   OVERDUE
   VOID
+  REFUNDED
 }
 
 model Invoice {
@@ -366,12 +403,17 @@ model Invoice {
   invoiceNumber String        @unique
   status        InvoiceStatus @default(DRAFT)
   amount        Decimal
-  tax           Decimal?
+  tax           Decimal?      @default(0)
   totalAmount   Decimal
+  amountPaid    Decimal       @default(0)
 
   issueDate     DateTime      @default(now())
   dueDate       DateTime?
-  paidDate      DateTime?
+  paidAt        DateTime?     // when payment was received
+
+  // Stripe
+  stripePaymentIntentId    String?
+  stripeCheckoutSessionId  String?
 
   notes         String?
   lineItems     Json?         // array of {description, qty, unitPrice, total}

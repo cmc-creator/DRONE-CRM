@@ -13,6 +13,7 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Plus, DollarSign, Download } from "lucide-react";
 import { formatDate, formatCurrency } from "@/lib/utils";
+import { SendPaymentLinkButton } from "./SendPaymentLinkButton";
 
 const statusConfig = {
   DRAFT: { label: "Draft", variant: "outline" as const },
@@ -53,6 +54,12 @@ export default async function InvoicesPage() {
           </p>
         </div>
         <div className="flex items-center gap-2">
+          <a href="/api/export/quickbooks" download>
+            <Button variant="outline" size="sm">
+              <Download className="w-4 h-4 mr-2" />
+              QuickBooks IIF
+            </Button>
+          </a>
           <a href="/api/export/invoices" download>
             <Button variant="outline" size="sm">
               <Download className="w-4 h-4 mr-2" />
@@ -124,6 +131,7 @@ export default async function InvoicesPage() {
                   <TableHead>Issue Date</TableHead>
                   <TableHead>Due Date</TableHead>
                   <TableHead>Status</TableHead>
+                  <TableHead></TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -156,6 +164,11 @@ export default async function InvoicesPage() {
                       </TableCell>
                       <TableCell>
                         <Badge variant={sc.variant}>{sc.label}</Badge>
+                      </TableCell>
+                      <TableCell>
+                        {(inv.status === "SENT" || inv.status === "OVERDUE" || inv.status === "DRAFT") && (
+                          <SendPaymentLinkButton invoiceId={inv.id} />
+                        )}
                       </TableCell>
                     </TableRow>
                   );
