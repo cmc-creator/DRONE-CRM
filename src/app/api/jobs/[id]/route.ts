@@ -36,12 +36,32 @@ export async function GET(req: Request, { params }: Props) {
 
 export async function PATCH(req: Request, { params }: Props) {
   const session = await auth();
-  if (!session || session.user.role !== "ADMIN") {
+  if (!session) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   const { id } = await params;
   const body = await req.json();
+
+  // Pilots may only update status on jobs they are assigned to,
+  // and only to allowed transition states.
+  if (session.user.role === "PILOT") {
+    const PILOT_ALLOWED = ["IN_PROGRESS", "CAPTURE_COMPLETE"];
+    if (!body.status || !PILOT_ALLOWED.includes(body.status)) {
+      return NextResponse.json({ error: "Pilots may only set IN_PROGRESS or CAPTURE_COMPLETE" }, { status: 403 });
+    }
+    const pilot = await prisma.pilot.findFirst({ where: { user: { id: session.user.id } } });
+    if (!pilot) return NextResponse.json({ error: "Pilot not found" }, { status: 404 });
+    const assignment = await prisma.jobAssignment.findFirst({ where: { jobId: id, pilotId: pilot.id } });
+    if (!assignment) return NextResponse.json({ error: "Not assigned to this job" }, { status: 403 });
+
+    const updated = await prisma.job.update({ where: { id }, data: { status: body.status } });
+    return NextResponse.json(updated);
+  }
+
+  if (session.user.role !== "ADMIN") {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
 
   try {
     const updated = await prisma.job.update({
