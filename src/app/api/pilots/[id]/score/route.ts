@@ -18,7 +18,7 @@ export async function POST(
   context: { params: Promise<{ id: string }> }
 ) {
   const session = await auth();
-  if (session?.user?.role !== "admin") {
+  if (!session || session.user.role !== "ADMIN") {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
