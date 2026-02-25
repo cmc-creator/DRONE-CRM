@@ -1,19 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, type ReactNode } from "react";
 import {
   Beaker, Trash2, Loader2, CheckCircle, AlertTriangle,
-  RefreshCw, ChevronDown, ChevronRight, Info,
+  RefreshCw, ChevronDown, ChevronRight, Info, Undo2, ShieldAlert,
 } from "lucide-react";
 
 // ── Shared styles ─────────────────────────────────────────────────────────────
-
-const glassCard = {
-  background: "rgba(255,255,255,0.025)",
-  border: "1px solid rgba(0,212,255,0.1)",
-  borderRadius: "0.875rem",
-  padding: "1.25rem",
-} as const;
 
 const sectionHeader = {
   background: "rgba(255,255,255,0.02)",
@@ -22,43 +15,91 @@ const sectionHeader = {
   borderRadius: "0.875rem 0.875rem 0 0",
 } as const;
 
-// ── Individual action card ────────────────────────────────────────────────────
+type ActionResult = {
+  message?: string;
+  results?: string[];
+  credentials?: Record<string, { email: string; password: string }>;
+  deleted?: Record<string, number>;
+};
+
+// ── Result log ────────────────────────────────────────────────────────────────
+
+function ResultLog({ result }: { result: ActionResult }) {
+  const [expanded, setExpanded] = useState(true);
+  return (
+    <div className="mt-3">
+      <button
+        className="w-full flex items-center justify-between text-xs px-3 py-2 rounded-t-lg"
+        style={{ background: "rgba(52,211,153,0.05)", border: "1px solid rgba(52,211,153,0.15)", color: "#34d399" }}
+        onClick={() => setExpanded(!expanded)}
+      >
+        <span className="flex items-center gap-1.5">
+          <CheckCircle className="w-3.5 h-3.5" />
+          {result.message ?? "Done"}
+        </span>
+        {expanded ? <ChevronDown className="w-3.5 h-3.5" /> : <ChevronRight className="w-3.5 h-3.5" />}
+      </button>
+      {expanded && (
+        <div
+          className="rounded-b-lg px-3 py-3 space-y-1.5 text-xs font-mono max-h-64 overflow-y-auto"
+          style={{ background: "rgba(0,0,0,0.3)", border: "1px solid rgba(52,211,153,0.1)", borderTop: "none" }}
+        >
+          {result.results?.map((line, i) => (
+            <p key={i} style={{ color: line.startsWith("✓") ? "#34d399" : "#94a3b8" }}>{line}</p>
+          ))}
+          {result.credentials && (
+            <div className="mt-2 pt-2" style={{ borderTop: "1px solid rgba(0,212,255,0.08)" }}>
+              <p className="text-[10px] mb-1.5 uppercase tracking-wider" style={{ color: "rgba(0,212,255,0.4)" }}>Test logins</p>
+              {Object.entries(result.credentials).map(([role, creds]) => (
+                <p key={role} style={{ color: "#d8e8f4" }}>
+                  <span style={{ color: "#00d4ff" }}>{role}:</span> {creds.email} / {creds.password}
+                </p>
+              ))}
+            </div>
+          )}
+          {result.deleted && (
+            <div className="mt-2 pt-2" style={{ borderTop: "1px solid rgba(0,212,255,0.08)" }}>
+              {Object.entries(result.deleted).map(([key, count]) => (
+                <p key={key} style={{ color: count > 0 ? "#f87171" : "#94a3b8" }}>
+                  {key}: {count} deleted
+                </p>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ── Standard action card (seed / low-risk) ────────────────────────────────────
 
 function ActionCard({
   title,
   description,
   buttonLabel,
   buttonColor,
-  confirmMessage,
   onAction,
-  warningLevel = "low",
+  afterAction,
 }: {
   title: string;
   description: string;
   buttonLabel: string;
   buttonColor: string;
-  confirmMessage?: string;
-  onAction: () => Promise<{ message?: string; results?: string[]; credentials?: Record<string, {email:string;password:string}>; deleted?: Record<string,number> }>;
-  warningLevel?: "low" | "medium" | "high";
+  onAction: () => Promise<ActionResult>;
+  afterAction?: (result: ActionResult) => ReactNode;
 }) {
-  const [loading, setLoading]     = useState(false);
-  const [result, setResult]       = useState<ReturnType<typeof onAction> extends Promise<infer T> ? T : never | null>(null);
-  const [error, setError]         = useState("");
-  const [expanded, setExpanded]   = useState(false);
-
-  const borderColor =
-    warningLevel === "high"   ? "rgba(248,113,113,0.15)" :
-    warningLevel === "medium" ? "rgba(251,191,36,0.15)"  : "rgba(0,212,255,0.1)";
+  const [loading, setLoading] = useState(false);
+  const [result, setResult]   = useState<ActionResult | null>(null);
+  const [error, setError]     = useState("");
 
   async function run() {
-    if (confirmMessage && !window.confirm(confirmMessage)) return;
     setLoading(true);
     setError("");
     setResult(null);
     try {
       const res = await onAction();
-      setResult(res as never);
-      setExpanded(true);
+      setResult(res);
     } catch (e) {
       setError(e instanceof Error ? e.message : "Unknown error");
     } finally {
@@ -67,7 +108,8 @@ function ActionCard({
   }
 
   return (
-    <div className="rounded-xl overflow-hidden" style={{ border: `1px solid ${borderColor}`, background: "rgba(255,255,255,0.015)" }}>
+    <div className="rounded-xl overflow-hidden"
+      style={{ border: "1px solid rgba(0,212,255,0.1)", background: "rgba(255,255,255,0.015)" }}>
       <div className="p-5">
         <div className="flex items-start justify-between gap-4">
           <div className="flex-1">
@@ -77,15 +119,110 @@ function ActionCard({
           <button
             onClick={run}
             disabled={loading}
-            className="flex-shrink-0 inline-flex items-center gap-1.5 text-xs px-4 py-2 rounded-lg font-bold transition-all disabled:opacity-50"
+            className="flex-shrink-0 inline-flex items-center gap-1.5 text-xs px-4 py-2 rounded-lg font-bold disabled:opacity-50"
             style={{ background: `${buttonColor}15`, border: `1px solid ${buttonColor}35`, color: buttonColor }}
           >
             {loading
-              ? <><Loader2 className="w-3.5 h-3.5 animate-spin" /> Working…</>
-              : <>{warningLevel === "high" ? <Trash2 className="w-3.5 h-3.5" /> : <RefreshCw className="w-3.5 h-3.5" />} {buttonLabel}</>
-            }
+              ? <><Loader2 className="w-3.5 h-3.5 animate-spin" /> Working...</>
+              : <><RefreshCw className="w-3.5 h-3.5" /> {buttonLabel}</>}
           </button>
         </div>
+        {error && (
+          <div className="mt-3 flex items-center gap-2 text-xs px-3 py-2 rounded-lg"
+            style={{ background: "rgba(248,113,113,0.08)", border: "1px solid rgba(248,113,113,0.2)", color: "#f87171" }}>
+            <AlertTriangle className="w-3.5 h-3.5 flex-shrink-0" /> {error}
+          </div>
+        )}
+        {result && <ResultLog result={result} />}
+        {result && afterAction?.(result)}
+      </div>
+    </div>
+  );
+}
+
+// ── Two-step confirm card (medium risk: clear demo) ───────────────────────────
+
+function TwoStepCard({
+  title,
+  description,
+  buttonLabel,
+  confirmDescription,
+  onAction,
+}: {
+  title: string;
+  description: string;
+  buttonLabel: string;
+  confirmDescription: string;
+  onAction: () => Promise<ActionResult>;
+}) {
+  const [step, setStep]       = useState<"idle" | "confirm" | "done">("idle");
+  const [loading, setLoading] = useState(false);
+  const [result, setResult]   = useState<ActionResult | null>(null);
+  const [error, setError]     = useState("");
+
+  async function run() {
+    setLoading(true);
+    setError("");
+    try {
+      const res = await onAction();
+      setResult(res);
+      setStep("done");
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Unknown error");
+      setStep("idle");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return (
+    <div className="rounded-xl overflow-hidden"
+      style={{ border: step === "confirm" ? "1px solid rgba(251,191,36,0.35)" : "1px solid rgba(251,191,36,0.15)", background: "rgba(255,255,255,0.015)" }}>
+      <div className="p-5">
+        <div className="flex items-start justify-between gap-4">
+          <div className="flex-1">
+            <p className="text-sm font-bold" style={{ color: "#d8e8f4" }}>{title}</p>
+            <p className="text-xs mt-1 leading-relaxed" style={{ color: "rgba(0,212,255,0.4)" }}>{description}</p>
+          </div>
+          {step === "idle" && (
+            <button
+              onClick={() => setStep("confirm")}
+              className="flex-shrink-0 inline-flex items-center gap-1.5 text-xs px-4 py-2 rounded-lg font-bold"
+              style={{ background: "rgba(251,191,36,0.1)", border: "1px solid rgba(251,191,36,0.3)", color: "#fbbf24" }}
+            >
+              <Trash2 className="w-3.5 h-3.5" /> {buttonLabel}
+            </button>
+          )}
+        </div>
+
+        {/* Step 2: inline confirmation */}
+        {step === "confirm" && (
+          <div className="mt-4 rounded-lg p-4"
+            style={{ background: "rgba(251,191,36,0.05)", border: "1px solid rgba(251,191,36,0.25)" }}>
+            <p className="text-xs font-bold mb-1" style={{ color: "#fbbf24" }}>
+              Warning: Are you sure?
+            </p>
+            <p className="text-xs mb-4 leading-relaxed" style={{ color: "#94a3b8" }}>{confirmDescription}</p>
+            <div className="flex gap-2">
+              <button
+                onClick={run}
+                disabled={loading}
+                className="inline-flex items-center gap-1.5 text-xs px-4 py-2 rounded-lg font-bold disabled:opacity-50"
+                style={{ background: "rgba(251,191,36,0.15)", border: "1px solid rgba(251,191,36,0.4)", color: "#fbbf24" }}
+              >
+                {loading ? <><Loader2 className="w-3.5 h-3.5 animate-spin" /> Deleting...</> : "Yes, delete demo data"}
+              </button>
+              <button
+                onClick={() => setStep("idle")}
+                disabled={loading}
+                className="text-xs px-4 py-2 rounded-lg font-semibold"
+                style={{ background: "rgba(148,163,184,0.08)", border: "1px solid rgba(148,163,184,0.2)", color: "#94a3b8" }}
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        )}
 
         {error && (
           <div className="mt-3 flex items-center gap-2 text-xs px-3 py-2 rounded-lg"
@@ -93,56 +230,170 @@ function ActionCard({
             <AlertTriangle className="w-3.5 h-3.5 flex-shrink-0" /> {error}
           </div>
         )}
+        {result && step === "done" && <ResultLog result={result} />}
 
-        {result && !error && (
-          <div className="mt-3">
+        {/* Undo: re-seed after demo clear */}
+        {step === "done" && result && (
+          <UndoReseed />
+        )}
+      </div>
+    </div>
+  );
+}
+
+// ── Undo helper shown after demo clear ───────────────────────────────────────
+
+function UndoReseed() {
+  const [loading, setLoading] = useState(false);
+  const [done, setDone]       = useState(false);
+
+  async function reseed() {
+    setLoading(true);
+    await fetch("/api/dev/seed", { method: "POST" });
+    setLoading(false);
+    setDone(true);
+  }
+
+  if (done) {
+    return (
+      <p className="mt-3 text-xs flex items-center gap-1.5" style={{ color: "#34d399" }}>
+        <CheckCircle className="w-3.5 h-3.5" /> Demo data restored.
+      </p>
+    );
+  }
+
+  return (
+    <button
+      onClick={reseed}
+      disabled={loading}
+      className="mt-3 inline-flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg font-semibold disabled:opacity-50"
+      style={{ background: "rgba(52,211,153,0.08)", border: "1px solid rgba(52,211,153,0.2)", color: "#34d399" }}
+    >
+      {loading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Undo2 className="w-3.5 h-3.5" />}
+      {loading ? "Restoring..." : "Undo — re-add demo data"}
+    </button>
+  );
+}
+
+// ── Type-to-confirm nuclear card (high risk: clear everything) ────────────────
+
+function NuclearCard() {
+  const [step, setStep]         = useState<"idle" | "confirm" | "done">("idle");
+  const [typed, setTyped]       = useState("");
+  const [loading, setLoading]   = useState(false);
+  const [result, setResult]     = useState<ActionResult | null>(null);
+  const [error, setError]       = useState("");
+  const inputRef                = useRef<HTMLInputElement>(null);
+  const REQUIRED                = "DELETE ALL";
+  const matches                 = typed.trim().toUpperCase() === REQUIRED;
+
+  function openConfirm() {
+    setStep("confirm");
+    setTyped("");
+    setTimeout(() => inputRef.current?.focus(), 50);
+  }
+
+  async function run() {
+    if (!matches) return;
+    setLoading(true);
+    setError("");
+    try {
+      const res = await fetch("/api/dev/clear", { method: "DELETE" });
+      if (!res.ok) throw new Error((await res.json()).error ?? "Failed");
+      const data = await res.json();
+      setResult(data);
+      setStep("done");
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Unknown error");
+      setStep("idle");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return (
+    <div className="rounded-xl overflow-hidden"
+      style={{
+        border: step === "confirm" ? "1px solid rgba(248,113,113,0.5)" : "1px solid rgba(248,113,113,0.2)",
+        background: "rgba(255,255,255,0.015)",
+      }}>
+      <div className="p-5">
+        {/* Title + idle button */}
+        <div className="flex items-start justify-between gap-4">
+          <div className="flex-1">
+            <p className="text-sm font-bold" style={{ color: "#d8e8f4" }}>Clear Everything</p>
+            <p className="text-xs mt-1 leading-relaxed" style={{ color: "rgba(248,113,113,0.6)" }}>
+              Permanently deletes ALL clients, pilots, jobs, invoices, contracts, and leads.
+              Your admin login is preserved. <strong style={{ color: "#f87171" }}>This cannot be undone.</strong>
+            </p>
+          </div>
+          {step === "idle" && (
             <button
-              className="w-full flex items-center justify-between text-xs px-3 py-2 rounded-t-lg"
-              style={{ background: "rgba(52,211,153,0.05)", border: "1px solid rgba(52,211,153,0.15)", color: "#34d399" }}
-              onClick={() => setExpanded(!expanded)}
+              onClick={openConfirm}
+              className="flex-shrink-0 inline-flex items-center gap-1.5 text-xs px-4 py-2 rounded-lg font-bold"
+              style={{ background: "rgba(248,113,113,0.1)", border: "1px solid rgba(248,113,113,0.35)", color: "#f87171" }}
             >
-              <span className="flex items-center gap-1.5">
-                <CheckCircle className="w-3.5 h-3.5" />
-                {(result as { message?: string }).message ?? "Done"}
-              </span>
-              {expanded ? <ChevronDown className="w-3.5 h-3.5" /> : <ChevronRight className="w-3.5 h-3.5" />}
+              <ShieldAlert className="w-3.5 h-3.5" /> Delete All Data
             </button>
-            {expanded && (
-              <div
-                className="rounded-b-lg px-3 py-3 space-y-1.5 text-xs font-mono max-h-64 overflow-y-auto"
-                style={{ background: "rgba(0,0,0,0.3)", border: "1px solid rgba(52,211,153,0.1)", borderTop: "none" }}
+          )}
+        </div>
+
+        {/* Step 2: type-to-confirm */}
+        {step === "confirm" && (
+          <div className="mt-4 rounded-lg p-4"
+            style={{ background: "rgba(248,113,113,0.05)", border: "1px solid rgba(248,113,113,0.3)" }}>
+            <p className="text-sm font-bold mb-1" style={{ color: "#f87171" }}>
+              Final warning — this will wipe everything
+            </p>
+            <p className="text-xs mb-4 leading-relaxed" style={{ color: "#94a3b8" }}>
+              All clients, pilots, jobs, invoices, contracts, and leads will be permanently deleted.
+              Your admin accounts are safe. There is no automatic backup — if you have real data you want to keep,
+              export it from the Integrations page first.
+            </p>
+            <p className="text-xs mb-2" style={{ color: "#94a3b8" }}>
+              Type <code style={{ color: "#f87171", background: "rgba(248,113,113,0.1)", padding: "0 4px", borderRadius: 3 }}>DELETE ALL</code> to confirm:
+            </p>
+            <input
+              ref={inputRef}
+              value={typed}
+              onChange={(e) => setTyped(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && matches && run()}
+              placeholder="Type DELETE ALL"
+              className="w-full text-xs px-3 py-2 rounded-lg font-mono outline-none mb-4"
+              style={{
+                background: "rgba(0,0,0,0.4)",
+                border: `1px solid ${matches ? "rgba(248,113,113,0.6)" : "rgba(148,163,184,0.2)"}`,
+                color: matches ? "#f87171" : "#d8e8f4",
+              }}
+            />
+            <div className="flex gap-2">
+              <button
+                onClick={run}
+                disabled={!matches || loading}
+                className="inline-flex items-center gap-1.5 text-xs px-4 py-2 rounded-lg font-bold disabled:opacity-40"
+                style={{ background: "rgba(248,113,113,0.15)", border: "1px solid rgba(248,113,113,0.5)", color: "#f87171" }}
               >
-                {/* Seed results */}
-                {(result as { results?: string[] }).results?.map((line, i) => (
-                  <p key={i} style={{ color: line.startsWith("✓") ? "#34d399" : "#94a3b8" }}>{line}</p>
-                ))}
-
-                {/* Credentials */}
-                {(result as { credentials?: Record<string,{email:string;password:string}> }).credentials && (
-                  <div className="mt-2 pt-2" style={{ borderTop: "1px solid rgba(0,212,255,0.08)" }}>
-                    <p className="text-[10px] mb-1.5 uppercase tracking-wider" style={{ color: "rgba(0,212,255,0.4)" }}>Test logins</p>
-                    {Object.entries((result as { credentials: Record<string,{email:string;password:string}> }).credentials).map(([role, creds]) => (
-                      <p key={role} style={{ color: "#d8e8f4" }}>
-                        <span style={{ color: "#00d4ff" }}>{role}:</span> {creds.email} / {creds.password}
-                      </p>
-                    ))}
-                  </div>
-                )}
-
-                {/* Delete counts */}
-                {(result as { deleted?: Record<string,number> }).deleted && (
-                  <div className="mt-2 pt-2" style={{ borderTop: "1px solid rgba(0,212,255,0.08)" }}>
-                    {Object.entries((result as { deleted: Record<string,number> }).deleted).map(([key, count]) => (
-                      <p key={key} style={{ color: count > 0 ? "#f87171" : "#94a3b8" }}>
-                        {key}: {count} deleted
-                      </p>
-                    ))}
-                  </div>
-                )}
-              </div>
-            )}
+                {loading ? <><Loader2 className="w-3.5 h-3.5 animate-spin" /> Deleting...</> : <><Trash2 className="w-3.5 h-3.5" /> Confirm Delete All</>}
+              </button>
+              <button
+                onClick={() => { setStep("idle"); setTyped(""); }}
+                disabled={loading}
+                className="text-xs px-4 py-2 rounded-lg font-semibold"
+                style={{ background: "rgba(148,163,184,0.08)", border: "1px solid rgba(148,163,184,0.2)", color: "#94a3b8" }}
+              >
+                Cancel — keep my data
+              </button>
+            </div>
           </div>
         )}
+
+        {error && (
+          <div className="mt-3 flex items-center gap-2 text-xs px-3 py-2 rounded-lg"
+            style={{ background: "rgba(248,113,113,0.08)", border: "1px solid rgba(248,113,113,0.2)", color: "#f87171" }}>
+            <AlertTriangle className="w-3.5 h-3.5 flex-shrink-0" /> {error}
+          </div>
+        )}
+        {result && step === "done" && <ResultLog result={result} />}
       </div>
     </div>
   );
@@ -155,19 +406,15 @@ export default function DevToolsPage() {
     <div className="space-y-8 max-w-3xl">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-black" style={{ color: "#d8e8f4" }}>
-          Developer Tools
-        </h1>
+        <h1 className="text-2xl font-black" style={{ color: "#d8e8f4" }}>Developer Tools</h1>
         <p className="text-xs mt-0.5" style={{ color: "rgba(0,212,255,0.38)" }}>
           Seed demo data for testing or clean the database for a fresh start
         </p>
       </div>
 
       {/* Info banner */}
-      <div
-        className="flex items-start gap-3 rounded-xl p-4"
-        style={{ background: "rgba(251,191,36,0.06)", border: "1px solid rgba(251,191,36,0.2)" }}
-      >
+      <div className="flex items-start gap-3 rounded-xl p-4"
+        style={{ background: "rgba(251,191,36,0.06)", border: "1px solid rgba(251,191,36,0.2)" }}>
         <Info className="w-4 h-4 mt-0.5 flex-shrink-0" style={{ color: "#fbbf24" }} />
         <div className="text-xs leading-relaxed space-y-1" style={{ color: "#94a3b8" }}>
           <p><span style={{ color: "#fbbf24", fontWeight: 700 }}>Development environment tools.</span> Use these to quickly populate the database with test data or wipe it clean.</p>
@@ -196,13 +443,11 @@ export default function DevToolsPage() {
             }}
           />
 
-          <ActionCard
+          <TwoStepCard
             title="Remove Demo Data Only"
-            description="Deletes all records tagged [DEMO] and users with @test.local emails. Your real data is untouched."
+            description="Deletes all records tagged [DEMO] and users with @test.local emails. Your real data is untouched. You can re-add demo data at any time."
             buttonLabel="Clear Demo Data"
-            buttonColor="#fbbf24"
-            confirmMessage="Remove all demo data? Your real clients, jobs, and pilots will NOT be affected."
-            warningLevel="medium"
+            confirmDescription="This will delete all demo clients, pilots, jobs, invoices, and contracts (anything tagged [DEMO] or using @test.local emails). Your real data will NOT be touched. You can undo this by clicking 'Re-add demo data' afterward."
             onAction={async () => {
               const res = await fetch("/api/dev/clear?mode=demo", { method: "DELETE" });
               if (!res.ok) throw new Error((await res.json()).error ?? "Failed");
@@ -212,7 +457,7 @@ export default function DevToolsPage() {
         </div>
       </div>
 
-      {/* Nuclear option */}
+      {/* Danger Zone */}
       <div className="rounded-xl overflow-hidden" style={{ border: "1px solid rgba(248,113,113,0.15)" }}>
         <div style={{ ...sectionHeader, background: "rgba(248,113,113,0.04)", borderBottom: "1px solid rgba(248,113,113,0.1)" }}>
           <p className="text-xs font-bold uppercase tracking-widest flex items-center gap-2" style={{ color: "rgba(248,113,113,0.7)" }}>
@@ -220,19 +465,7 @@ export default function DevToolsPage() {
           </p>
         </div>
         <div className="p-5">
-          <ActionCard
-            title="Clear Everything"
-            description="Permanently deletes ALL clients, pilots, jobs, invoices, contracts, and leads. Your admin login accounts are preserved. This CANNOT be undone."
-            buttonLabel="Delete All Data"
-            buttonColor="#f87171"
-            confirmMessage="⚠️ WARNING: This will permanently delete ALL data (clients, pilots, jobs, invoices, contracts, leads).\n\nYour admin accounts will be preserved.\n\nAre you absolutely sure? Type OK to confirm."
-            warningLevel="high"
-            onAction={async () => {
-              const res = await fetch("/api/dev/clear", { method: "DELETE" });
-              if (!res.ok) throw new Error((await res.json()).error ?? "Failed");
-              return res.json();
-            }}
-          />
+          <NuclearCard />
         </div>
       </div>
 
@@ -257,11 +490,10 @@ export default function DevToolsPage() {
                 name: "production",
                 color: "#34d399",
                 role: "Live / Clean",
-                desc: "Clean branch — no demo data, no test accounts. When you're ready to go live, deploy from this branch. Only merge stable, tested changes into it.",
+                desc: "Clean code branch. Both branches share the same live database — changing the Vercel deployment branch doesn't affect your data, only which version of the app is live.",
               },
             ].map((b) => (
-              <div key={b.name}
-                className="rounded-lg p-3.5"
+              <div key={b.name} className="rounded-lg p-3.5"
                 style={{ background: `${b.color}08`, border: `1px solid ${b.color}20` }}>
                 <p className="text-sm font-bold mb-0.5" style={{ color: b.color }}>
                   <code>{b.name}</code>
@@ -278,7 +510,7 @@ export default function DevToolsPage() {
 git merge main
 git push origin production`}
             </pre>
-            <p className="mt-2" style={{ color: "#94a3b8" }}>Then set Vercel to deploy from <code style={{ color: "#00d4ff" }}>production</code> branch in your project settings.</p>
+            <p className="mt-2" style={{ color: "#94a3b8" }}>Then in Vercel → Project Settings → Git → set Production Branch to <code style={{ color: "#00d4ff" }}>production</code>.</p>
           </div>
         </div>
       </div>
