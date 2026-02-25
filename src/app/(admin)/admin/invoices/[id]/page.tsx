@@ -13,7 +13,7 @@ interface LineItem { description: string; qty: number; unitPrice: number; total:
 interface Invoice {
   id: string; invoiceNumber: string; status: string;
   amount: string; tax: string | null; totalAmount: string;
-  issueDate: string; dueDate: string | null; paidDate: string | null;
+  issueDate: string; dueDate: string | null; paidAt: string | null;
   notes: string | null; lineItems: LineItem[] | null;
   client: { id: string; companyName: string; contactName: string | null; email: string | null; address: string | null; city: string | null; state: string | null };
   job: { id: string; title: string; city: string; state: string } | null;
@@ -45,7 +45,7 @@ export default function InvoiceDetailPage({ params }: { params: Promise<{ id: st
   async function updateStatus(newStatus: string) {
     if (!invoice) return;
     setSaving(true);
-    const extra = newStatus === "PAID" ? { paidDate: new Date().toISOString() } : {};
+    const extra = newStatus === "PAID" ? { paidAt: new Date().toISOString() } : {};
     const res = await fetch(`/api/invoices/${id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
@@ -130,7 +130,7 @@ export default function InvoiceDetailPage({ params }: { params: Promise<{ id: st
               </div>
               <div>
                 <p className="text-xs font-semibold uppercase text-muted-foreground mb-1">Paid Date</p>
-                <p>{invoice.paidDate ? formatDate(invoice.paidDate) : "—"}</p>
+                <p>{invoice.paidAt ? formatDate(invoice.paidAt) : "—"}</p>
               </div>
             </div>
             {invoice.job && (

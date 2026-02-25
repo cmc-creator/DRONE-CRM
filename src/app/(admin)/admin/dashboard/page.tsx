@@ -53,9 +53,9 @@ async function getChartData() {
   sixMonthsAgo.setHours(0, 0, 0, 0);
 
   const paidInvoices = await prisma.invoice.findMany({
-    where: { status: "PAID", paidDate: { gte: sixMonthsAgo } },
-    select: { paidDate: true, totalAmount: true },
-    orderBy: { paidDate: "asc" },
+    where: { status: "PAID", paidAt: { gte: sixMonthsAgo } },
+    select: { paidAt: true, totalAmount: true },
+    orderBy: { paidAt: "asc" },
   });
 
   const monthMap: Record<string, { revenue: number; invoices: number }> = {};
@@ -66,8 +66,8 @@ async function getChartData() {
     monthMap[key] = { revenue: 0, invoices: 0 };
   }
   for (const inv of paidInvoices) {
-    if (!inv.paidDate) continue;
-    const key = new Date(inv.paidDate).toLocaleDateString("en-US", { month: "short", year: "2-digit" });
+    if (!inv.paidAt) continue;
+    const key = new Date(inv.paidAt).toLocaleDateString("en-US", { month: "short", year: "2-digit" });
     if (monthMap[key]) {
       monthMap[key].revenue += Number(inv.totalAmount);
       monthMap[key].invoices += 1;

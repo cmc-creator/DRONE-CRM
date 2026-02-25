@@ -28,13 +28,13 @@ export async function PATCH(req: NextRequest, { params }: RouteParams) {
   }
   const { id } = await params;
   const body = await req.json();
-  const { status, paidDate, notes, dueDate, lineItems } = body;
+  const { status, paidAt, notes, dueDate, lineItems } = body;
 
   const invoice = await prisma.invoice.update({
     where: { id },
     data: {
       ...(status !== undefined && { status }),
-      ...(paidDate !== undefined && { paidDate: paidDate ? new Date(paidDate) : null }),
+      ...(paidAt !== undefined && { paidAt: paidAt ? new Date(paidAt) : null }),
       ...(notes !== undefined && { notes }),
       ...(dueDate !== undefined && { dueDate: dueDate ? new Date(dueDate) : null }),
       ...(lineItems !== undefined && { lineItems }),

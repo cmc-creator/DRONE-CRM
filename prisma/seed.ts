@@ -368,7 +368,7 @@ async function main() {
       totalAmount: 1200,
       issueDate: new Date("2026-01-17"),
       dueDate: new Date("2026-02-01"),
-      paidDate: new Date("2026-01-28"),
+      paidAt: new Date("2026-01-28"),
       notes: "Spring Campaign – Phoenix aerial. Thank you!",
       lineItems: [
         {
