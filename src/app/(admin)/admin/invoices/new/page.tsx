@@ -58,7 +58,7 @@ export default function NewInvoicePage() {
 
   // Filter jobs by selected client
   const filteredJobs = form.clientId
-    ? jobs.filter((j: Job) => {
+    ? jobs.filter((_j: Job) => {
         // We need client id on job — for now show all
         return true;
       })

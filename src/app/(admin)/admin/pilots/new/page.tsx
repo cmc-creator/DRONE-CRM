@@ -209,7 +209,7 @@ export default function NewPilotPage() {
           <CardContent className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="markets">
-                Markets (e.g. "Phoenix AZ, Scottsdale AZ, Tucson AZ")
+                Markets (e.g. &quot;Phoenix AZ, Scottsdale AZ, Tucson AZ&quot;)
               </Label>
               <Input
                 id="markets"
