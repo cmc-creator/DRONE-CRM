@@ -227,6 +227,27 @@ npm run db:seed      # Seed demo data
 
 ---
 
+## Backlog / Future Features
+
+> Items to build next — add ideas here as they come up
+
+### High Priority
+- [ ] **Guided Onboarding Walkthrough** — When Bailey first logs in, show an interactive step-by-step tour using the seeded demo data. Each step highlights a feature (Command Center stats, Jobs board, Lead Pipeline, Calendar, etc.) with a tooltip/overlay explaining what it does and why it matters. Triggered by a "Start Tour" button or automatically on first login. Track completion in localStorage or a DB flag on the User model.
+- [ ] **Volo memory / context** — Persist recent CRM activity (overdue invoices, unassigned jobs, hot leads) into Volo's context so it can give truly live advice without Bailey asking
+- [ ] **Pilot mobile view** — Optimize pilot portal for phone use (they're in the field)
+- [ ] **Job status push notifications** — Notify pilot by email/SMS when assigned a job
+- [ ] **E-signature flow** — Allow clients to sign contracts directly in the portal
+- [ ] **Stripe integration** — Client invoice payments online
+
+### Nice To Have
+- [ ] Bulk job import via CSV
+- [ ] Client self-service quote request form (public-facing)
+- [ ] Pilot rating and review system after job completion
+- [ ] Automated overdue invoice reminders via email
+- [ ] Map view of all active job locations
+
+---
+
 ## Built By
 
 GitHub Copilot — for Lumin Aerial LLC and Bailey Sargent.

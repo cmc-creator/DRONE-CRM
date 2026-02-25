@@ -24,7 +24,7 @@ export default async function AdminLayout({
       <main className="flex-1 overflow-auto">
         <div className="p-6 md:p-8 page-enter">{children}</div>
       </main>
-      <ChatWidget />
+      <ChatWidget isAdmin />
     </div>
   );
 }
