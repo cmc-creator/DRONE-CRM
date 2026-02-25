@@ -20,10 +20,49 @@ const SOURCE_LABELS: Record<string, string> = {
 };
 
 export default async function LeadsPage() {
-  const leads = await prisma.lead.findMany({
-    orderBy: { createdAt: "desc" },
-    include: { activities: { take: 1, orderBy: { createdAt: "desc" } } },
-  });
+  let leads: Awaited<ReturnType<typeof prisma.lead.findMany>> = [];
+  let dbError: string | null = null;
+
+  try {
+    leads = await prisma.lead.findMany({
+      orderBy: { createdAt: "desc" },
+      include: { activities: { take: 1, orderBy: { createdAt: "desc" } } },
+    });
+  } catch (err) {
+    console.error("[LeadsPage] Failed to load leads:", err);
+    dbError = err instanceof Error ? err.message : "Database error";
+  }
+
+  if (dbError) {
+    return (
+      <div className="space-y-5">
+        <div className="flex items-center justify-between">
+          <h1
+            className="text-2xl font-black tracking-wide"
+            style={{
+              background: "linear-gradient(135deg, #ffffff 0%, #fbbf24 60%, #f97316 100%)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              backgroundClip: "text",
+            }}
+          >
+            Lead Pipeline
+          </h1>
+        </div>
+        <div
+          className="rounded-xl p-6 text-center"
+          style={{ background: "rgba(248,113,113,0.05)", border: "1px solid rgba(248,113,113,0.2)" }}
+        >
+          <p className="text-sm font-semibold mb-1" style={{ color: "#f87171" }}>
+            Unable to load leads
+          </p>
+          <p className="text-xs" style={{ color: "rgba(248,113,113,0.6)" }}>
+            {dbError}
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   const byStage = Object.fromEntries(
     PIPELINE_STAGES.map((s) => [s.key, leads.filter((l) => l.status === s.key)])
