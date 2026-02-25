@@ -155,6 +155,14 @@ export function Sidebar({ role, userName, userEmail }: SidebarProps) {
           <LogOut className="w-4 h-4" />
           Sign out
         </button>
+        <div className="mt-3 px-3 space-y-1">
+          <p className="text-[10px] text-sidebar-foreground/30">© 2026 Lumin Aerial LLC™</p>
+          <div className="flex gap-2">
+            <a href="/terms" className="text-[10px] text-sidebar-foreground/30 hover:text-sidebar-foreground/60 underline transition-colors">Terms</a>
+            <span className="text-[10px] text-sidebar-foreground/20">·</span>
+            <a href="/privacy" className="text-[10px] text-sidebar-foreground/30 hover:text-sidebar-foreground/60 underline transition-colors">Privacy</a>
+          </div>
+        </div>
       </div>
     </aside>
   );

@@ -117,8 +117,13 @@ export default function LoginPage() {
         </div>
 
         <p className="text-center text-slate-600 text-xs mt-6">
-          Lumin Aerial LLC · Internal Operations Platform
+          © 2026 Lumin Aerial LLC™ · Internal Operations Platform
         </p>
+        <div className="flex items-center justify-center gap-3 mt-2">
+          <a href="/terms" className="text-slate-500 text-xs hover:text-slate-300 underline transition-colors">Terms of Service</a>
+          <span className="text-slate-700">·</span>
+          <a href="/privacy" className="text-slate-500 text-xs hover:text-slate-300 underline transition-colors">Privacy Policy</a>
+        </div>
       </div>
     </div>
   );

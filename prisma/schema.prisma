@@ -6,7 +6,7 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
   url      = env("DATABASE_URL")
 }
 
@@ -48,12 +48,12 @@ model Account {
   type              String
   provider          String
   providerAccountId String
-  refresh_token     String? @db.Text
-  access_token      String? @db.Text
+  refresh_token     String?
+  access_token      String?
   expires_at        Int?
   token_type        String?
   scope             String?
-  id_token          String? @db.Text
+  id_token          String?
   session_state     String?
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -103,7 +103,7 @@ model Pilot {
   city            String?
   state           String?
   zip             String?
-  bio             String?     @db.Text
+  bio             String?
 
   // FAA credentials
   faaPartNumber   String?     // Part 107 cert number
@@ -124,7 +124,7 @@ model Pilot {
   // Operational
   status          PilotStatus @default(PENDING_REVIEW)
   rating          Float?      // internal quality rating 1-5
-  notes           String?     @db.Text
+  notes           String?
 
   // Timestamps
   createdAt       DateTime    @default(now())
@@ -207,7 +207,7 @@ model Client {
 
   // Business
   billingEmail String?
-  notes        String?  @db.Text
+  notes        String?
   source       String?  // how they found us
 
   // Timestamps
@@ -253,7 +253,7 @@ model Job {
 
   // Job details
   title         String
-  description   String?   @db.Text
+  description   String?
   type          JobType   @default(OTHER)
   status        JobStatus @default(DRAFT)
 
@@ -272,12 +272,12 @@ model Job {
   deliverables  String?   // description of what to capture
 
   // Pricing
-  clientPrice   Decimal?  @db.Decimal(10, 2)
-  pilotPayout   Decimal?  @db.Decimal(10, 2)
+  clientPrice   Decimal?
+  pilotPayout   Decimal?
 
   // Admin
   priority      Int       @default(2) // 1=high 2=normal 3=low
-  internalNotes String?   @db.Text
+  internalNotes String?
 
   // Timestamps
   createdAt     DateTime  @default(now())
@@ -360,15 +360,15 @@ model Invoice {
 
   invoiceNumber String        @unique
   status        InvoiceStatus @default(DRAFT)
-  amount        Decimal       @db.Decimal(10, 2)
-  tax           Decimal?      @db.Decimal(10, 2)
-  totalAmount   Decimal       @db.Decimal(10, 2)
+  amount        Decimal
+  tax           Decimal?
+  totalAmount   Decimal
 
   issueDate     DateTime      @default(now())
   dueDate       DateTime?
   paidDate      DateTime?
 
-  notes         String?       @db.Text
+  notes         String?
   lineItems     Json?         // array of {description, qty, unitPrice, total}
 
   createdAt     DateTime      @default(now())
@@ -391,7 +391,7 @@ model PilotPayment {
   assignmentId    String        @unique
   assignment      JobAssignment @relation(fields: [assignmentId], references: [id])
 
-  amount          Decimal       @db.Decimal(10, 2)
+  amount          Decimal
   status          PaymentStatus @default(PENDING)
   method          String?       // check, zelle, ach, etc.
 
