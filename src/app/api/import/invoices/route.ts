@@ -182,6 +182,7 @@ export async function POST(req: NextRequest) {
       data: {
         invoiceNumber: finalNumber,
         clientId,
+        amount:      total || amount,
         totalAmount: total || amount,
         amountPaid:  invoiceStatus === "PAID" ? (total || amount) : 0,
         tax,
