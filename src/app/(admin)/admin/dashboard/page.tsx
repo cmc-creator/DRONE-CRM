@@ -9,6 +9,7 @@ import { formatCurrency } from "@/lib/utils";
 import { DashboardCharts } from "@/components/admin/dashboard-charts";
 import { CommandCenterHeader } from "@/components/admin/command-center-header";
 import { QuickActions } from "./QuickActions";
+import { DroneWeatherWidget } from "@/components/ui/weather-widget";
 
 async function getDashboardStats() {
   const [
@@ -216,6 +217,9 @@ export default async function AdminDashboard() {
 
       {/* Quick Actions */}
       <QuickActions />
+
+      {/* Drone Weather */}
+      <DroneWeatherWidget />
 
       {/* Two-column: Charts + Activity Feed */}
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">

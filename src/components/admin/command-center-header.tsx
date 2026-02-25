@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { Radio } from "lucide-react";
+import { DroneWeatherWidget } from "@/components/ui/weather-widget";
 
 export function CommandCenterHeader() {
   const [time, setTime] = useState("");
@@ -57,7 +58,10 @@ export function CommandCenterHeader() {
           </p>
         </div>
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3 flex-wrap justify-end">
+          {/* Drone weather (compact) */}
+          <DroneWeatherWidget compact />
+
           {/* Live clock */}
           <div
             className="text-right px-4 py-2 rounded-xl"
