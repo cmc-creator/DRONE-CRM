@@ -42,7 +42,7 @@ export default async function DispatchPage() {
           id: p.id,
           name: p.user?.name ?? "Unknown",
           email: p.user?.email ?? "",
-          markets: p.markets.map((m) => m.name),
+          markets: p.markets.map((m) => [m.city, m.state].filter(Boolean).join(", ")),
           rating: p.rating ?? null,
           isActive: p.status === "ACTIVE",
         }))}
