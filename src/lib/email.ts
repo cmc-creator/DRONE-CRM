@@ -15,7 +15,10 @@ function getResend() {
   return new Resend(key);
 }
 
-const FROM = process.env.EMAIL_FROM ?? "Lumin Aerial <noreply@luminaerial.com>";
+// Resend's shared domain works without DNS verification.
+// To use your own domain: move luminaerial.com DNS to Cloudflare (free),
+// then add EMAIL_FROM="Lumin Aerial <noreply@luminaerial.com>" to Vercel env vars.
+const FROM = process.env.EMAIL_FROM ?? "Lumin Aerial <onboarding@resend.dev>";
 const APP_URL = process.env.NEXTAUTH_URL ?? "https://drone-crm-theta.vercel.app";
 
 // ── Job assignment notification ───────────────────────────────────────────────
