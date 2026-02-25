@@ -2,6 +2,7 @@ import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { Sidebar } from "@/components/layout/sidebar";
 import { ChatWidget } from "@/components/ui/chat-widget";
+import { TourGuide } from "@/components/admin/tour-guide";
 
 export default async function AdminLayout({
   children,
@@ -25,6 +26,7 @@ export default async function AdminLayout({
         <div className="p-6 md:p-8 page-enter">{children}</div>
       </main>
       <ChatWidget isAdmin />
+      <TourGuide />
     </div>
   );
 }
