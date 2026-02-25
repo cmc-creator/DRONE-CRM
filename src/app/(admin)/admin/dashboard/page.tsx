@@ -2,12 +2,13 @@ import { prisma } from "@/lib/prisma";
 import Link from "next/link";
 import {
   Users, Briefcase, Building2, DollarSign,
-  Clock, CheckCircle2, AlertCircle, Plus,
-  Target, FileText, Calendar, TrendingUp,
+  CheckCircle2, AlertCircle,
+  Target, TrendingUp,
 } from "lucide-react";
 import { formatCurrency } from "@/lib/utils";
 import { DashboardCharts } from "@/components/admin/dashboard-charts";
 import { CommandCenterHeader } from "@/components/admin/command-center-header";
+import { QuickActions } from "./QuickActions";
 
 async function getDashboardStats() {
   const [
@@ -163,14 +164,7 @@ export default async function AdminDashboard() {
     { label: "Avg. Jobs/Month",  value: stats.totalJobs > 0 ? Math.round(stats.totalJobs / 6) : 0, sub: "last 6 months", icon: TrendingUp, color: "#00d4ff" },
   ];
 
-  const quickActions = [
-    { label: "New Job",      href: "/admin/jobs/new",       icon: Briefcase, color: "#00d4ff" },
-    { label: "Add Client",   href: "/admin/clients/new",    icon: Building2, color: "#a78bfa" },
-    { label: "Add Lead",     href: "/admin/leads/new",      icon: Target,    color: "#fbbf24" },
-    { label: "New Invoice",  href: "/admin/invoices/new",   icon: FileText,  color: "#34d399" },
-    { label: "Add Pilot",    href: "/admin/pilots/new",     icon: Users,     color: "#60a5fa" },
-    { label: "Calendar",     href: "/admin/calendar",       icon: Calendar,  color: "#f472b6" },
-  ];
+
 
   return (
     <div className="space-y-6">
@@ -184,18 +178,10 @@ export default async function AdminDashboard() {
           const card = (
             <div
               key={s.label}
-              className="rounded-xl p-4 relative overflow-hidden transition-all duration-200 group cursor-pointer"
+              className="rounded-xl p-4 relative overflow-hidden transition-all duration-200 group cursor-pointer hover:bg-white/5 hover:border-white/20"
               style={{
                 background: "rgba(255,255,255,0.03)",
                 border: "1px solid rgba(0,212,255,0.08)",
-              }}
-              onMouseEnter={(e) => {
-                (e.currentTarget as HTMLDivElement).style.borderColor = `${s.color}44`;
-                (e.currentTarget as HTMLDivElement).style.background = `${s.color}08`;
-              }}
-              onMouseLeave={(e) => {
-                (e.currentTarget as HTMLDivElement).style.borderColor = "rgba(0,212,255,0.08)";
-                (e.currentTarget as HTMLDivElement).style.background = "rgba(255,255,255,0.03)";
               }}
             >
               <div className="flex items-start justify-between">
@@ -229,41 +215,7 @@ export default async function AdminDashboard() {
       </div>
 
       {/* Quick Actions */}
-      <div
-        className="rounded-xl p-4"
-        style={{ background: "rgba(0,212,255,0.03)", border: "1px solid rgba(0,212,255,0.07)" }}
-      >
-        <p className="label-cyan mb-3">Quick Actions</p>
-        <div className="flex flex-wrap gap-2">
-          {quickActions.map((a) => {
-            const Icon = a.icon;
-            return (
-              <Link key={a.label} href={a.href}>
-                <button
-                  className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-150"
-                  style={{
-                    background: `${a.color}12`,
-                    border: `1px solid ${a.color}30`,
-                    color: a.color,
-                  }}
-                  onMouseEnter={(e) => {
-                    (e.currentTarget as HTMLButtonElement).style.background = `${a.color}22`;
-                    (e.currentTarget as HTMLButtonElement).style.boxShadow = `0 0 16px ${a.color}22`;
-                  }}
-                  onMouseLeave={(e) => {
-                    (e.currentTarget as HTMLButtonElement).style.background = `${a.color}12`;
-                    (e.currentTarget as HTMLButtonElement).style.boxShadow = "none";
-                  }}
-                >
-                  <Plus className="w-3.5 h-3.5" />
-                  <Icon className="w-3.5 h-3.5" />
-                  {a.label}
-                </button>
-              </Link>
-            );
-          })}
-        </div>
-      </div>
+      <QuickActions />
 
       {/* Two-column: Charts + Activity Feed */}
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
@@ -338,12 +290,7 @@ export default async function AdminDashboard() {
               const pilot = job.assignments?.[0]?.pilot?.user?.name;
               return (
                 <Link key={job.id} href={`/admin/jobs/${job.id}`} className="block">
-                  <div
-                    className="flex items-center gap-4 px-5 py-3 transition-colors duration-100"
-                    style={{ background: "transparent" }}
-                    onMouseEnter={(e) => { (e.currentTarget as HTMLDivElement).style.background = "rgba(0,212,255,0.03)"; }}
-                    onMouseLeave={(e) => { (e.currentTarget as HTMLDivElement).style.background = "transparent"; }}
-                  >
+                  <div className="flex items-center gap-4 px-5 py-3 transition-colors duration-100 hover:bg-[rgba(0,212,255,0.03)]">
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-semibold truncate" style={{ color: "#d8e8f4" }}>
                         {job.title}
