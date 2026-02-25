@@ -12,7 +12,7 @@ export default async function AnalyticsPage() {
   const year  = now.getFullYear();
   const start = new Date(year, 0, 1);
 
-  const [jobs, invoices, leads, pilots, clients] = await Promise.all([
+  const [jobs, invoices, pilots, clients] = await Promise.all([
     prisma.job.findMany({
       where:   { createdAt: { gte: start } },
       select:  { createdAt: true, status: true, type: true, clientPrice: true },
@@ -21,12 +21,17 @@ export default async function AnalyticsPage() {
       where:   { createdAt: { gte: start } },
       select:  { createdAt: true, status: true, totalAmount: true, clientId: true },
     }),
-    prisma.lead.findMany({
-      select: { status: true, value: true, createdAt: true },
-    }),
     prisma.pilot.count(),
     prisma.client.count(),
   ]);
+
+  // Lead table added after initial deploy — guard against missing table in production
+  let leads: { status: string; value: number | null; createdAt: Date }[] = [];
+  try {
+    leads = await prisma.lead.findMany({
+      select: { status: true, value: true, createdAt: true },
+    });
+  } catch { /* table not yet migrated */ }
 
   // ── Revenue by month ──────────────────────────────────────────────
   const revenueByMonth = Array.from({ length: 12 }, (_, i) => ({

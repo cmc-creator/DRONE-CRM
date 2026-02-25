@@ -8,7 +8,7 @@ export default async function NotificationsPage() {
   const now = new Date();
   const thirtyDaysOut = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000);
 
-  const [overdueInvoices, unassignedJobs, overdueJobs, overdueLeads, expiringDocs] =
+  const [overdueInvoices, unassignedJobs, overdueJobs, expiringDocs] =
     await Promise.all([
       prisma.invoice.findMany({
         where: { status: { in: ["SENT", "OVERDUE"] }, dueDate: { lt: now } },
@@ -34,11 +34,6 @@ export default async function NotificationsPage() {
         orderBy: { scheduledDate: "asc" },
         take: 20,
       }),
-      prisma.lead.findMany({
-        where: { nextFollowUp: { lt: now }, status: { notIn: ["WON", "LOST"] } },
-        orderBy: { nextFollowUp: "asc" },
-        take: 20,
-      }),
       prisma.complianceDoc.findMany({
         where: { expiresAt: { gte: now, lte: thirtyDaysOut } },
         include: { pilot: { include: { user: { select: { name: true } } } } },
@@ -46,6 +41,16 @@ export default async function NotificationsPage() {
         take: 20,
       }),
     ]);
+
+  // Lead table added after initial deploy — guard against missing table in production
+  let overdueLeads: { id: string; companyName: string; contactName: string; nextFollowUp: Date | null }[] = [];
+  try {
+    overdueLeads = await prisma.lead.findMany({
+      where: { nextFollowUp: { lt: now }, status: { notIn: ["WON", "LOST"] } },
+      orderBy: { nextFollowUp: "asc" },
+      take: 20,
+    });
+  } catch { /* table not yet migrated */ }
 
   const totalAlerts =
     overdueInvoices.length +

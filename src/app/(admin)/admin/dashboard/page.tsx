@@ -16,7 +16,6 @@ async function getDashboardStats() {
     totalJobs, jobsInProgress,
     completedJobs, pendingJobs,
     totalRevenue, pendingInvoices,
-    openLeads,
   ] = await Promise.all([
     prisma.pilot.count(),
     prisma.pilot.count({ where: { status: "ACTIVE" } }),
@@ -28,8 +27,14 @@ async function getDashboardStats() {
     prisma.job.count({ where: { status: "PENDING_ASSIGNMENT" } }),
     prisma.invoice.aggregate({ where: { status: "PAID" }, _sum: { totalAmount: true } }),
     prisma.invoice.aggregate({ where: { status: { in: ["SENT", "OVERDUE"] } }, _sum: { totalAmount: true } }),
-    prisma.lead.count({ where: { status: { notIn: ["WON", "LOST"] } } }),
   ]);
+
+  // Lead table added after initial deploy — guard against missing table in production
+  let openLeads = 0;
+  try {
+    openLeads = await prisma.lead.count({ where: { status: { notIn: ["WON", "LOST"] } } });
+  } catch { /* table not yet migrated in this environment */ }
+
   return {
     totalPilots, activePilots, totalClients, activeClients,
     totalJobs, jobsInProgress, completedJobs, pendingJobs,
@@ -90,14 +95,19 @@ async function getRecentJobs() {
 }
 
 async function getRecentActivities() {
-  return prisma.activity.findMany({
-    take: 6,
-    orderBy: { createdAt: "desc" },
-    include: {
-      client: { select: { companyName: true } },
-      lead: { select: { companyName: true } },
-    },
-  });
+  // Activity table added after initial deploy — guard against missing table in production
+  try {
+    return await prisma.activity.findMany({
+      take: 6,
+      orderBy: { createdAt: "desc" },
+      include: {
+        client: { select: { companyName: true } },
+        lead: { select: { companyName: true } },
+      },
+    });
+  } catch {
+    return [];
+  }
 }
 
 const JOB_STATUS_COLORS: Record<string, { text: string; bg: string }> = {
