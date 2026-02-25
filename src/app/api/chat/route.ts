@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { prisma } from "@/lib/prisma";
 
 const SYSTEM_PROMPT = `You are Volo (Latin: "I fly"), the AI assistant and personal co-pilot for Bailey Sargent — founder and sole operator of Lumin Aerial LLC, a nationwide FAA Part 107 drone pilot network. Bailey goes by "BoBo" with close friends and family.
 
@@ -26,16 +27,108 @@ LUMIN AERIAL CONTEXT:
 
 HOW TO HELP:
 - Be specific and actionable — if Bailey asks what to work on, actually tell him prioritized steps
+- You have a LIVE CRM SNAPSHOT appended below your system prompt — use those real numbers when giving advice. Reference specific jobs, leads, and amounts by name when available.
 - Guide him to CRM pages when relevant (e.g., "Check /admin/leads to see your open pipeline")
 - Keep responses concise unless depth is genuinely needed
-- If you don't have live data (you don't), say so clearly and point to the right page
-- Never make up specific numbers or invent data
+- Never make up data beyond what's in the snapshot
 
 TONE EXAMPLES:
 - Good: "Three jobs are sitting in PENDING_ASSIGNMENT right now — head to /admin/jobs and get those dispatched, BoBo."
 - Good: "That proposal template should lead with the deliverables first. Clients care about what they're getting, not your gear list."
 - Occasional easter egg: respond to "remind me my mom loves me" with an enthusiastic, funny confirmation that yes, his mother absolutely adores him.
 - Bad: "Certainly! I'd be happy to assist you with that today!"`;
+
+async function getLiveCRMContext(): Promise<string> {
+  try {
+    const now = new Date();
+    const thirtyDaysOut = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000);
+
+    const [
+      totalPilots, activePilots,
+      totalClients,
+      totalJobs, inProgressJobs, pendingJobs,
+      overdueInvoices, unpaidTotal,
+      unassignedJobs,
+    ] = await Promise.all([
+      prisma.pilot.count(),
+      prisma.pilot.count({ where: { status: "ACTIVE" } }),
+      prisma.client.count(),
+      prisma.job.count(),
+      prisma.job.count({ where: { status: "IN_PROGRESS" } }),
+      prisma.job.count({ where: { status: "PENDING_ASSIGNMENT" } }),
+      prisma.invoice.count({ where: { status: { in: ["SENT", "OVERDUE"] }, dueDate: { lt: now } } }),
+      prisma.invoice.aggregate({ where: { status: { in: ["SENT", "OVERDUE"] } }, _sum: { totalAmount: true } }),
+      prisma.job.findMany({
+        where: { status: "PENDING_ASSIGNMENT" },
+        select: { title: true, scheduledDate: true, client: { select: { companyName: true } } },
+        take: 5,
+        orderBy: { createdAt: "asc" },
+      }),
+    ]);
+
+    // Lead and activity counts (guarded — table may not exist yet)
+    let openLeads = 0;
+    let hotLeads: { companyName: string; contactName: string; status: string }[] = [];
+    let overdueFollowUps = 0;
+    try {
+      [openLeads, hotLeads, overdueFollowUps] = await Promise.all([
+        prisma.lead.count({ where: { status: { notIn: ["WON", "LOST"] } } }),
+        prisma.lead.findMany({
+          where: { status: { in: ["PROPOSAL_SENT", "NEGOTIATING"] } },
+          select: { companyName: true, contactName: true, status: true },
+          take: 5,
+          orderBy: { updatedAt: "desc" },
+        }),
+        prisma.lead.count({ where: { nextFollowUp: { lt: now }, status: { notIn: ["WON", "LOST"] } } }),
+      ]);
+    } catch { /* table not yet in this env */ }
+
+    // Expiring compliance docs
+    let expiringDocs: { type: string; pilot: { user: { name: string | null } } | null }[] = [];
+    try {
+      expiringDocs = await prisma.complianceDoc.findMany({
+        where: { expiresAt: { gte: now, lte: thirtyDaysOut } },
+        select: { type: true, pilot: { select: { user: { select: { name: true } } } } },
+        take: 5,
+      });
+    } catch { /* ignore */ }
+
+    const lines: string[] = [
+      "LIVE CRM SNAPSHOT (as of right now):",
+      `- Pilots: ${activePilots} active out of ${totalPilots} on roster`,
+      `- Clients: ${totalClients} total`,
+      `- Jobs: ${inProgressJobs} in-flight, ${pendingJobs} waiting for a pilot, ${totalJobs} total`,
+    ];
+
+    if (pendingJobs > 0) {
+      lines.push(`- NEEDS ATTENTION: ${pendingJobs} job(s) unassigned:`);
+      for (const j of unassignedJobs) {
+        const date = j.scheduledDate ? ` — scheduled ${new Date(j.scheduledDate).toLocaleDateString()}` : "";
+        lines.push(`    • "${j.title}" for ${j.client?.companyName ?? "unknown client"}${date}`);
+      }
+    }
+
+    if (overdueInvoices > 0) {
+      const amt = Number(unpaidTotal._sum.totalAmount ?? 0).toLocaleString("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 });
+      lines.push(`- OVERDUE INVOICES: ${overdueInvoices} overdue totaling ${amt}`);
+    }
+
+    if (openLeads > 0) {
+      lines.push(`- Lead pipeline: ${openLeads} open leads, ${overdueFollowUps} follow-up(s) overdue`);
+    }
+    if (hotLeads.length > 0) {
+      lines.push(`- Hot leads right now: ${hotLeads.map((l) => `${l.companyName} (${l.status.replace(/_/g, " ")})`).join(", ")}`);
+    }
+
+    if (expiringDocs.length > 0) {
+      lines.push(`- Compliance docs expiring in 30 days: ${expiringDocs.map((d) => `${d.pilot?.user?.name ?? "unknown"} ${d.type.replace(/_/g, " ")}`).join(", ")}`);
+    }
+
+    return "\n\n" + lines.join("\n");
+  } catch {
+    return ""; // never let context fetch crash the chat
+  }
+}
 
 export async function POST(req: NextRequest) {
   const apiKey = process.env.OPENAI_API_KEY;
@@ -46,7 +139,7 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  let body: { messages?: { role: string; content: string }[] };
+  let body: { messages?: { role: string; content: string }[]; isAdmin?: boolean };
   try {
     body = await req.json();
   } catch {
@@ -57,6 +150,10 @@ export async function POST(req: NextRequest) {
   if (!messages.length) {
     return NextResponse.json({ error: "No messages provided" }, { status: 400 });
   }
+
+  // Fetch live CRM data for admin users so Volo can give real, specific advice
+  const liveContext = body.isAdmin ? await getLiveCRMContext() : "";
+  const systemContent = SYSTEM_PROMPT + liveContext;
 
   const allowedRoles = new Set(["user", "assistant", "system"]);
   const cleaned = messages.filter((m) => allowedRoles.has(m.role)).slice(-20); // keep last 20
@@ -69,7 +166,7 @@ export async function POST(req: NextRequest) {
     },
     body: JSON.stringify({
       model: "gpt-4o-mini",
-      messages: [{ role: "system", content: SYSTEM_PROMPT }, ...cleaned],
+      messages: [{ role: "system", content: systemContent }, ...cleaned],
       max_tokens: 700,
       temperature: 0.85,
     }),
