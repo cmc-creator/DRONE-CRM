@@ -16,11 +16,12 @@ import { formatDate, formatCurrency } from "@/lib/utils";
 import { SendPaymentLinkButton } from "./SendPaymentLinkButton";
 
 const statusConfig = {
-  DRAFT: { label: "Draft", variant: "outline" as const },
-  SENT: { label: "Sent", variant: "info" as const },
-  PAID: { label: "Paid", variant: "success" as const },
-  OVERDUE: { label: "Overdue", variant: "destructive" as const },
-  VOID: { label: "Void", variant: "secondary" as const },
+  DRAFT:    { label: "Draft",    variant: "outline" as const },
+  SENT:     { label: "Sent",     variant: "info" as const },
+  PAID:     { label: "Paid",     variant: "success" as const },
+  OVERDUE:  { label: "Overdue",  variant: "destructive" as const },
+  VOID:     { label: "Void",     variant: "secondary" as const },
+  REFUNDED: { label: "Refunded", variant: "secondary" as const },
 };
 
 export default async function InvoicesPage() {

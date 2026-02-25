@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import JobStatusActions from "./JobStatusActions";
+import { CopyTrackingLinkButton } from "./CopyTrackingLinkButton";
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -113,7 +114,10 @@ export default async function JobDetailPage({ params }: Props) {
               </Link>
             </p>
           </div>
-          <JobStatusActions jobId={id} currentStatus={job.status} />
+          <div className="flex items-center gap-2 flex-wrap">
+            <JobStatusActions jobId={id} currentStatus={job.status} />
+            <CopyTrackingLinkButton jobId={id} trackingToken={job.trackingToken ?? null} />
+          </div>
         </div>
       </div>
 
