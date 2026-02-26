@@ -221,7 +221,7 @@ export default function PrivacyPage() {
       </main>
 
       <footer className="text-center text-slate-400 text-xs py-8">
-        © 2026 Lumin Aerial LLC™ · All Rights Reserved ·{" "}
+        © 2026 NyxCollective™ · Built for Lumin Aerial LLC · All Rights Reserved ·{" "}
         <Link href="/privacy" className="hover:text-slate-600 underline">Privacy Policy</Link>
         {" "}·{" "}
         <Link href="/terms" className="hover:text-slate-600 underline">Terms of Service</Link>

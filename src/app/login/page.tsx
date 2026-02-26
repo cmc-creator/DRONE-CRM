@@ -595,7 +595,7 @@ function LoginForm() {
             className="text-xs font-medium mb-1 pt-6"
             style={{ color: "rgba(0,212,255,0.25)" }}
           >
-            © 2026 Lumin Aerial LLC™ · Internal Operations Platform
+            © 2026 NyxCollective™ · Internal Operations Platform
           </p>
           <div className="flex items-center justify-center gap-3">
             <a

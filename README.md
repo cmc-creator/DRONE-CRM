@@ -250,4 +250,6 @@ npm run db:seed      # Seed demo data
 
 ## Built By
 
-GitHub Copilot — for Lumin Aerial LLC and Bailey Sargent.
+**NyxCollective™** — proprietary CRM platform built for Lumin Aerial LLC and Bailey Sargent.
+
+> © 2026 NyxCollective™. All rights reserved. Lumin Aerial™ is a trademark of Lumin Aerial LLC.

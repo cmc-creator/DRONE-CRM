@@ -106,7 +106,7 @@ export async function sendJobAssignmentEmail({
       </div>
 
       <p style="margin: 24px 0 0; font-size: 12px; color: rgba(0,212,255,0.3); text-align: center;">
-        Lumin Aerial LLC &nbsp;·&nbsp; luminaerial.com
+        Lumin Aerial LLC &nbsp;·&nbsp; luminaerial.com &nbsp;·&nbsp; <span style="color:rgba(0,212,255,0.3)">Powered by NyxCollective™</span>
       </p>
     </div>
   </div>
