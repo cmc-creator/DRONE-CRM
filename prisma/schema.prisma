@@ -168,6 +168,7 @@ model Pilot {
   payments        PilotPayment[]
   contracts       Contract[]
   activities      Activity[]
+  reviews         PilotReview[]
 
   @@map("pilots")
 }
@@ -242,6 +243,9 @@ model Client {
   notes        String?
   source       String?  // how they found us
 
+  // Stripe
+  stripeCustomerId String?
+
   // Timestamps
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -251,6 +255,7 @@ model Client {
   invoices    Invoice[]
   contracts   Contract[]
   activities  Activity[]
+  quoteRequests QuoteRequest[]
 
   @@map("clients")
 }
@@ -323,6 +328,7 @@ model Job {
   files         JobFile[]
   invoices      Invoice[]
   activities    Activity[]
+  reviews       PilotReview[]
 
   @@map("jobs")
 }
@@ -415,6 +421,7 @@ model Invoice {
   // Stripe
   stripePaymentIntentId    String?
   stripeCheckoutSessionId  String?
+  stripePaymentUrl         String?
 
   notes         String?
   lineItems     Json?         // array of {description, qty, unitPrice, total}
@@ -622,3 +629,51 @@ model Activity {
   @@map("activities")
 }
 
+// ── Pilot Reviews ──────────────────────────────────────────────────────────────
+
+model PilotReview {
+  id          String   @id @default(cuid())
+  pilotId     String
+  pilot       Pilot    @relation(fields: [pilotId], references: [id], onDelete: Cascade)
+  jobId       String?
+  job         Job?     @relation(fields: [jobId], references: [id])
+
+  rating      Int      // 1-5 stars
+  comment     String?
+  reviewedBy  String?  // admin user id
+  createdAt   DateTime @default(now())
+
+  @@map("pilot_reviews")
+}
+
+// ── Public Quote Requests ──────────────────────────────────────────────────────
+
+enum QuoteStatus {
+  NEW
+  REVIEWED
+  CONVERTED
+  DISMISSED
+}
+
+model QuoteRequest {
+  id          String      @id @default(cuid())
+  name        String
+  email       String
+  phone       String?
+  company     String?
+  city        String?
+  state       String?
+  serviceType String?
+  description String?
+  budget      String?
+  status      QuoteStatus @default(NEW)
+
+  // If converted to lead/client
+  clientId    String?
+  client      Client?  @relation(fields: [clientId], references: [id])
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("quote_requests")
+}
