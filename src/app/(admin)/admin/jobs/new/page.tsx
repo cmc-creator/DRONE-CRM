@@ -29,7 +29,7 @@ const JOB_TYPES = [
 
 interface Client {
   id: string;
-  company: string;
+  companyName: string;
   contactName: string | null;
 }
 
@@ -50,12 +50,16 @@ export default function NewJobPage() {
     clientId: "",
     pilotId: "",
     type: "REAL_ESTATE",
-    location: "",
+    address: "",
+    city: "",
+    state: "",
+    zip: "",
+    deliverables: "",
     scheduledDate: "",
     scheduledTime: "",
     clientPrice: "",
-    pilotPay: "",
-    notes: "",
+    pilotPayout: "",
+    internalNotes: "",
   });
 
   useEffect(() => {
@@ -94,11 +98,15 @@ export default function NewJobPage() {
           clientId: form.clientId,
           pilotId: form.pilotId || undefined,
           type: form.type,
-          location: form.location || undefined,
+          address: form.address || undefined,
+          city: form.city,
+          state: form.state,
+          zip: form.zip || undefined,
+          deliverables: form.deliverables || undefined,
           scheduledDate,
           clientPrice: form.clientPrice ? parseFloat(form.clientPrice) : undefined,
-          pilotPay: form.pilotPay ? parseFloat(form.pilotPay) : undefined,
-          notes: form.notes || undefined,
+          pilotPayout: form.pilotPayout ? parseFloat(form.pilotPayout) : undefined,
+          internalNotes: form.internalNotes || undefined,
         }),
       });
 
@@ -167,14 +175,46 @@ export default function NewJobPage() {
                 </Select>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="location">Location</Label>
+                <Label htmlFor="city">City *</Label>
                 <Input
-                  id="location"
-                  value={form.location}
-                  onChange={(e) => set("location", e.target.value)}
-                  placeholder="Phoenix, AZ"
+                  id="city"
+                  required
+                  value={form.city}
+                  onChange={(e) => set("city", e.target.value)}
+                  placeholder="Phoenix"
                 />
               </div>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="state">State *</Label>
+                <Input
+                  id="state"
+                  required
+                  value={form.state}
+                  onChange={(e) => set("state", e.target.value)}
+                  placeholder="AZ"
+                  maxLength={2}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="zip">ZIP</Label>
+                <Input
+                  id="zip"
+                  value={form.zip}
+                  onChange={(e) => set("zip", e.target.value)}
+                  placeholder="85001"
+                />
+              </div>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="address">Street Address</Label>
+              <Input
+                id="address"
+                value={form.address}
+                onChange={(e) => set("address", e.target.value)}
+                placeholder="123 Main St (optional)"
+              />
             </div>
             <div className="space-y-2">
               <Label htmlFor="description">Description</Label>
@@ -182,8 +222,18 @@ export default function NewJobPage() {
                 id="description"
                 value={form.description}
                 onChange={(e) => set("description", e.target.value)}
-                placeholder="Job scope, deliverable requirements..."
-                rows={3}
+                placeholder="Job scope, special requirements..."
+                rows={2}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="deliverables">Deliverables Required</Label>
+              <Textarea
+                id="deliverables"
+                value={form.deliverables}
+                onChange={(e) => set("deliverables", e.target.value)}
+                placeholder="Photos, video, 3D model..."
+                rows={2}
               />
             </div>
           </CardContent>
@@ -208,7 +258,7 @@ export default function NewJobPage() {
                 <SelectContent>
                   {clients.map((c) => (
                     <SelectItem key={c.id} value={c.id}>
-                      {c.company}
+                      {c.companyName}
                       {c.contactName ? ` — ${c.contactName}` : ""}
                     </SelectItem>
                   ))}
@@ -283,14 +333,14 @@ export default function NewJobPage() {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="pilotPay">Pilot Pay ($)</Label>
+              <Label htmlFor="pilotPayout">Pilot Payout ($)</Label>
               <Input
-                id="pilotPay"
+                id="pilotPayout"
                 type="number"
                 step="0.01"
                 min="0"
-                value={form.pilotPay}
-                onChange={(e) => set("pilotPay", e.target.value)}
+                value={form.pilotPayout}
+                onChange={(e) => set("pilotPayout", e.target.value)}
                 placeholder="0.00"
               />
             </div>
@@ -304,8 +354,8 @@ export default function NewJobPage() {
           </CardHeader>
           <CardContent>
             <Textarea
-              value={form.notes}
-              onChange={(e) => set("notes", e.target.value)}
+              value={form.internalNotes}
+              onChange={(e) => set("internalNotes", e.target.value)}
               placeholder="Any internal notes about this job..."
               rows={3}
             />

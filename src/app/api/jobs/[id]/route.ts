@@ -67,14 +67,28 @@ export async function PATCH(req: Request, { params }: Props) {
     const updated = await prisma.job.update({
       where: { id },
       data: {
-        ...(body.status && { status: body.status }),
-        ...(body.title && { title: body.title }),
-        ...(body.notes !== undefined && { notes: body.notes }),
-        ...(body.location !== undefined && { location: body.location }),
+        ...(body.status !== undefined && { status: body.status }),
+        ...(body.title !== undefined && { title: body.title }),
+        ...(body.description !== undefined && { description: body.description }),
+        ...(body.type !== undefined && { type: body.type }),
+        ...(body.address !== undefined && { address: body.address }),
+        ...(body.city !== undefined && { city: body.city }),
+        ...(body.state !== undefined && { state: body.state }),
+        ...(body.zip !== undefined && { zip: body.zip }),
+        ...(body.lat !== undefined && { lat: body.lat }),
+        ...(body.lng !== undefined && { lng: body.lng }),
+        ...(body.deliverables !== undefined && { deliverables: body.deliverables }),
+        ...(body.internalNotes !== undefined && { internalNotes: body.internalNotes }),
+        ...(body.scheduledDate !== undefined && {
+          scheduledDate: body.scheduledDate ? new Date(body.scheduledDate) : null,
+        }),
         ...(body.completedDate !== undefined && {
           completedDate: body.completedDate ? new Date(body.completedDate) : null,
         }),
+        ...(body.duration !== undefined && { duration: body.duration ? Number(body.duration) : null }),
         ...(body.clientPrice !== undefined && { clientPrice: body.clientPrice }),
+        ...(body.pilotPayout !== undefined && { pilotPayout: body.pilotPayout }),
+        ...(body.priority !== undefined && { priority: Number(body.priority) }),
       },
     });
     // Fire-and-forget status email to assigned pilot

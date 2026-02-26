@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-
+import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { formatDate, formatCurrency } from "@/lib/utils";
 import {
@@ -12,6 +12,7 @@ import {
   FileDown,
   DollarSign,
   ClipboardList,
+  Pencil,
 } from "lucide-react";
 import Link from "next/link";
 import JobStatusActions from "./JobStatusActions";
@@ -117,6 +118,11 @@ export default async function JobDetailPage({ params }: Props) {
           <div className="flex items-center gap-2 flex-wrap">
             <JobStatusActions jobId={id} currentStatus={job.status} />
             <CopyTrackingLinkButton jobId={id} trackingToken={job.trackingToken ?? null} />
+            <Link href={`/admin/jobs/${id}/edit`}>
+              <Button size="sm" variant="outline" className="gap-1">
+                <Pencil className="w-3.5 h-3.5" /> Edit
+              </Button>
+            </Link>
           </div>
         </div>
       </div>
