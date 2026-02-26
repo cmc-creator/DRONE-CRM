@@ -163,7 +163,7 @@ export async function POST() {
         clientId: client1.id,
         jobId: job1.id,
         status: "PAID",
-        subtotal: 850,
+        amount: 850,
         tax: 0,
         totalAmount: 850,
         dueDate: new Date("2026-02-15"),
