@@ -126,11 +126,11 @@ export async function POST() {
         clientPrice: 850,
         pilotPayout: 500,
         deliverables: "50 edited photos, 30-second highlight reel",
-        notes: "Demo job created by Dev Tools",
+        internalNotes: "Demo job created by Dev Tools",
       },
     });
     await prisma.jobAssignment.create({
-      data: { jobId: job1.id, pilotId: pilot1.id, status: "COMPLETED" },
+      data: { jobId: job1.id, pilotId: pilot1.id, acceptedAt: new Date("2026-01-28") },
     });
 
     const job2 = await prisma.job.create({
@@ -146,11 +146,11 @@ export async function POST() {
         clientPrice: 1200,
         pilotPayout: 700,
         deliverables: "HDR photos + 2-minute video walkthrough",
-        notes: "Demo job created by Dev Tools",
+        internalNotes: "Demo job created by Dev Tools",
       },
     });
     await prisma.jobAssignment.create({
-      data: { jobId: job2.id, pilotId: pilot1.id, status: "ACCEPTED" },
+      data: { jobId: job2.id, pilotId: pilot1.id, acceptedAt: new Date() },
     });
 
     jobsCreated = 2;
