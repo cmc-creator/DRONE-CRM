@@ -115,7 +115,7 @@ export async function POST() {
     const job1 = await prisma.job.create({
       data: {
         title: "[DEMO] Retail Store Exterior Survey",
-        type: "AERIAL_PHOTOGRAPHY",
+        type: "MARKETING",
         status: "COMPLETED",
         clientId: client1.id,
         address: "100 Demo St",
