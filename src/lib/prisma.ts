@@ -2,9 +2,20 @@ import { PrismaClient } from "@prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 
 function makePrisma() {
+  // Strip sslmode query param and pass ssl option directly to pg to silence
+  // the pg-connection-string future-behavior warning about sslmode=require.
+  // Neon has valid TLS certs so rejectUnauthorized:true is correct in prod.
+  const rawUrl = process.env.DATABASE_URL ?? "";
+  const isRemote =
+    rawUrl.includes(".neon.tech") || rawUrl.includes(".supabase.co");
+  const connectionString = rawUrl
+    .replace(/[?&]sslmode=[^&]*/g, "")
+    .replace(/\?$/, "")
+    .replace(/&$/, "");
+
   const adapter = new PrismaPg({
-    connectionString: process.env.DATABASE_URL!,
-    // Match Prisma v6 default connection timeout of 5 s
+    connectionString,
+    ssl: isRemote ? { rejectUnauthorized: true } : false,
     connectionTimeoutMillis: 5000,
   });
   return new PrismaClient({

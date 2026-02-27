@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import Stripe from "stripe";
+import { sendPaymentReceiptEmail } from "@/lib/email";
 
 function getStripe() {
   const key = process.env.STRIPE_SECRET_KEY;
@@ -58,6 +59,30 @@ export async function POST(req: NextRequest) {
           : null,
       },
     });
+
+    // Fire-and-forget payment receipt to client
+    prisma.invoice
+      .findUnique({
+        where: { id: invoiceId },
+        include: {
+          client: { include: { user: { select: { email: true, name: true } } } },
+        },
+      })
+      .then((inv) => {
+        const email = inv?.client?.user?.email;
+        const name = inv?.client?.user?.name ?? inv?.client?.companyName ?? "Client";
+        if (email && inv) {
+          sendPaymentReceiptEmail({
+            clientEmail: email,
+            clientName: name,
+            invoiceNumber: inv.invoiceNumber,
+            amountPaid: amountPaidDollars,
+            paidAt: new Date(),
+            invoiceId: inv.id,
+          });
+        }
+      })
+      .catch(() => {});
 
     console.log(`[Stripe webhook] Invoice ${invoiceId} marked PAID — $${amountPaidDollars}`);
   }

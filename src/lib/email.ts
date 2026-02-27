@@ -375,3 +375,91 @@ export async function sendNewQuoteNotificationEmail({
     console.error("[email] Failed to send new quote notification:", err);
   }
 }
+
+// ── Payment Receipt ───────────────────────────────────────────────────────────
+
+export async function sendPaymentReceiptEmail({
+  clientEmail,
+  clientName,
+  invoiceNumber,
+  amountPaid,
+  paidAt,
+  invoiceId,
+}: {
+  clientEmail: string;
+  clientName: string;
+  invoiceNumber: string;
+  amountPaid: number;
+  paidAt: Date;
+  invoiceId: string;
+}) {
+  const resend = getResend();
+  if (!resend) return;
+  const dateStr = paidAt.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+  try {
+    await resend.emails.send({
+      from: FROM,
+      to: clientEmail,
+      subject: `Payment Received — Invoice ${invoiceNumber}`,
+      html: `<div style="font-family: sans-serif; max-width: 480px; margin: 40px auto; background: #080f1e; border: 1px solid rgba(0,212,255,0.15); border-radius: 12px; padding: 28px; color: #d8e8f4;">
+        <p style="margin:0 0 8px; font-size:11px; font-weight:700; letter-spacing:2px; color:#00d4ff; text-transform:uppercase;">Lumin Aerial</p>
+        <h2 style="margin:0 0 16px; color:#4ade80;">✓ Payment Received</h2>
+        <p>Hi ${clientName},</p>
+        <p>We've received your payment of <strong style="color:#4ade80;">$${amountPaid.toFixed(2)}</strong> for invoice <strong>${invoiceNumber}</strong> on <strong>${dateStr}</strong>.</p>
+        <p>Thank you for your business! Your project is in good hands.</p>
+        <a href="${APP_URL}/client/invoices" style="display:inline-block; margin-top:16px; background:#4ade80; color:#04080f; font-weight:900; padding:10px 24px; border-radius:8px; text-decoration:none;">View Receipt</a>
+        <p style="margin-top:24px; font-size:12px; color:#5b7a99;">Questions? Contact us at <a href="mailto:ops@luminaerial.com" style="color:#00d4ff;">ops@luminaerial.com</a>.</p>
+        <p style="font-size:11px; color:rgba(91,122,153,0.6); margin-top:16px;">Lumin Aerial LLC · luminaerial.com · Powered by NyxCollective™</p>
+      </div>`,
+    });
+  } catch (err) {
+    console.error("[email] Failed to send payment receipt:", err);
+  }
+}
+
+// ── Lead Follow-Up Reminder (admin) ──────────────────────────────────────────
+
+export async function sendLeadFollowUpEmail({
+  adminEmail,
+  leadId,
+  companyName,
+  contactName,
+  daysOverdue,
+  notes,
+}: {
+  adminEmail: string;
+  leadId: string;
+  companyName: string;
+  contactName: string;
+  daysOverdue: number;
+  notes?: string | null;
+}) {
+  const resend = getResend();
+  if (!resend) return;
+  const urgencyColor = daysOverdue >= 7 ? "#ef4444" : daysOverdue >= 3 ? "#f59e0b" : "#00d4ff";
+  try {
+    await resend.emails.send({
+      from: FROM,
+      to: adminEmail,
+      subject: `⏰ Follow-Up Overdue: ${companyName}`,
+      html: `<div style="font-family: sans-serif; max-width: 480px; margin: 40px auto; background: #080f1e; border: 1px solid ${urgencyColor}40; border-radius: 12px; padding: 28px; color: #d8e8f4;">
+        <p style="margin:0 0 8px; font-size:11px; font-weight:700; letter-spacing:2px; color:#00d4ff; text-transform:uppercase;">Lumin Aerial CRM</p>
+        <h2 style="margin:0 0 16px; color:${urgencyColor};">⏰ Follow-Up Overdue</h2>
+        <p>A lead follow-up is <strong style="color:${urgencyColor};">${daysOverdue} day${daysOverdue !== 1 ? "s" : ""} overdue</strong>:</p>
+        <table style="width:100%; border-collapse:collapse; font-size:14px; margin-top:12px;">
+          <tr><td style="padding:6px 0; color:rgba(0,212,255,0.5); font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1px; width:35%;">Company</td><td style="padding:6px 0;">${companyName}</td></tr>
+          <tr><td style="padding:6px 0; color:rgba(0,212,255,0.5); font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1px;">Contact</td><td style="padding:6px 0;">${contactName}</td></tr>
+          ${notes ? `<tr><td style="padding:6px 0; color:rgba(0,212,255,0.5); font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1px;">Notes</td><td style="padding:6px 0; color:rgba(216,232,244,0.6);">${notes}</td></tr>` : ""}
+        </table>
+        <a href="${APP_URL}/admin/leads/${leadId}" style="display:inline-block; margin-top:20px; background:${urgencyColor}; color:#04080f; font-weight:900; padding:10px 24px; border-radius:8px; text-decoration:none;">Open Lead →</a>
+        <p style="font-size:11px; color:rgba(91,122,153,0.6); margin-top:16px;">Lumin Aerial LLC · luminaerial.com · Powered by NyxCollective™</p>
+      </div>`,
+    });
+  } catch (err) {
+    console.error("[email] Failed to send lead follow-up reminder:", err);
+  }
+}
