@@ -287,3 +287,91 @@ export async function sendDeliverableNotificationEmail({
     console.error("[email] Failed to send deliverable notification:", err);
   }
 }
+
+// ── Overdue Invoice Reminder ──────────────────────────────────────────────────
+
+export async function sendOverdueInvoiceEmail({
+  clientEmail,
+  clientName,
+  invoiceNumber,
+  totalAmount,
+  dueDate,
+  invoiceId,
+}: {
+  clientEmail: string;
+  clientName: string;
+  invoiceNumber: string;
+  totalAmount: number;
+  dueDate?: Date | null;
+  invoiceId: string;
+}) {
+  const resend = getResend();
+  if (!resend) return;
+  const due = dueDate
+    ? dueDate.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })
+    : "a past date";
+  try {
+    await resend.emails.send({
+      from: FROM,
+      to: clientEmail,
+      subject: `Action Required: Invoice ${invoiceNumber} is Overdue`,
+      html: `<div style="font-family: sans-serif; max-width: 480px; margin: 40px auto; background: #080f1e; border: 1px solid rgba(239,68,68,0.3); border-radius: 12px; padding: 28px; color: #d8e8f4;">
+        <p style="margin:0 0 8px; font-size:11px; font-weight:700; letter-spacing:2px; color:#00d4ff; text-transform:uppercase;">Lumin Aerial</p>
+        <h2 style="margin:0 0 16px; color:#ef4444;">⚠️ Invoice Overdue</h2>
+        <p>Hi ${clientName},</p>
+        <p>Invoice <strong>${invoiceNumber}</strong> for <strong>$${totalAmount.toFixed(2)}</strong> was due on <strong style="color:#ef4444;">${due}</strong> and remains unpaid.</p>
+        <p>Please settle this invoice at your earliest convenience to avoid service interruptions.</p>
+        <a href="${APP_URL}/client/invoices" style="display:inline-block; margin-top:16px; background:#ef4444; color:#fff; font-weight:900; padding:10px 24px; border-radius:8px; text-decoration:none;">View &amp; Pay Invoice</a>
+        <p style="margin-top:24px; font-size:12px; color:#5b7a99;">Questions? Reply to this email or contact us at <a href="mailto:ops@luminaerial.com" style="color:#00d4ff;">ops@luminaerial.com</a>.</p>
+        <p style="font-size:11px; color:rgba(91,122,153,0.6); margin-top:16px;">Lumin Aerial LLC · luminaerial.com · Powered by NyxCollective™</p>
+      </div>`,
+    });
+  } catch (err) {
+    console.error("[email] Failed to send overdue invoice reminder:", err);
+  }
+}
+
+// ── New Quote Request Notification (admin) ────────────────────────────────────
+
+export async function sendNewQuoteNotificationEmail({
+  name,
+  email,
+  company,
+  serviceType,
+  city,
+  state,
+}: {
+  name: string;
+  email: string;
+  company?: string | null;
+  serviceType?: string | null;
+  city?: string | null;
+  state?: string | null;
+}) {
+  const resend = getResend();
+  if (!resend) return;
+  const adminEmail = process.env.ADMIN_EMAIL ?? "ops@luminaerial.com";
+  const location = [city, state].filter(Boolean).join(", ");
+  try {
+    await resend.emails.send({
+      from: FROM,
+      to: adminEmail,
+      subject: `New Quote Request — ${name}${company ? ` (${company})` : ""}`,
+      html: `<div style="font-family: sans-serif; max-width: 480px; margin: 40px auto; background: #080f1e; border: 1px solid rgba(0,212,255,0.15); border-radius: 12px; padding: 28px; color: #d8e8f4;">
+        <p style="margin:0 0 8px; font-size:11px; font-weight:700; letter-spacing:2px; color:#00d4ff; text-transform:uppercase;">Lumin Aerial CRM</p>
+        <h2 style="margin:0 0 16px; color:#d8e8f4;">📋 New Quote Request</h2>
+        <table style="width:100%; border-collapse:collapse; font-size:14px;">
+          <tr><td style="padding:6px 0; color:rgba(0,212,255,0.5); font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1px; width:35%;">Name</td><td style="padding:6px 0;">${name}</td></tr>
+          <tr><td style="padding:6px 0; color:rgba(0,212,255,0.5); font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1px;">Email</td><td style="padding:6px 0;"><a href="mailto:${email}" style="color:#00d4ff;">${email}</a></td></tr>
+          ${company ? `<tr><td style="padding:6px 0; color:rgba(0,212,255,0.5); font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1px;">Company</td><td style="padding:6px 0;">${company}</td></tr>` : ""}
+          ${location ? `<tr><td style="padding:6px 0; color:rgba(0,212,255,0.5); font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1px;">Location</td><td style="padding:6px 0;">${location}</td></tr>` : ""}
+          ${serviceType ? `<tr><td style="padding:6px 0; color:rgba(0,212,255,0.5); font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1px;">Service</td><td style="padding:6px 0;">${serviceType}</td></tr>` : ""}
+        </table>
+        <a href="${APP_URL}/admin/quotes" style="display:inline-block; margin-top:20px; background:#00d4ff; color:#04080f; font-weight:900; padding:10px 24px; border-radius:8px; text-decoration:none;">View in CRM →</a>
+        <p style="font-size:11px; color:rgba(91,122,153,0.6); margin-top:16px;">Lumin Aerial LLC · luminaerial.com · Powered by NyxCollective™</p>
+      </div>`,
+    });
+  } catch (err) {
+    console.error("[email] Failed to send new quote notification:", err);
+  }
+}

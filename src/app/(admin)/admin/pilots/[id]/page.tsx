@@ -13,6 +13,7 @@ import {
   FileCheck,
   DollarSign,
   Briefcase,
+  Star,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -39,6 +40,10 @@ export default async function PilotDetailPage({ params }: Props) {
           },
           payment: true,
         },
+      },
+      reviews: {
+        orderBy: { createdAt: "desc" },
+        include: { job: { select: { title: true, id: true } } },
       },
     },
   });
@@ -341,6 +346,87 @@ export default async function PilotDetailPage({ params }: Props) {
                 ))}
               </tbody>
             </table>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* Reviews */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-base">
+            <Star className="h-4 w-4 text-yellow-500" /> Pilot Reviews
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          {pilot.reviews.length === 0 ? (
+            <p className="text-sm text-muted-foreground">No reviews yet.</p>
+          ) : (
+            <div className="space-y-4">
+              {/* Aggregate */}
+              <div className="flex items-center gap-3 pb-3 border-b">
+                <span className="text-3xl font-bold">
+                  {(pilot.reviews.reduce((s, r) => s + r.rating, 0) / pilot.reviews.length).toFixed(1)}
+                </span>
+                <div>
+                  <div className="flex gap-0.5">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <Star
+                        key={star}
+                        className={`h-4 w-4 ${
+                          star <=
+                          Math.round(
+                            pilot.reviews.reduce((s, r) => s + r.rating, 0) /
+                              pilot.reviews.length
+                          )
+                            ? "fill-yellow-400 text-yellow-400"
+                            : "text-muted-foreground"
+                        }`}
+                      />
+                    ))}
+                  </div>
+                  <p className="text-xs text-muted-foreground mt-0.5">
+                    {pilot.reviews.length} review{pilot.reviews.length !== 1 ? "s" : ""}
+                  </p>
+                </div>
+              </div>
+
+              {/* Individual reviews */}
+              {pilot.reviews.map((review) => (
+                <div key={review.id} className="space-y-1">
+                  <div className="flex items-center justify-between">
+                    <div className="flex gap-0.5">
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <Star
+                          key={star}
+                          className={`h-3.5 w-3.5 ${
+                            star <= review.rating
+                              ? "fill-yellow-400 text-yellow-400"
+                              : "text-muted-foreground"
+                          }`}
+                        />
+                      ))}
+                    </div>
+                    <span className="text-xs text-muted-foreground">
+                      {formatDate(review.createdAt)}
+                    </span>
+                  </div>
+                  {review.job && (
+                    <p className="text-xs text-muted-foreground">
+                      Job:{" "}
+                      <Link
+                        href={`/admin/jobs/${review.job.id}`}
+                        className="hover:underline text-primary"
+                      >
+                        {review.job.title}
+                      </Link>
+                    </p>
+                  )}
+                  {review.comment && (
+                    <p className="text-sm">{review.comment}</p>
+                  )}
+                </div>
+              ))}
+            </div>
           )}
         </CardContent>
       </Card>

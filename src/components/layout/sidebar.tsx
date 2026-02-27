@@ -22,6 +22,7 @@ import {
   Map,
   Settings2,
   Beaker,
+  MessageSquare,
 } from "lucide-react";
 
 interface NavItem {
@@ -64,6 +65,7 @@ const adminGroups: NavGroup[] = [
     items: [
       { label: "Clients",        href: "/admin/clients",         icon: Building2 },
       { label: "Leads",          href: "/admin/leads",           icon: Target },
+      { label: "Quotes",         href: "/admin/quotes",          icon: MessageSquare },
       { label: "Invoices",       href: "/admin/invoices",        icon: FileText },
       { label: "Contracts",      href: "/admin/contracts",       icon: FileSignature },
     ],

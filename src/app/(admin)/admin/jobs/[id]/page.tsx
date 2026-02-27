@@ -17,6 +17,7 @@ import {
 import Link from "next/link";
 import JobStatusActions from "./JobStatusActions";
 import { CopyTrackingLinkButton } from "./CopyTrackingLinkButton";
+import ReviewWidget from "./ReviewWidget";
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -366,6 +367,17 @@ export default async function JobDetailPage({ params }: Props) {
           </CardContent>
         </Card>
       )}
+
+      {/* Pilot Review — shown when job is complete and a pilot is assigned */}
+      {(job.status === "COMPLETED" || job.status === "DELIVERED") &&
+        job.assignments.length > 0 &&
+        job.assignments[0].pilot && (
+          <ReviewWidget
+            jobId={job.id}
+            pilotId={job.assignments[0].pilot.id}
+            pilotName={job.assignments[0].pilot.user.name ?? "Pilot"}
+          />
+        )}
     </div>
   );
 }
