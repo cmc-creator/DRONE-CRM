@@ -1,13 +1,14 @@
 /**
- * Lumin Aerial — Email Notifications
+ * NyxAerial ? Email Notifications
  * Uses Resend (resend.com). Requires RESEND_API_KEY in env.
- * Gracefully no-ops if the key is not set — nothing crashes, just no email sent.
+ * Gracefully no-ops if the key is not set ? nothing crashes, just no email sent.
  *
  * To enable: add RESEND_API_KEY to Vercel env vars (free tier = 3k emails/month)
  * Get a key at: https://resend.com
  */
 
 import { Resend } from "resend";
+import { SERVER_BRAND } from "@/lib/brand";
 
 function getResend() {
   const key = process.env.RESEND_API_KEY;
@@ -16,9 +17,12 @@ function getResend() {
 }
 
 // Resend's shared domain works without DNS verification.
-// To use your own domain: move luminaerial.com DNS to Cloudflare (free),
-// then add EMAIL_FROM="Lumin Aerial <noreply@luminaerial.com>" to Vercel env vars.
-const FROM = process.env.EMAIL_FROM ?? "Lumin Aerial <onboarding@resend.dev>";
+// To use your own sender domain: add EMAIL_FROM="YourBrand <noreply@yourdomain.com>" to env vars.
+// White-label: set ORG_NAME + ORG_WEBSITE + ORG_EMAIL in your environment.
+const ORG_NAME    = SERVER_BRAND.name;
+const ORG_WEBSITE = SERVER_BRAND.website;
+const ORG_EMAIL   = SERVER_BRAND.email;
+const FROM = process.env.EMAIL_FROM ?? `${ORG_NAME} <onboarding@resend.dev>`;
 const APP_URL = process.env.NEXTAUTH_URL ?? "https://drone-crm-theta.vercel.app";
 
 // -- Job assignment notification -----------------------------------------------
@@ -45,7 +49,7 @@ export async function sendJobAssignmentEmail({
   payout?: number | null;
 }) {
   const resend = getResend();
-  if (!resend) return; // no API key — silent no-op
+  if (!resend) return; // no API key ? silent no-op
 
   const dateStr = scheduledDate
     ? new Date(scheduledDate).toLocaleDateString("en-US", {
@@ -68,7 +72,7 @@ export async function sendJobAssignmentEmail({
   <div style="max-width: 520px; margin: 40px auto; background: #080f1e; border: 1px solid rgba(0,212,255,0.15); border-radius: 16px; overflow: hidden;">
     
     <div style="background: linear-gradient(135deg, #00d4ff15, #a78bfa10); padding: 28px 32px 20px; border-bottom: 1px solid rgba(0,212,255,0.1);">
-      <p style="margin: 0 0 4px; font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #00d4ff;">Lumin Aerial</p>
+      <p style="margin: 0 0 4px; font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #00d4ff;">${ORG_NAME}</p>
       <h1 style="margin: 0; font-size: 22px; font-weight: 900; color: #d8e8f4;">New Job Assignment ??</h1>
     </div>
 
@@ -106,7 +110,7 @@ export async function sendJobAssignmentEmail({
       </div>
 
       <p style="margin: 24px 0 0; font-size: 12px; color: rgba(0,212,255,0.3); text-align: center;">
-        Lumin Aerial LLC &nbsp;·&nbsp; luminaerial.com &nbsp;·&nbsp; <span style="color:rgba(0,212,255,0.3)">Powered by NyxAerial</span>
+        ${ORG_NAME} &nbsp;Â·&nbsp; ${ORG_WEBSITE} &nbsp;Â·&nbsp; Powered by NyxAerial
       </p>
     </div>
   </div>
@@ -117,12 +121,12 @@ export async function sendJobAssignmentEmail({
     await resend.emails.send({
       from: FROM,
       to: pilotEmail,
-      subject: `New Job: ${jobTitle} — ${city}, ${state}`,
+      subject: `New Job: ${jobTitle} ? ${city}, ${state}`,
       html,
     });
   } catch (err) {
     console.error("[email] Failed to send job assignment notification:", err);
-    // never throw — email failure should not block job creation
+    // never throw ? email failure should not block job creation
   }
 }
 
@@ -158,9 +162,9 @@ export async function sendJobStatusEmail({
     await resend.emails.send({
       from: FROM,
       to: pilotEmail,
-      subject: `Job Update: ${jobTitle} — ${label}`,
+      subject: `Job Update: ${jobTitle} ? ${label}`,
       html: `<div style="font-family: sans-serif; max-width: 480px; margin: 40px auto; background: #080f1e; border: 1px solid rgba(0,212,255,0.15); border-radius: 12px; padding: 28px; color: #d8e8f4;">
-        <p style="margin:0 0 8px; font-size:11px; font-weight:700; letter-spacing:2px; color:#00d4ff; text-transform:uppercase;">Lumin Aerial</p>
+        <p style="margin:0 0 8px; font-size:11px; font-weight:700; letter-spacing:2px; color:#00d4ff; text-transform:uppercase;">${ORG_NAME}</p>
         <h2 style="margin:0 0 16px; color:#d8e8f4;">Job Status Update</h2>
         <p>Hey ${pilotName}, <strong>${jobTitle}</strong> has been ${label}.</p>
         <a href="${APP_URL}/pilot/jobs/${jobId}" style="display:inline-block; margin-top:16px; background:#00d4ff; color:#04080f; font-weight:900; padding:10px 24px; border-radius:8px; text-decoration:none;">View Job</a>
@@ -196,10 +200,10 @@ export async function sendComplianceExpiryEmail({
       to: pilotEmail,
       subject: `Action Required: ${docType} expires in ${daysLeft} day${daysLeft === 1 ? "" : "s"}`,
       html: `<div style="font-family: sans-serif; max-width: 480px; margin: 40px auto; background: #080f1e; border: 1px solid ${urgencyColor}40; border-radius: 12px; padding: 28px; color: #d8e8f4;">
-        <p style="margin:0 0 8px; font-size:11px; font-weight:700; letter-spacing:2px; color:${urgencyColor}; text-transform:uppercase;">Lumin Aerial — Compliance Alert</p>
+        <p style="margin:0 0 8px; font-size:11px; font-weight:700; letter-spacing:2px; color:${urgencyColor}; text-transform:uppercase;">${ORG_NAME} - Compliance Alert</p>
         <h2 style="margin:0 0 16px; color:#d8e8f4;">Document Expiring Soon</h2>
         <p>Hi ${pilotName},</p>
-        <p>Your <strong>${docType}</strong> expires on <strong>${expiry}</strong> — that's <strong style="color:${urgencyColor};">${daysLeft} day${daysLeft === 1 ? "" : "s"}</strong> from now.</p>
+        <p>Your <strong>${docType}</strong> expires on <strong>${expiry}</strong> ? that's <strong style="color:${urgencyColor};">${daysLeft} day${daysLeft === 1 ? "" : "s"}</strong> from now.</p>
         <p>Please upload your renewed document to keep your pilot status active and remain eligible for job assignments.</p>
         <a href="${APP_URL}/pilot/documents" style="display:inline-block; margin-top:16px; background:${urgencyColor}; color:#04080f; font-weight:900; padding:10px 24px; border-radius:8px; text-decoration:none;">Upload Document</a>
         <p style="margin-top:24px; font-size:12px; color:#5b7a99;">If you have already uploaded this document, please ensure it is marked as active in your profile.</p>
@@ -236,15 +240,15 @@ export async function sendInvoicePaymentLinkEmail({
     await resend.emails.send({
       from: FROM,
       to: clientEmail,
-      subject: `Invoice ${invoiceNumber} — Pay Online`,
+      subject: `Invoice ${invoiceNumber} ? Pay Online`,
       html: `<div style="font-family: sans-serif; max-width: 480px; margin: 40px auto; background: #080f1e; border: 1px solid rgba(0,212,255,0.15); border-radius: 12px; padding: 28px; color: #d8e8f4;">
-        <p style="margin:0 0 8px; font-size:11px; font-weight:700; letter-spacing:2px; color:#00d4ff; text-transform:uppercase;">Lumin Aerial</p>
+        <p style="margin:0 0 8px; font-size:11px; font-weight:700; letter-spacing:2px; color:#00d4ff; text-transform:uppercase;">${ORG_NAME}</p>
         <h2 style="margin:0 0 16px; color:#d8e8f4;">Invoice Ready for Payment</h2>
         <p>Hi ${clientName},</p>
         <p>Invoice <strong>${invoiceNumber}</strong> for <strong>$${totalAmount.toFixed(2)}</strong> is ready. Due date: <strong>${due}</strong>.</p>
         <p>Click below to pay securely via credit card:</p>
         <a href="${paymentUrl}" style="display:inline-block; margin-top:16px; background:#00d4ff; color:#04080f; font-weight:900; padding:10px 24px; border-radius:8px; text-decoration:none;">Pay $${totalAmount.toFixed(2)} Now</a>
-        <p style="margin-top:24px; font-size:12px; color:#5b7a99;">Powered by Stripe — your card details are never stored on our servers.</p>
+        <p style="margin-top:24px; font-size:12px; color:#5b7a99;">Powered by Stripe ? your card details are never stored on our servers.</p>
       </div>`,
     });
   } catch (err) {
@@ -273,9 +277,9 @@ export async function sendDeliverableNotificationEmail({
     await resend.emails.send({
       from: FROM,
       to: clientEmail,
-      subject: `Your deliverables are ready — ${jobTitle}`,
+      subject: `Your deliverables are ready ? ${jobTitle}`,
       html: `<div style="font-family: sans-serif; max-width: 480px; margin: 40px auto; background: #080f1e; border: 1px solid rgba(0,212,255,0.15); border-radius: 12px; padding: 28px; color: #d8e8f4;">
-        <p style="margin:0 0 8px; font-size:11px; font-weight:700; letter-spacing:2px; color:#00d4ff; text-transform:uppercase;">Lumin Aerial</p>
+        <p style="margin:0 0 8px; font-size:11px; font-weight:700; letter-spacing:2px; color:#00d4ff; text-transform:uppercase;">${ORG_NAME}</p>
         <h2 style="margin:0 0 16px; color:#d8e8f4;">Your Files Are Ready</h2>
         <p>Hi ${clientName},</p>
         <p>Your aerial deliverables for <strong>${jobTitle}</strong> are ready for review. <strong>${fileCount} file${fileCount === 1 ? "" : "s"}</strong> have been uploaded.</p>
@@ -316,14 +320,14 @@ export async function sendOverdueInvoiceEmail({
       to: clientEmail,
       subject: `Action Required: Invoice ${invoiceNumber} is Overdue`,
       html: `<div style="font-family: sans-serif; max-width: 480px; margin: 40px auto; background: #080f1e; border: 1px solid rgba(239,68,68,0.3); border-radius: 12px; padding: 28px; color: #d8e8f4;">
-        <p style="margin:0 0 8px; font-size:11px; font-weight:700; letter-spacing:2px; color:#00d4ff; text-transform:uppercase;">Lumin Aerial</p>
+        <p style="margin:0 0 8px; font-size:11px; font-weight:700; letter-spacing:2px; color:#00d4ff; text-transform:uppercase;">${ORG_NAME}</p>
         <h2 style="margin:0 0 16px; color:#ef4444;">?? Invoice Overdue</h2>
         <p>Hi ${clientName},</p>
         <p>Invoice <strong>${invoiceNumber}</strong> for <strong>$${totalAmount.toFixed(2)}</strong> was due on <strong style="color:#ef4444;">${due}</strong> and remains unpaid.</p>
         <p>Please settle this invoice at your earliest convenience to avoid service interruptions.</p>
         <a href="${APP_URL}/client/invoices" style="display:inline-block; margin-top:16px; background:#ef4444; color:#fff; font-weight:900; padding:10px 24px; border-radius:8px; text-decoration:none;">View &amp; Pay Invoice</a>
-        <p style="margin-top:24px; font-size:12px; color:#5b7a99;">Questions? Reply to this email or contact us at <a href="mailto:ops@luminaerial.com" style="color:#00d4ff;">ops@luminaerial.com</a>.</p>
-        <p style="font-size:11px; color:rgba(91,122,153,0.6); margin-top:16px;">Lumin Aerial LLC · luminaerial.com · Powered by NyxAerial</p>
+        <p style="margin-top:24px; font-size:12px; color:#5b7a99;">Questions? Reply to this email or contact us at <a href="mailto:${ORG_EMAIL}" style="color:#00d4ff;">${ORG_EMAIL}</a>.</p>
+        <p style="font-size:11px; color:rgba(91,122,153,0.6); margin-top:16px;">${ORG_NAME} Â· ${ORG_WEBSITE}</p>
       </div>`,
     });
   } catch (err) {
@@ -350,15 +354,15 @@ export async function sendNewQuoteNotificationEmail({
 }) {
   const resend = getResend();
   if (!resend) return;
-  const adminEmail = process.env.ADMIN_EMAIL ?? "ops@luminaerial.com";
+  const adminEmail = process.env.ADMIN_EMAIL ?? ORG_EMAIL;
   const location = [city, state].filter(Boolean).join(", ");
   try {
     await resend.emails.send({
       from: FROM,
       to: adminEmail,
-      subject: `New Quote Request — ${name}${company ? ` (${company})` : ""}`,
+      subject: `New Quote Request ? ${name}${company ? ` (${company})` : ""}`,
       html: `<div style="font-family: sans-serif; max-width: 480px; margin: 40px auto; background: #080f1e; border: 1px solid rgba(0,212,255,0.15); border-radius: 12px; padding: 28px; color: #d8e8f4;">
-        <p style="margin:0 0 8px; font-size:11px; font-weight:700; letter-spacing:2px; color:#00d4ff; text-transform:uppercase;">Lumin Aerial CRM</p>
+        <p style="margin:0 0 8px; font-size:11px; font-weight:700; letter-spacing:2px; color:#00d4ff; text-transform:uppercase;">${ORG_NAME}</p>
         <h2 style="margin:0 0 16px; color:#d8e8f4;">?? New Quote Request</h2>
         <table style="width:100%; border-collapse:collapse; font-size:14px;">
           <tr><td style="padding:6px 0; color:rgba(0,212,255,0.5); font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1px; width:35%;">Name</td><td style="padding:6px 0;">${name}</td></tr>
@@ -368,7 +372,7 @@ export async function sendNewQuoteNotificationEmail({
           ${serviceType ? `<tr><td style="padding:6px 0; color:rgba(0,212,255,0.5); font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1px;">Service</td><td style="padding:6px 0;">${serviceType}</td></tr>` : ""}
         </table>
         <a href="${APP_URL}/admin/quotes" style="display:inline-block; margin-top:20px; background:#00d4ff; color:#04080f; font-weight:900; padding:10px 24px; border-radius:8px; text-decoration:none;">View in CRM ?</a>
-        <p style="font-size:11px; color:rgba(91,122,153,0.6); margin-top:16px;">Lumin Aerial LLC · luminaerial.com · Powered by NyxAerial</p>
+        <p style="font-size:11px; color:rgba(91,122,153,0.6); margin-top:16px;">${ORG_NAME} Â· ${ORG_WEBSITE}</p>
       </div>`,
     });
   } catch (err) {
@@ -404,16 +408,16 @@ export async function sendPaymentReceiptEmail({
     await resend.emails.send({
       from: FROM,
       to: clientEmail,
-      subject: `Payment Received — Invoice ${invoiceNumber}`,
+      subject: `Payment Received ? Invoice ${invoiceNumber}`,
       html: `<div style="font-family: sans-serif; max-width: 480px; margin: 40px auto; background: #080f1e; border: 1px solid rgba(0,212,255,0.15); border-radius: 12px; padding: 28px; color: #d8e8f4;">
-        <p style="margin:0 0 8px; font-size:11px; font-weight:700; letter-spacing:2px; color:#00d4ff; text-transform:uppercase;">Lumin Aerial</p>
+        <p style="margin:0 0 8px; font-size:11px; font-weight:700; letter-spacing:2px; color:#00d4ff; text-transform:uppercase;">${ORG_NAME}</p>
         <h2 style="margin:0 0 16px; color:#4ade80;">? Payment Received</h2>
         <p>Hi ${clientName},</p>
         <p>We've received your payment of <strong style="color:#4ade80;">$${amountPaid.toFixed(2)}</strong> for invoice <strong>${invoiceNumber}</strong> on <strong>${dateStr}</strong>.</p>
         <p>Thank you for your business! Your project is in good hands.</p>
         <a href="${APP_URL}/client/invoices" style="display:inline-block; margin-top:16px; background:#4ade80; color:#04080f; font-weight:900; padding:10px 24px; border-radius:8px; text-decoration:none;">View Receipt</a>
-        <p style="margin-top:24px; font-size:12px; color:#5b7a99;">Questions? Contact us at <a href="mailto:ops@luminaerial.com" style="color:#00d4ff;">ops@luminaerial.com</a>.</p>
-        <p style="font-size:11px; color:rgba(91,122,153,0.6); margin-top:16px;">Lumin Aerial LLC · luminaerial.com · Powered by NyxAerial</p>
+        <p style="margin-top:24px; font-size:12px; color:#5b7a99;">Questions? Contact us at <a href="mailto:${ORG_EMAIL}" style="color:#00d4ff;">${ORG_EMAIL}</a>.</p>
+        <p style="font-size:11px; color:rgba(91,122,153,0.6); margin-top:16px;">${ORG_NAME} Â· ${ORG_WEBSITE}</p>
       </div>`,
     });
   } catch (err) {
@@ -447,7 +451,7 @@ export async function sendLeadFollowUpEmail({
       to: adminEmail,
       subject: `? Follow-Up Overdue: ${companyName}`,
       html: `<div style="font-family: sans-serif; max-width: 480px; margin: 40px auto; background: #080f1e; border: 1px solid ${urgencyColor}40; border-radius: 12px; padding: 28px; color: #d8e8f4;">
-        <p style="margin:0 0 8px; font-size:11px; font-weight:700; letter-spacing:2px; color:#00d4ff; text-transform:uppercase;">Lumin Aerial CRM</p>
+        <p style="margin:0 0 8px; font-size:11px; font-weight:700; letter-spacing:2px; color:#00d4ff; text-transform:uppercase;">${ORG_NAME}</p>
         <h2 style="margin:0 0 16px; color:${urgencyColor};">? Follow-Up Overdue</h2>
         <p>A lead follow-up is <strong style="color:${urgencyColor};">${daysOverdue} day${daysOverdue !== 1 ? "s" : ""} overdue</strong>:</p>
         <table style="width:100%; border-collapse:collapse; font-size:14px; margin-top:12px;">
@@ -456,7 +460,7 @@ export async function sendLeadFollowUpEmail({
           ${notes ? `<tr><td style="padding:6px 0; color:rgba(0,212,255,0.5); font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1px;">Notes</td><td style="padding:6px 0; color:rgba(216,232,244,0.6);">${notes}</td></tr>` : ""}
         </table>
         <a href="${APP_URL}/admin/leads/${leadId}" style="display:inline-block; margin-top:20px; background:${urgencyColor}; color:#04080f; font-weight:900; padding:10px 24px; border-radius:8px; text-decoration:none;">Open Lead ?</a>
-        <p style="font-size:11px; color:rgba(91,122,153,0.6); margin-top:16px;">Lumin Aerial LLC · luminaerial.com · Powered by NyxAerial</p>
+        <p style="font-size:11px; color:rgba(91,122,153,0.6); margin-top:16px;">${ORG_NAME} Â· ${ORG_WEBSITE}</p>
       </div>`,
     });
   } catch (err) {

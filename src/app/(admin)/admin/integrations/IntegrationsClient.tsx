@@ -396,7 +396,7 @@ export default function IntegrationsClient({ gdriveConnected }: Props) {
               <div className="mt-4 space-y-1.5">
                 <p className="text-xs font-semibold" style={{ color: "#94a3b8" }}>Adobe Console → Webhooks → New Webhook:</p>
                 {[
-                  "Name: Lumin Aerial CRM",
+                  "Name: NyxAerial CRM",
                   "Scope: Account",
                   "URL: (above)",
                   "Events: AGREEMENT_ACTION_COMPLETED",

@@ -16,9 +16,9 @@ const SERVICE_TYPES = [
 
 const BUDGET_RANGES = [
   "Under $500",
-  "$500 – $1,000",
-  "$1,000 – $2,500",
-  "$2,500 – $5,000",
+  "$500 ï¿½ $1,000",
+  "$1,000 ï¿½ $2,500",
+  "$2,500 ï¿½ $5,000",
   "$5,000+",
   "Not sure yet",
 ];
@@ -109,17 +109,17 @@ export default function QuotePage() {
               color: "#00d4ff",
             }}
           >
-            Lumin Aerial
+            NyxAerial
           </p>
           <p style={{ margin: 0, fontSize: 13, color: "rgba(216,232,244,0.5)" }}>
             nationwide drone pilot network
           </p>
         </div>
         <a
-          href="https://luminaerial.com"
+          href="https://nyxaerial.com"
           style={{ fontSize: 13, color: "#00d4ff", textDecoration: "none" }}
         >
-          luminaerial.com
+          nyxaerial.com
         </a>
       </header>
 
@@ -164,7 +164,7 @@ export default function QuotePage() {
               get back to you within 1 business day.
             </p>
             <a
-              href="https://luminaerial.com"
+              href="https://nyxaerial.com"
               style={{
                 display: "inline-block",
                 background: "#00d4ff",
@@ -176,7 +176,7 @@ export default function QuotePage() {
                 fontSize: 14,
               }}
             >
-              Back to luminaerial.com
+              Back to nyxaerial.com
             </a>
           </div>
         ) : (
@@ -290,7 +290,7 @@ export default function QuotePage() {
                   onChange={handleChange}
                   style={inputStyle}
                 >
-                  <option value="">— Select a service type —</option>
+                  <option value="">ï¿½ Select a service type ï¿½</option>
                   {SERVICE_TYPES.map((s) => (
                     <option key={s} value={s}>
                       {s}
@@ -306,7 +306,7 @@ export default function QuotePage() {
                   value={form.description}
                   onChange={handleChange}
                   rows={4}
-                  placeholder="Tell us about your project — location details, timeline, deliverables needed, etc."
+                  placeholder="Tell us about your project ï¿½ location details, timeline, deliverables needed, etc."
                   style={{ ...inputStyle, resize: "vertical" }}
                 />
               </Field>
@@ -319,7 +319,7 @@ export default function QuotePage() {
                   onChange={handleChange}
                   style={inputStyle}
                 >
-                  <option value="">— Select a range —</option>
+                  <option value="">ï¿½ Select a range ï¿½</option>
                   {BUDGET_RANGES.map((b) => (
                     <option key={b} value={b}>
                       {b}
@@ -348,7 +348,7 @@ export default function QuotePage() {
                   transition: "opacity 0.2s",
                 }}
               >
-                {submitting ? "Submitting…" : "Submit Quote Request ?"}
+                {submitting ? "Submittingï¿½" : "Submit Quote Request ?"}
               </button>
 
               <p style={{ margin: 0, fontSize: 12, color: "rgba(216,232,244,0.35)", textAlign: "center" }}>
@@ -367,9 +367,9 @@ export default function QuotePage() {
             color: "rgba(216,232,244,0.25)",
           }}
         >
-          Lumin Aerial LLC &middot;{" "}
-          <Link href="https://luminaerial.com" style={{ color: "#00d4ff" }}>
-            luminaerial.com
+          NyxAerial &middot;{" "}
+          <Link href="https://nyxaerial.com" style={{ color: "#00d4ff" }}>
+            nyxaerial.com
           </Link>{" "}
           &middot; Powered by{" "}
           <span style={{ color: "#a78bfa" }}>NyxAerial</span>

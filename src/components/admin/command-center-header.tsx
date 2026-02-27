@@ -54,7 +54,7 @@ export function CommandCenterHeader() {
             Command Center
           </h1>
           <p className="text-xs mt-0.5" style={{ color: "rgba(0,212,255,0.4)" }}>
-            {date || "Lumin Aerial LLC — Nationwide Drone Operations"}
+            {date || "NyxAerial — Nationwide Drone Operations"}
           </p>
         </div>
 

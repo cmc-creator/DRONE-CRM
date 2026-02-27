@@ -61,7 +61,7 @@ export default async function PilotDocumentsPage() {
             ))}
           </div>
           <p className="text-yellow-700 text-xs mt-2">
-            Please email your documents to bsargent@luminaerial.com
+            Please email your documents to ops@nyxaerial.com
           </p>
         </div>
       )}

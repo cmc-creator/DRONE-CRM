@@ -10,8 +10,8 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "Lumin Aerial CRM",
-  description: "Operations management for the Lumin Aerial drone pilot network",
+  title: "NyxAerial CRM",
+  description: "Operations management for the NyxAerial drone pilot network",
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,

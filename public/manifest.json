@@ -1,7 +1,7 @@
 {
-  "name": "Lumin Aerial CRM",
-  "short_name": "Lumin CRM",
-  "description": "Lumin Aerial nationwide drone pilot CRM",
+  "name": "NyxAerial CRM",
+  "short_name": "NyxAerial",
+  "description": "NyxAerial — Drone Business Operations Platform",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#04080f",

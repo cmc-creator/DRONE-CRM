@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState, useEffect } from "react";
 import { CheckCircle, FileSignature, AlertTriangle } from "lucide-react";
@@ -109,9 +109,9 @@ export default function SignContractPage({ params }: { params: Promise<{ id: str
               <p className="mt-1"><strong>Timestamp:</strong> {new Date().toLocaleString()}</p>
             </div>
             <p className="text-xs text-muted-foreground mt-4">
-              A copy of this agreement is on file with Lumin Aerial LLC. For questions, contact{" "}
-              <a href="mailto:bsargent@luminaerial.com" className="text-primary hover:underline">
-                bsargent@luminaerial.com
+              A copy of this agreement is on file with NyxAerial. For questions, contact{" "}
+              <a href="mailto:ops@nyxaerial.com" className="text-primary hover:underline">
+                ops@nyxaerial.com
               </a>
             </p>
           </CardContent>
@@ -135,7 +135,7 @@ export default function SignContractPage({ params }: { params: Promise<{ id: str
                 <line x1="19" y1="15" x2="26" y2="15" stroke="white" strokeWidth="2" strokeLinecap="round"/>
               </svg>
             </div>
-            <span className="font-bold text-lg">Lumin Aerial LLC</span>
+            <span className="font-bold text-lg">NyxAerial</span>
           </div>
           <h1 className="text-2xl font-bold flex items-center justify-center gap-2">
             <FileSignature className="h-6 w-6 text-muted-foreground" />
@@ -212,8 +212,8 @@ export default function SignContractPage({ params }: { params: Promise<{ id: str
         </Card>
 
         <p className="text-center text-xs text-muted-foreground">
-          © 2026 NyxAerial · Built for Lumin Aerial LLC · For questions contact{" "}
-          <a href="mailto:bsargent@luminaerial.com" className="text-primary hover:underline">bsargent@luminaerial.com</a>
+          © 2026 NyxAerial · Built for NyxAerial · For questions contact{" "}
+          <a href="mailto:ops@nyxaerial.com" className="text-primary hover:underline">ops@nyxaerial.com</a>
         </p>
       </div>
     </div>

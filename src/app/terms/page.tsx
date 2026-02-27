@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 export const metadata = {
-  title: "Terms of Service | Lumin Aerial CRM",
+  title: "Terms of Service | NyxAerial CRM",
 };
 
 export default function TermsPage() {
@@ -12,7 +12,7 @@ export default function TermsPage() {
         <div className="max-w-4xl mx-auto px-6 py-4 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2 text-slate-800 font-bold text-lg">
             <span className="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-blue-600 text-white text-xs font-bold">LA</span>
-            Lumin Aerial
+            NyxAerial
           </Link>
           <Link href="/login" className="text-sm text-blue-600 hover:underline">? Back to login</Link>
         </div>
@@ -22,7 +22,7 @@ export default function TermsPage() {
         <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-8 md:p-12">
           <h1 className="text-3xl font-bold text-slate-900 mb-2">Terms of Service</h1>
           <p className="text-slate-500 text-sm mb-8">
-            Effective Date: January 1, 2026 &nbsp;·&nbsp; Last Updated: February 2026
+            Effective Date: January 1, 2026 &nbsp;ï¿½&nbsp; Last Updated: February 2026
           </p>
 
           <div className="prose prose-slate max-w-none space-y-8 text-slate-700">
@@ -31,8 +31,8 @@ export default function TermsPage() {
               <h2 className="text-xl font-semibold text-slate-900 mb-3">1. Agreement to Terms</h2>
               <p>
                 These Terms of Service ("Terms") constitute a legally binding agreement between you and
-                <strong> Lumin Aerial LLC</strong> ("Lumin Aerial," "we," "us," or "our"), an Arizona limited
-                liability company, regarding your access to and use of the Lumin Aerial CRM platform
+                <strong> NyxAerial</strong> ("NyxAerial," "we," "us," or "our"), an Arizona limited
+                liability company, regarding your access to and use of the NyxAerial CRM platform
                 ("Platform") and all associated services.
               </p>
               <p className="mt-3">
@@ -44,7 +44,7 @@ export default function TermsPage() {
             <section>
               <h2 className="text-xl font-semibold text-slate-900 mb-3">2. Description of Services</h2>
               <p>
-                Lumin Aerial LLC operates a nationwide network of FAA Part 107 certified drone pilots who
+                NyxAerial operates a nationwide network of FAA Part 107 certified drone pilots who
                 provide aerial photography, videography, inspection, and data collection services to
                 commercial clients. The Platform is an internal operations management system used to:
               </p>
@@ -60,14 +60,14 @@ export default function TermsPage() {
             <section>
               <h2 className="text-xl font-semibold text-slate-900 mb-3">3. Authorized Use &amp; Access</h2>
               <p>
-                Access to this Platform is granted solely to authorized personnel — including Lumin Aerial
+                Access to this Platform is granted solely to authorized personnel ï¿½ including NyxAerial
                 administrators, contracted pilots, and approved clients. Credentials are personal and
                 non-transferable.
               </p>
               <p className="mt-3">You agree to:</p>
               <ul className="list-disc ml-6 mt-2 space-y-1">
                 <li>Maintain the confidentiality of your login credentials</li>
-                <li>Notify Lumin Aerial immediately of any unauthorized access to your account</li>
+                <li>Notify NyxAerial immediately of any unauthorized access to your account</li>
                 <li>Use the Platform solely for its intended business purposes</li>
                 <li>Not attempt to reverse-engineer, scrape, or exploit the Platform</li>
               </ul>
@@ -75,7 +75,7 @@ export default function TermsPage() {
 
             <section>
               <h2 className="text-xl font-semibold text-slate-900 mb-3">4. Pilot Obligations</h2>
-              <p>Pilots contracting with Lumin Aerial agree to:</p>
+              <p>Pilots contracting with NyxAerial agree to:</p>
               <ul className="list-disc ml-6 mt-2 space-y-1">
                 <li>Maintain a valid FAA Part 107 Remote Pilot Certificate at all times</li>
                 <li>Carry required liability insurance and provide current Certificates of Insurance</li>
@@ -100,19 +100,19 @@ export default function TermsPage() {
             <section>
               <h2 className="text-xl font-semibold text-slate-900 mb-3">6. Intellectual Property</h2>
               <p>
-                The Lumin Aerial name, logo, and brand identity are trademarks of Lumin Aerial LLC.
-                The "Lumin Aerial™" mark is the exclusive property of Lumin Aerial LLC. Unauthorized use
+                The NyxAerial name, logo, and brand identity are trademarks of NyxAerial.
+                The "NyxAerialï¿½" mark is the exclusive property of NyxAerial. Unauthorized use
                 is prohibited. This CRM platform is a proprietary product of NyxAerial. All platform
                 software, design, and intellectual property are owned by NyxAerial. Unauthorized use
                 of this trademark is prohibited.
               </p>
               <p className="mt-3">
                 All content, code, design, and functionality of this Platform are the exclusive intellectual
-                property of Lumin Aerial LLC and are protected under applicable copyright, trademark, and
+                property of NyxAerial and are protected under applicable copyright, trademark, and
                 trade secret laws.
               </p>
               <p className="mt-3">
-                © 2026 NyxAerial · All rights reserved. Built for Lumin Aerial LLC.
+                ï¿½ 2026 NyxAerial ï¿½ All rights reserved. Built for NyxAerial.
               </p>
               <p className="mt-3">
                 Aerial content and deliverables produced under contract remain subject to the terms of
@@ -123,9 +123,9 @@ export default function TermsPage() {
             <section>
               <h2 className="text-xl font-semibold text-slate-900 mb-3">7. Confidentiality</h2>
               <p>
-                All information accessed through this Platform — including client identities, job details,
-                pricing, pilot network information, and business processes — is confidential and proprietary
-                to Lumin Aerial LLC. Users agree to maintain strict confidentiality and not disclose any
+                All information accessed through this Platform ï¿½ including client identities, job details,
+                pricing, pilot network information, and business processes ï¿½ is confidential and proprietary
+                to NyxAerial. Users agree to maintain strict confidentiality and not disclose any
                 such information to unauthorized parties.
               </p>
             </section>
@@ -134,7 +134,7 @@ export default function TermsPage() {
               <h2 className="text-xl font-semibold text-slate-900 mb-3">8. Data &amp; Deliverables</h2>
               <p>
                 Files uploaded to the Platform are stored securely and accessible only to authorized users
-                with appropriate permissions. Lumin Aerial does not claim ownership of client-commissioned
+                with appropriate permissions. NyxAerial does not claim ownership of client-commissioned
                 deliverables but retains the right to use anonymized project data for internal analytics
                 and business improvement.
               </p>
@@ -143,9 +143,9 @@ export default function TermsPage() {
             <section>
               <h2 className="text-xl font-semibold text-slate-900 mb-3">9. Limitation of Liability</h2>
               <p>
-                To the maximum extent permitted by law, Lumin Aerial LLC shall not be liable for any
+                To the maximum extent permitted by law, NyxAerial shall not be liable for any
                 indirect, incidental, special, consequential, or punitive damages arising from use of or
-                inability to use the Platform. Lumin Aerial's total liability for any claim shall not
+                inability to use the Platform. NyxAerial's total liability for any claim shall not
                 exceed the fees paid by the claimant in the three months preceding the claim.
               </p>
             </section>
@@ -153,7 +153,7 @@ export default function TermsPage() {
             <section>
               <h2 className="text-xl font-semibold text-slate-900 mb-3">10. Indemnification</h2>
               <p>
-                You agree to indemnify and hold harmless Lumin Aerial LLC, its officers, employees, and
+                You agree to indemnify and hold harmless NyxAerial, its officers, employees, and
                 agents from any claims, damages, or expenses (including reasonable attorneys' fees) arising
                 from your use of the Platform, violation of these Terms, or infringement of any third-party
                 rights.
@@ -163,10 +163,10 @@ export default function TermsPage() {
             <section>
               <h2 className="text-xl font-semibold text-slate-900 mb-3">11. Termination</h2>
               <p>
-                Lumin Aerial reserves the right to suspend or terminate access to the Platform at any time,
+                NyxAerial reserves the right to suspend or terminate access to the Platform at any time,
                 with or without cause. Users may request account deactivation by contacting
-                <a href="mailto:bsargent@luminaerial.com" className="text-blue-600 hover:underline ml-1">
-                  bsargent@luminaerial.com
+                <a href="mailto:ops@nyxaerial.com" className="text-blue-600 hover:underline ml-1">
+                  ops@nyxaerial.com
                 </a>.
               </p>
             </section>
@@ -183,7 +183,7 @@ export default function TermsPage() {
             <section>
               <h2 className="text-xl font-semibold text-slate-900 mb-3">13. Changes to Terms</h2>
               <p>
-                Lumin Aerial reserves the right to modify these Terms at any time. Updated Terms will be
+                NyxAerial reserves the right to modify these Terms at any time. Updated Terms will be
                 posted within the Platform with a revised effective date. Continued use of the Platform
                 after changes constitutes acceptance.
               </p>
@@ -193,16 +193,16 @@ export default function TermsPage() {
               <h2 className="text-xl font-semibold text-slate-900 mb-3">14. Contact</h2>
               <p>For questions about these Terms, contact:</p>
               <div className="mt-3 bg-slate-50 rounded-lg p-4 border border-slate-200">
-                <p className="font-semibold text-slate-900">Lumin Aerial LLC</p>
+                <p className="font-semibold text-slate-900">NyxAerial</p>
                 <p>Bailey Sargent, Owner</p>
                 <p>
-                  <a href="mailto:bsargent@luminaerial.com" className="text-blue-600 hover:underline">
-                    bsargent@luminaerial.com
+                  <a href="mailto:ops@nyxaerial.com" className="text-blue-600 hover:underline">
+                    ops@nyxaerial.com
                   </a>
                 </p>
                 <p>
-                  <a href="https://www.luminaerial.com" className="text-blue-600 hover:underline" target="_blank" rel="noopener noreferrer">
-                    www.luminaerial.com
+                  <a href="https://www.nyxaerial.com" className="text-blue-600 hover:underline" target="_blank" rel="noopener noreferrer">
+                    www.nyxaerial.com
                   </a>
                 </p>
               </div>
@@ -213,9 +213,9 @@ export default function TermsPage() {
       </main>
 
       <footer className="text-center text-slate-400 text-xs py-8">
-        © 2026 NyxAerial · All Rights Reserved ·{" "}
+        ï¿½ 2026 NyxAerial ï¿½ All Rights Reserved ï¿½{" "}
         <Link href="/privacy" className="hover:text-slate-600 underline">Privacy Policy</Link>
-        {" "}·{" "}
+        {" "}ï¿½{" "}
         <Link href="/terms" className="hover:text-slate-600 underline">Terms of Service</Link>
       </footer>
     </div>

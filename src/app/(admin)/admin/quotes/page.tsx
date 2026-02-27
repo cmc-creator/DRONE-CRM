@@ -43,7 +43,7 @@ export default async function AdminQuotesPage() {
               target="_blank"
               className="text-primary hover:underline"
             >
-              luminaerial.com/quote
+              nyxaerial.com/quote
             </a>
           </p>
         </div>

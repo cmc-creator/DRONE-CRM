@@ -16,7 +16,7 @@ export async function GET(req: NextRequest) {
   }
 
   const now = new Date();
-  const adminEmail = process.env.ADMIN_EMAIL ?? "ops@luminaerial.com";
+  const adminEmail = process.env.ADMIN_EMAIL ?? "ops@nyxaerial.com";
 
   const overdueLeads = await prisma.lead.findMany({
     where: {

@@ -4,7 +4,7 @@ import bcrypt from "bcryptjs";
 const prisma = new PrismaClient();
 
 async function main() {
-  console.log("🌱 Seeding Lumin Aerial CRM...");
+  console.log("🌱 Seeding NyxAerial CRM...");
 
   // Clean up existing data
   await prisma.complianceDoc.deleteMany();
@@ -26,7 +26,7 @@ async function main() {
   const admin = await prisma.user.create({
     data: {
       name: "Bailey Sargent",
-      email: "bsargent@luminaerial.com",
+      email: "ops@nyxaerial.com",
       password: adminPassword,
       role: "ADMIN",
     },
@@ -336,7 +336,7 @@ async function main() {
       {
         jobId: job1.id,
         name: "phoenix_aerial_01.mp4",
-        url: "https://storage.luminaerial.com/jobs/phoenix-01.mp4",
+        url: "https://storage.nyxaerial.com/jobs/phoenix-01.mp4",
         type: "VIDEO",
         sizeMb: 245.8,
         uploadedBy: pilot1User.id,
@@ -346,7 +346,7 @@ async function main() {
       {
         jobId: job1.id,
         name: "phoenix_photo_package.zip",
-        url: "https://storage.luminaerial.com/jobs/phoenix-photos.zip",
+        url: "https://storage.nyxaerial.com/jobs/phoenix-photos.zip",
         type: "PHOTO",
         sizeMb: 89.4,
         uploadedBy: pilot1User.id,
@@ -402,7 +402,7 @@ async function main() {
   console.log(`✅ Files & invoices created`);
   console.log("\n🎉 Seed complete!\n");
   console.log("Login credentials:");
-  console.log("  Admin:  bsargent@luminaerial.com / admin123");
+  console.log("  Admin:  ops@nyxaerial.com / admin123");
   console.log("  Pilot:  jake@example.com / pilot123");
   console.log("  Pilot:  sarah@example.com / pilot123");
   console.log("  Client: alex@creativepulse.com / client123");

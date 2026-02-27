@@ -18,7 +18,7 @@ const ADMIN_WELCOME: Message = {
 const GUEST_WELCOME: Message = {
   role: "assistant",
   content:
-    "Hi! I'm Volo, the Lumin Aerial assistant. Ask me about your jobs, invoices, or anything drone-related.",
+    "Hi! I'm Volo, the NyxAerial assistant. Ask me about your jobs, invoices, or anything drone-related.",
 };
 
 const ADMIN_PROMPTS = [
@@ -178,7 +178,7 @@ export function ChatWidget({ isAdmin = false }: Props) {
                 Volo
               </p>
               <p className="text-[10px]" style={{ color: "rgba(0,212,255,0.45)" }}>
-                {isAdmin ? "Your personal co-pilot" : "Lumin Aerial assistant"}
+                {isAdmin ? "Your personal co-pilot" : "NyxAerial assistant"}
               </p>
             </div>
             <div className="flex items-center gap-1.5">

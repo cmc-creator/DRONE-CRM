@@ -1,4 +1,4 @@
-// Lumin Aerial CRM - Prisma Schema
+// NyxAerial CRM - Prisma Schema
 // https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference
 
 generator client {
@@ -56,7 +56,7 @@ model User {
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 
-  // White-label org (null = default Lumin Aerial instance)
+  // White-label org (null = default NyxAerial instance)
   organizationId String?
   organization   Organization? @relation(fields: [organizationId], references: [id])
 

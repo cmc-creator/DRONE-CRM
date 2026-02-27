@@ -172,7 +172,7 @@ function LoginForm() {
                 className="font-black tracking-[0.15em] uppercase text-xl login-text-glow"
                 style={{ color: "#00d4ff" }}
               >
-                Lumin Aerial
+                NyxAerial
               </div>
               <div
                 className="text-xs tracking-widest uppercase font-medium"
@@ -412,7 +412,7 @@ function LoginForm() {
             className="font-black text-lg tracking-widest uppercase login-text-glow"
             style={{ color: "#00d4ff" }}
           >
-            Lumin Aerial
+            NyxAerial
           </span>
         </div>
 
@@ -480,7 +480,7 @@ function LoginForm() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     className="w-full pl-10 pr-4 py-3 rounded-xl text-sm font-medium outline-none transition-all duration-200"
-                    placeholder="you@luminaerial.com"
+                    placeholder="you@nyxaerial.com"
                     style={{
                       background: "rgba(0,212,255,0.05)",
                       border: "1px solid rgba(0,212,255,0.15)",
@@ -524,7 +524,7 @@ function LoginForm() {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     className="w-full pl-10 pr-4 py-3 rounded-xl text-sm font-medium outline-none transition-all duration-200"
-                    placeholder="••••••••"
+                    placeholder="ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½"
                     style={{
                       background: "rgba(0,212,255,0.05)",
                       border: "1px solid rgba(0,212,255,0.15)",
@@ -595,7 +595,7 @@ function LoginForm() {
             className="text-xs font-medium mb-1 pt-6"
             style={{ color: "rgba(0,212,255,0.25)" }}
           >
-            © 2026 NyxAerial · Internal Operations Platform
+            ï¿½ 2026 NyxAerial ï¿½ Internal Operations Platform
           </p>
           <div className="flex items-center justify-center gap-3">
             <a
@@ -607,7 +607,7 @@ function LoginForm() {
             >
               Terms of Service
             </a>
-            <span style={{ color: "rgba(0,212,255,0.15)" }}>·</span>
+            <span style={{ color: "rgba(0,212,255,0.15)" }}>ï¿½</span>
             <a
               href="/privacy"
               className="text-xs transition-colors"

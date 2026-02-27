@@ -79,7 +79,7 @@ export default async function PilotDashboard() {
           Hey, {firstName} ✈️
         </h1>
         <p className="text-sm mt-0.5" style={{ color: "rgba(0,212,255,0.4)" }}>
-          Lumin Aerial — Pilot Portal
+          NyxAerial — Pilot Portal
         </p>
       </div>
 

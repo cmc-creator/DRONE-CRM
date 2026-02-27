@@ -1,6 +1,6 @@
-# Lumin Aerial CRM - Copilot Instructions
+# NyxAerial CRM - Copilot Instructions
 
-This is a full-stack CRM application for Lumin Aerial (luminaerial.com), a nationwide drone pilot network.
+This is a full-stack CRM application for NyxAerial (nyxaerial.com), a nationwide drone pilot network.
 
 ## Tech Stack
 - **Framework**: Next.js 14 (App Router)

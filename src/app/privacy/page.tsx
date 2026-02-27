@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 export const metadata = {
-  title: "Privacy Policy | Lumin Aerial CRM",
+  title: "Privacy Policy | NyxAerial CRM",
 };
 
 export default function PrivacyPage() {
@@ -12,7 +12,7 @@ export default function PrivacyPage() {
         <div className="max-w-4xl mx-auto px-6 py-4 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2 text-slate-800 font-bold text-lg">
             <span className="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-blue-600 text-white text-xs font-bold">LA</span>
-            Lumin Aerial
+            NyxAerial
           </Link>
           <Link href="/login" className="text-sm text-blue-600 hover:underline">? Back to login</Link>
         </div>
@@ -22,7 +22,7 @@ export default function PrivacyPage() {
         <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-8 md:p-12">
           <h1 className="text-3xl font-bold text-slate-900 mb-2">Privacy Policy</h1>
           <p className="text-slate-500 text-sm mb-8">
-            Effective Date: January 1, 2026 &nbsp;·&nbsp; Last Updated: February 2026
+            Effective Date: January 1, 2026 &nbsp;ï¿½&nbsp; Last Updated: February 2026
           </p>
 
           <div className="prose prose-slate max-w-none space-y-8 text-slate-700">
@@ -30,9 +30,9 @@ export default function PrivacyPage() {
             <section>
               <h2 className="text-xl font-semibold text-slate-900 mb-3">1. Introduction</h2>
               <p>
-                Lumin Aerial LLC ("Lumin Aerial," "we," "us," or "our") is committed to protecting the
+                NyxAerial ("NyxAerial," "we," "us," or "our") is committed to protecting the
                 privacy and security of your personal information. This Privacy Policy explains how we
-                collect, use, store, and protect information gathered through the Lumin Aerial CRM
+                collect, use, store, and protect information gathered through the NyxAerial CRM
                 Platform ("Platform").
               </p>
               <p className="mt-3">
@@ -88,7 +88,7 @@ export default function PrivacyPage() {
               <h2 className="text-xl font-semibold text-slate-900 mb-3">3. How We Use Your Information</h2>
               <p>We use the information collected solely to:</p>
               <ul className="list-disc ml-6 mt-2 space-y-1">
-                <li>Operate and manage the Lumin Aerial pilot dispatch network</li>
+                <li>Operate and manage the NyxAerial pilot dispatch network</li>
                 <li>Assign and track drone service jobs</li>
                 <li>Process client billing and pilot payments</li>
                 <li>Maintain FAA regulatory compliance documentation</li>
@@ -120,7 +120,7 @@ export default function PrivacyPage() {
                 </li>
                 <li>
                   <strong>Business transfer:</strong> In the event of a merger, acquisition, or sale of
-                  Lumin Aerial's business assets, with appropriate confidentiality protections.
+                  NyxAerial's business assets, with appropriate confidentiality protections.
                 </li>
               </ul>
             </section>
@@ -164,8 +164,8 @@ export default function PrivacyPage() {
               </ul>
               <p className="mt-3">
                 To exercise any of these rights, contact us at{" "}
-                <a href="mailto:bsargent@luminaerial.com" className="text-blue-600 hover:underline">
-                  bsargent@luminaerial.com
+                <a href="mailto:ops@nyxaerial.com" className="text-blue-600 hover:underline">
+                  ops@nyxaerial.com
                 </a>.
               </p>
             </section>
@@ -201,16 +201,16 @@ export default function PrivacyPage() {
               <h2 className="text-xl font-semibold text-slate-900 mb-3">11. Contact Us</h2>
               <p>For questions, concerns, or requests regarding this Privacy Policy:</p>
               <div className="mt-3 bg-slate-50 rounded-lg p-4 border border-slate-200">
-                <p className="font-semibold text-slate-900">Lumin Aerial LLC</p>
+                <p className="font-semibold text-slate-900">NyxAerial</p>
                 <p>Bailey Sargent, Owner</p>
                 <p>
-                  <a href="mailto:bsargent@luminaerial.com" className="text-blue-600 hover:underline">
-                    bsargent@luminaerial.com
+                  <a href="mailto:ops@nyxaerial.com" className="text-blue-600 hover:underline">
+                    ops@nyxaerial.com
                   </a>
                 </p>
                 <p>
-                  <a href="https://www.luminaerial.com" className="text-blue-600 hover:underline" target="_blank" rel="noopener noreferrer">
-                    www.luminaerial.com
+                  <a href="https://www.nyxaerial.com" className="text-blue-600 hover:underline" target="_blank" rel="noopener noreferrer">
+                    www.nyxaerial.com
                   </a>
                 </p>
               </div>
@@ -221,9 +221,9 @@ export default function PrivacyPage() {
       </main>
 
       <footer className="text-center text-slate-400 text-xs py-8">
-        © 2026 NyxAerial · Built for Lumin Aerial LLC · All Rights Reserved ·{" "}
+        ï¿½ 2026 NyxAerial ï¿½ Built for NyxAerial ï¿½ All Rights Reserved ï¿½{" "}
         <Link href="/privacy" className="hover:text-slate-600 underline">Privacy Policy</Link>
-        {" "}·{" "}
+        {" "}ï¿½{" "}
         <Link href="/terms" className="hover:text-slate-600 underline">Terms of Service</Link>
       </footer>
     </div>

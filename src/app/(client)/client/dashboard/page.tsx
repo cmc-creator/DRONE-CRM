@@ -48,10 +48,10 @@ export default async function ClientDashboard() {
   if (!client) {
     return (
       <div className="text-center py-16 text-muted-foreground">
-        <p>Your client account is being set up. Please contact Lumin Aerial.</p>
+        <p>Your client account is being set up. Please contact NyxAerial.</p>
         <p className="mt-2 text-sm">
-          <a href="mailto:bsargent@luminaerial.com" className="text-primary hover:underline">
-            bsargent@luminaerial.com
+          <a href="mailto:ops@nyxaerial.com" className="text-primary hover:underline">
+            ops@nyxaerial.com
           </a>
         </p>
       </div>
@@ -71,7 +71,7 @@ export default async function ClientDashboard() {
     <div className="space-y-8">
       <div>
         <h1 className="text-3xl font-bold">Welcome, {client.companyName}</h1>
-        <p className="text-muted-foreground mt-1">Your Lumin Aerial project portal</p>
+        <p className="text-muted-foreground mt-1">Your NyxAerial project portal</p>
       </div>
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">

@@ -1,10 +1,10 @@
-﻿# NyxAerial — Drone Business CRM Platform
+# NyxAerial — Drone Business CRM Platform
 
 **The white-label operations platform built for drone service businesses.**
 
 NyxAerial is a full-stack, rebrandable CRM engineered specifically for the drone industry. Whether you run a solo FAA Part 107 operation, a regional drone network, an aerial inspection company, or a nationwide fleet — NyxAerial handles every part of your business in one place: pilot dispatch, client management, job tracking, deliverables, invoicing, compliance, and automated communications.
 
-Currently deployed as **Lumin Aerial CRM** for [Lumin Aerial LLC](https://luminaerial.com) — rebrandable for any drone service operator.
+Currently deployed as **NyxAerial CRM** for [NyxAerial](https://nyxaerial.com) — rebrandable for any drone service operator.
 
 > **Built by NyxAerial** — a NyxCollective LLC product.
 > © 2026 NyxCollective LLC. All rights reserved.
@@ -137,7 +137,7 @@ NEXTAUTH_URL="http://localhost:3000"
 RESEND_API_KEY="re_xxxxxxxxxxxx"
 
 # Admin notification inbox
-ADMIN_EMAIL="ops@luminaerial.com"
+ADMIN_EMAIL="ops@nyxaerial.com"
 
 # Stripe (Stripe Dashboard ? Developers)
 STRIPE_SECRET_KEY="sk_live_xxxxxxxxxxxx"
@@ -180,7 +180,7 @@ Open [http://localhost:3000](http://localhost:3000).
 
 | Role | Email | Password |
 |---|---|---|
-| Admin | bsargent@luminaerial.com | admin123 |
+| Admin | ops@nyxaerial.com | admin123 |
 | Pilot | jake@example.com | pilot123 |
 | Pilot | sarah@example.com | pilot123 |
 | Client | alex@creativepulse.com | client123 |

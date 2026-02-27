@@ -135,7 +135,7 @@ export default async function AnalyticsPage() {
           <BarChart2 className="w-6 h-6 flex-shrink-0" style={{ color:"#a78bfa", WebkitTextFillColor:"#a78bfa" }} />
           Analytics
         </h1>
-        <p className="text-xs mt-0.5" style={{ color:"rgba(0,212,255,0.4)" }}>Business intelligence for Lumin Aerial — {year}</p>
+        <p className="text-xs mt-0.5" style={{ color:"rgba(0,212,255,0.4)" }}>Business intelligence for NyxAerial — {year}</p>
       </div>
 
       {/* Summary stats */}

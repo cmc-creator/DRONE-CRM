@@ -44,7 +44,7 @@ export default async function ClientContractsPage() {
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold">Contracts</h1>
-        <p className="text-muted-foreground text-sm mt-1">Your service agreements with Lumin Aerial.</p>
+        <p className="text-muted-foreground text-sm mt-1">Your service agreements with NyxAerial.</p>
       </div>
 
       {/* Stats */}
@@ -86,7 +86,7 @@ export default async function ClientContractsPage() {
           {contracts.length === 0 ? (
             <div className="text-center py-12 text-muted-foreground">
               <FileText className="h-10 w-10 mx-auto mb-3 opacity-30" />
-              <p>No contracts yet. Lumin Aerial will send agreements here when ready.</p>
+              <p>No contracts yet. NyxAerial will send agreements here when ready.</p>
             </div>
           ) : (
             <div className="space-y-3">

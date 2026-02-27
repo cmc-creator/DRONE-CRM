@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -463,7 +463,7 @@ function NotificationsTab({ user }: { user: CurrentUser | null }) {
 
 function OrgTab({ org }: { org: OrgData | null }) {
   const [form, setForm] = useState({
-    name: org?.name ?? "Lumin Aerial",
+    name: org?.name ?? "NyxAerial",
     slug: org?.slug ?? "lumin",
     logoUrl: org?.logoUrl ?? "",
     faviconUrl: org?.faviconUrl ?? "",

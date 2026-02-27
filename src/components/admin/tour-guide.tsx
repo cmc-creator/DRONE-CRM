@@ -9,7 +9,7 @@ const TOUR_KEY = "lumin-tour-v1-complete";
 const STEPS = [
   {
     icon: "🚁",
-    title: "Welcome to Lumin Aerial Command Center",
+    title: "Welcome to NyxAerial Command Center",
     body: "This is your ops hub. Every stat, job, lead, and alert lives here. Bailey — you're running a nationwide drone network from this screen. Let's do a quick flight check.",
     cta: null,
   },
@@ -34,7 +34,7 @@ const STEPS = [
   {
     icon: "🔔",
     title: "Smart Notifications",
-    body: "Overdue invoices, unassigned jobs, overdue follow-ups, expiring pilot certs — Lumin Aerial surfaces everything that needs your attention so nothing slips.",
+    body: "Overdue invoices, unassigned jobs, overdue follow-ups, expiring pilot certs — NyxAerial surfaces everything that needs your attention so nothing slips.",
     cta: { label: "Check Alerts", href: "/admin/notifications" },
   },
   {
@@ -124,7 +124,7 @@ export function TourGuide() {
             <div className="flex items-center gap-2">
               <Rocket className="w-3.5 h-3.5" style={{ color: "#00d4ff" }} />
               <span className="text-xs font-bold tracking-widest uppercase" style={{ color: "#00d4ff" }}>
-                Lumin Aerial Tour — {step + 1} of {STEPS.length}
+                NyxAerial Tour — {step + 1} of {STEPS.length}
               </span>
             </div>
             <button

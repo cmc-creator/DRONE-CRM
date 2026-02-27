@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
 import { cn } from "@/lib/utils";
+import { BRAND } from "@/lib/brand";
 import {
   LayoutDashboard,
   Users,
@@ -192,10 +193,10 @@ export function Sidebar({ role, userName, userEmail }: SidebarProps) {
             className="font-black tracking-[0.10em] uppercase text-sm login-text-glow"
             style={{ color: "#00d4ff" }}
           >
-            Lumin Aerial
+            {BRAND.name}
           </div>
           <div className="text-[9px] tracking-widest uppercase" style={{ color: "rgba(0,212,255,0.3)" }}>
-            Mission Control
+            {BRAND.tagline}
           </div>
         </div>
       </div>
@@ -296,7 +297,7 @@ export function Sidebar({ role, userName, userEmail }: SidebarProps) {
           Sign out
         </button>
         <p className="text-[9px] mt-2 px-2" style={{ color: "rgba(0,212,255,0.15)" }}>
-          © 2026 NyxAerial · Built for Lumin Aerial LLC
+          Â© {BRAND.year} {BRAND.name} Â· A NyxCollective LLC Product
         </p>
       </div>
     </aside>

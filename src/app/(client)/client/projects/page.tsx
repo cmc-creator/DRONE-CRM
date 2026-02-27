@@ -55,7 +55,7 @@ export default async function ClientProjectsPage() {
         <CardContent className="p-0">
           {client.jobs.length === 0 ? (
             <div className="text-center py-12 text-muted-foreground text-sm">
-              No projects yet. Contact Lumin Aerial to get started.
+              No projects yet. Contact NyxAerial to get started.
             </div>
           ) : (
             <Table>

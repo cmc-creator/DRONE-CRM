@@ -61,7 +61,7 @@ export default async function TrackingPage({
       <header className="border-b border-white/5 px-6 py-4">
         <div className="max-w-2xl mx-auto flex items-center gap-3">
           <Camera className="h-6 w-6 text-[#00d4ff]" />
-          <span className="font-bold text-lg tracking-tight">Lumin Aerial</span>
+          <span className="font-bold text-lg tracking-tight">NyxAerial</span>
           <span className="text-xs text-[#5b7a99] ml-auto">Project Tracker</span>
         </div>
       </header>
@@ -187,7 +187,7 @@ export default async function TrackingPage({
         {/* Pilot info */}
         {job.assignments?.[0]?.pilot?.user?.name && (
           <p className="text-center text-xs text-[#5b7a99]">
-            Pilot: {job.assignments[0].pilot.user.name} · Powered by Lumin Aerial
+            Pilot: {job.assignments[0].pilot.user.name} · Powered by NyxAerial
           </p>
         )}
       </main>

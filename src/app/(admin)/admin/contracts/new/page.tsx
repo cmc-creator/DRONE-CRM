@@ -16,7 +16,7 @@ const labelClass = "block text-xs font-semibold uppercase text-muted-foreground 
 const CONTRACT_TEMPLATES: Record<string, string> = {
   PILOT_AGREEMENT: `INDEPENDENT CONTRACTOR AGREEMENT
 
-This Independent Contractor Agreement ("Agreement") is entered into as of [DATE], between Lumin Aerial LLC ("Company") and [PILOT NAME] ("Contractor").
+This Independent Contractor Agreement ("Agreement") is entered into as of [DATE], between NyxAerial ("Company") and [PILOT NAME] ("Contractor").
 
 1. SERVICES
 Contractor agrees to provide aerial photography and drone services as requested by the Company.
@@ -41,7 +41,7 @@ All work product and deliverables created for the Company belong to the Company.
 
 IN WITNESS WHEREOF, the parties have executed this Agreement as of the date first written above.
 
-Lumin Aerial LLC
+NyxAerial
 Bailey Sargent, Owner
 
 Contractor Signature: _______________________
@@ -50,16 +50,16 @@ Date: _______________________`,
 
   CLIENT_SERVICE: `SERVICE AGREEMENT
 
-This Service Agreement ("Agreement") is entered into between Lumin Aerial LLC ("Lumin Aerial") and [CLIENT NAME] ("Client").
+This Service Agreement ("Agreement") is entered into between NyxAerial ("NyxAerial") and [CLIENT NAME] ("Client").
 
 1. SERVICES
-Lumin Aerial will provide drone aerial photography and videography services as outlined in each project order.
+NyxAerial will provide drone aerial photography and videography services as outlined in each project order.
 
 2. PAYMENT
 Client agrees to pay invoices within 30 days of receipt. Late payments incur a 1.5% monthly fee.
 
 3. DELIVERABLES
-Lumin Aerial will deliver edited photos/video within the agreed timeline after capture.
+NyxAerial will deliver edited photos/video within the agreed timeline after capture.
 
 4. CANCELLATION
 Cancellations within 24 hours of scheduled shoot are subject to a 50% cancellation fee.
@@ -68,14 +68,14 @@ Cancellations within 24 hours of scheduled shoot are subject to a 50% cancellati
 Client receives full usage rights to all delivered files for their intended commercial purpose.
 
 6. LIMITATION OF LIABILITY
-Lumin Aerial's liability is limited to the amount paid for the specific project.
+NyxAerial's liability is limited to the amount paid for the specific project.
 
 7. GOVERNING LAW
 This Agreement is governed by the laws of the State of Arizona.
 
 AGREED AND ACCEPTED:
 
-LUMIN AERIAL LLC:
+NyxAerial:
 Bailey Sargent, Owner
 Date: _______________________
 
@@ -87,7 +87,7 @@ Date: _______________________`,
 
   NDA: `NON-DISCLOSURE AGREEMENT
 
-This Non-Disclosure Agreement ("Agreement") is entered into between Lumin Aerial LLC and the undersigned party.
+This Non-Disclosure Agreement ("Agreement") is entered into between NyxAerial and the undersigned party.
 
 1. CONFIDENTIAL INFORMATION
 The parties may disclose confidential business information, client lists, pricing, and operational methods.

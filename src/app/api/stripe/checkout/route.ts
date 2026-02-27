@@ -60,7 +60,7 @@ export async function POST(req: NextRequest) {
           unit_amount: Math.round(Number(invoice.totalAmount) * 100), // cents
           product_data: {
             name: `Invoice ${invoice.invoiceNumber}`,
-            description: `Lumin Aerial — aerial services for ${invoice.client?.companyName ?? "client"}`,
+            description: `NyxAerial — aerial services for ${invoice.client?.companyName ?? "client"}`,
           },
         },
       },
