@@ -1,6 +1,6 @@
 #!/bin/sh
 echo ">> Syncing Prisma schema to production DB..."
-npx prisma db push --skip-generate
+npx prisma db push
 if [ $? -ne 0 ]; then
   echo "FAILED: prisma db push failed. Check DATABASE_URL."
   exit 1
