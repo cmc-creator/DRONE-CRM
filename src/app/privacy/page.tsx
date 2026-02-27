@@ -14,7 +14,7 @@ export default function PrivacyPage() {
             <span className="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-blue-600 text-white text-xs font-bold">LA</span>
             Lumin Aerial
           </Link>
-          <Link href="/login" className="text-sm text-blue-600 hover:underline">‚Üê Back to login</Link>
+          <Link href="/login" className="text-sm text-blue-600 hover:underline">? Back to login</Link>
         </div>
       </header>
 
@@ -22,7 +22,7 @@ export default function PrivacyPage() {
         <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-8 md:p-12">
           <h1 className="text-3xl font-bold text-slate-900 mb-2">Privacy Policy</h1>
           <p className="text-slate-500 text-sm mb-8">
-            Effective Date: January 1, 2026 &nbsp;¬∑&nbsp; Last Updated: February 2026
+            Effective Date: January 1, 2026 &nbsp;∑&nbsp; Last Updated: February 2026
           </p>
 
           <div className="prose prose-slate max-w-none space-y-8 text-slate-700">
@@ -221,9 +221,9 @@ export default function PrivacyPage() {
       </main>
 
       <footer className="text-center text-slate-400 text-xs py-8">
-        ¬© 2026 NyxCollective‚Ñ¢ ¬∑ Built for Lumin Aerial LLC ¬∑ All Rights Reserved ¬∑{" "}
+        © 2026 NyxCollective LLC ∑ Built for Lumin Aerial LLC ∑ All Rights Reserved ∑{" "}
         <Link href="/privacy" className="hover:text-slate-600 underline">Privacy Policy</Link>
-        {" "}¬∑{" "}
+        {" "}∑{" "}
         <Link href="/terms" className="hover:text-slate-600 underline">Terms of Service</Link>
       </footer>
     </div>

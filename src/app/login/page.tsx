@@ -79,7 +79,7 @@ function LoginForm() {
       className="min-h-screen flex overflow-hidden"
       style={{ background: "#04080f" }}
     >
-      {/* â”€â”€ LEFT HERO PANEL â”€â”€ */}
+      {/* -- LEFT HERO PANEL -- */}
       <div
         className="hidden lg:flex lg:w-[58%] relative flex-col justify-between p-12 overflow-hidden"
         style={{
@@ -362,7 +362,7 @@ function LoginForm() {
         </div>
       </div>
 
-      {/* â”€â”€ RIGHT LOGIN PANEL â”€â”€ */}
+      {/* -- RIGHT LOGIN PANEL -- */}
       <div
         className="flex-1 flex flex-col justify-between relative"
         style={{
@@ -524,7 +524,7 @@ function LoginForm() {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     className="w-full pl-10 pr-4 py-3 rounded-xl text-sm font-medium outline-none transition-all duration-200"
-                    placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
+                    placeholder="••••••••"
                     style={{
                       background: "rgba(0,212,255,0.05)",
                       border: "1px solid rgba(0,212,255,0.15)",
@@ -579,7 +579,7 @@ function LoginForm() {
                     Authenticating...
                   </span>
                 ) : (
-                  "Launch Mission Control â†’"
+                  "Launch Mission Control ?"
                 )}
               </button>
             </form>
@@ -595,7 +595,7 @@ function LoginForm() {
             className="text-xs font-medium mb-1 pt-6"
             style={{ color: "rgba(0,212,255,0.25)" }}
           >
-            Â© 2026 NyxCollectiveâ„¢ Â· Internal Operations Platform
+            © 2026 NyxCollective LLC · Internal Operations Platform
           </p>
           <div className="flex items-center justify-center gap-3">
             <a
@@ -607,7 +607,7 @@ function LoginForm() {
             >
               Terms of Service
             </a>
-            <span style={{ color: "rgba(0,212,255,0.15)" }}>Â·</span>
+            <span style={{ color: "rgba(0,212,255,0.15)" }}>·</span>
             <a
               href="/privacy"
               className="text-xs transition-colors"

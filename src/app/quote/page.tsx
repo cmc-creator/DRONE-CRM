@@ -16,9 +16,9 @@ const SERVICE_TYPES = [
 
 const BUDGET_RANGES = [
   "Under $500",
-  "$500 – $1,000",
-  "$1,000 – $2,500",
-  "$2,500 – $5,000",
+  "$500 � $1,000",
+  "$1,000 � $2,500",
+  "$2,500 � $5,000",
   "$5,000+",
   "Not sure yet",
 ];
@@ -128,7 +128,7 @@ export default function QuotePage() {
         style={{ maxWidth: 640, margin: "48px auto", padding: "0 24px 64px" }}
       >
         {success ? (
-          /* ── Success state ── */
+          /* -- Success state -- */
           <div
             style={{
               background: "#080f1e",
@@ -152,7 +152,7 @@ export default function QuotePage() {
                 fontSize: 28,
               }}
             >
-              ✓
+              ?
             </div>
             <h2
               style={{ margin: "0 0 12px", fontSize: 24, fontWeight: 900, color: "#d8e8f4" }}
@@ -180,7 +180,7 @@ export default function QuotePage() {
             </a>
           </div>
         ) : (
-          /* ── Form ── */
+          /* -- Form -- */
           <>
             <div style={{ marginBottom: 32 }}>
               <h1
@@ -290,7 +290,7 @@ export default function QuotePage() {
                   onChange={handleChange}
                   style={inputStyle}
                 >
-                  <option value="">— Select a service type —</option>
+                  <option value="">� Select a service type �</option>
                   {SERVICE_TYPES.map((s) => (
                     <option key={s} value={s}>
                       {s}
@@ -306,7 +306,7 @@ export default function QuotePage() {
                   value={form.description}
                   onChange={handleChange}
                   rows={4}
-                  placeholder="Tell us about your project — location details, timeline, deliverables needed, etc."
+                  placeholder="Tell us about your project � location details, timeline, deliverables needed, etc."
                   style={{ ...inputStyle, resize: "vertical" }}
                 />
               </Field>
@@ -319,7 +319,7 @@ export default function QuotePage() {
                   onChange={handleChange}
                   style={inputStyle}
                 >
-                  <option value="">— Select a range —</option>
+                  <option value="">� Select a range �</option>
                   {BUDGET_RANGES.map((b) => (
                     <option key={b} value={b}>
                       {b}
@@ -348,7 +348,7 @@ export default function QuotePage() {
                   transition: "opacity 0.2s",
                 }}
               >
-                {submitting ? "Submitting…" : "Submit Quote Request →"}
+                {submitting ? "Submitting�" : "Submit Quote Request ?"}
               </button>
 
               <p style={{ margin: 0, fontSize: 12, color: "rgba(216,232,244,0.35)", textAlign: "center" }}>
@@ -372,14 +372,14 @@ export default function QuotePage() {
             luminaerial.com
           </Link>{" "}
           &middot; Powered by{" "}
-          <span style={{ color: "#a78bfa" }}>NyxCollective™</span>
+          <span style={{ color: "#a78bfa" }}>NyxCollective LLC</span>
         </p>
       </main>
     </div>
   );
 }
 
-// ── Helpers ───────────────────────────────────────────────────────────────────
+// -- Helpers -------------------------------------------------------------------
 
 function Field({
   label,

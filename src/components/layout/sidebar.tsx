@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -296,7 +296,7 @@ export function Sidebar({ role, userName, userEmail }: SidebarProps) {
           Sign out
         </button>
         <p className="text-[9px] mt-2 px-2" style={{ color: "rgba(0,212,255,0.15)" }}>
-          © 2026 NyxCollective™ · Built for Lumin Aerial LLC
+          © 2026 NyxCollective LLC · Built for Lumin Aerial LLC
         </p>
       </div>
     </aside>

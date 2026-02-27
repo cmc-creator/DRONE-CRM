@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect } from "react";
 import { CheckCircle, FileSignature, AlertTriangle } from "lucide-react";
@@ -212,7 +212,7 @@ export default function SignContractPage({ params }: { params: Promise<{ id: str
         </Card>
 
         <p className="text-center text-xs text-muted-foreground">
-          © 2026 NyxCollective™ · Built for Lumin Aerial LLC · For questions contact{" "}
+          © 2026 NyxCollective LLC · Built for Lumin Aerial LLC · For questions contact{" "}
           <a href="mailto:bsargent@luminaerial.com" className="text-primary hover:underline">bsargent@luminaerial.com</a>
         </p>
       </div>

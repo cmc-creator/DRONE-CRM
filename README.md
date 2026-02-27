@@ -2,8 +2,8 @@
 
 A full-stack CRM for **Lumin Aerial** ([luminaerial.com](https://luminaerial.com)) — a nationwide FAA Part 107 drone pilot network. Manages pilots, clients, jobs, deliverables, invoicing, compliance, leads, and automated communications.
 
-> **Built by NyxCollective™** — proprietary platform for **Lumin Aerial LLC** and Bailey Sargent.
-> © 2026 NyxCollective™. All rights reserved. Lumin Aerial™ is a trademark of Lumin Aerial LLC.
+> **Built by NyxCollective LLC** — proprietary platform for **Lumin Aerial LLC** and Bailey Sargent.
+> © 2026 NyxCollective LLC. All rights reserved. Lumin Aerial™ is a trademark of Lumin Aerial LLC.
 
 ---
 

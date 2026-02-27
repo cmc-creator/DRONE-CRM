@@ -14,7 +14,7 @@ export default function TermsPage() {
             <span className="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-blue-600 text-white text-xs font-bold">LA</span>
             Lumin Aerial
           </Link>
-          <Link href="/login" className="text-sm text-blue-600 hover:underline">‚Üê Back to login</Link>
+          <Link href="/login" className="text-sm text-blue-600 hover:underline">? Back to login</Link>
         </div>
       </header>
 
@@ -22,7 +22,7 @@ export default function TermsPage() {
         <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-8 md:p-12">
           <h1 className="text-3xl font-bold text-slate-900 mb-2">Terms of Service</h1>
           <p className="text-slate-500 text-sm mb-8">
-            Effective Date: January 1, 2026 &nbsp;¬∑&nbsp; Last Updated: February 2026
+            Effective Date: January 1, 2026 &nbsp;∑&nbsp; Last Updated: February 2026
           </p>
 
           <div className="prose prose-slate max-w-none space-y-8 text-slate-700">
@@ -60,7 +60,7 @@ export default function TermsPage() {
             <section>
               <h2 className="text-xl font-semibold text-slate-900 mb-3">3. Authorized Use &amp; Access</h2>
               <p>
-                Access to this Platform is granted solely to authorized personnel ‚Äî including Lumin Aerial
+                Access to this Platform is granted solely to authorized personnel ó including Lumin Aerial
                 administrators, contracted pilots, and approved clients. Credentials are personal and
                 non-transferable.
               </p>
@@ -101,9 +101,9 @@ export default function TermsPage() {
               <h2 className="text-xl font-semibold text-slate-900 mb-3">6. Intellectual Property</h2>
               <p>
                 The Lumin Aerial name, logo, and brand identity are trademarks of Lumin Aerial LLC.
-                The "Lumin Aerial‚Ñ¢" mark is the exclusive property of Lumin Aerial LLC. Unauthorized use
-                is prohibited. This CRM platform is a proprietary product of NyxCollective‚Ñ¢. All platform
-                software, design, and intellectual property are owned by NyxCollective. Unauthorized use
+                The "Lumin Aerialô" mark is the exclusive property of Lumin Aerial LLC. Unauthorized use
+                is prohibited. This CRM platform is a proprietary product of NyxCollective LLC. All platform
+                software, design, and intellectual property are owned by NyxCollective LLC. Unauthorized use
                 of this trademark is prohibited.
               </p>
               <p className="mt-3">
@@ -112,7 +112,7 @@ export default function TermsPage() {
                 trade secret laws.
               </p>
               <p className="mt-3">
-                ¬© 2026 NyxCollective‚Ñ¢ ¬∑ All rights reserved. Built for Lumin Aerial LLC.
+                © 2026 NyxCollective LLC ∑ All rights reserved. Built for Lumin Aerial LLC.
               </p>
               <p className="mt-3">
                 Aerial content and deliverables produced under contract remain subject to the terms of
@@ -123,8 +123,8 @@ export default function TermsPage() {
             <section>
               <h2 className="text-xl font-semibold text-slate-900 mb-3">7. Confidentiality</h2>
               <p>
-                All information accessed through this Platform ‚Äî including client identities, job details,
-                pricing, pilot network information, and business processes ‚Äî is confidential and proprietary
+                All information accessed through this Platform ó including client identities, job details,
+                pricing, pilot network information, and business processes ó is confidential and proprietary
                 to Lumin Aerial LLC. Users agree to maintain strict confidentiality and not disclose any
                 such information to unauthorized parties.
               </p>
@@ -213,9 +213,9 @@ export default function TermsPage() {
       </main>
 
       <footer className="text-center text-slate-400 text-xs py-8">
-        ¬© 2026 NyxCollective‚Ñ¢ ¬∑ All Rights Reserved ¬∑{" "}
+        © 2026 NyxCollective LLC ∑ All Rights Reserved ∑{" "}
         <Link href="/privacy" className="hover:text-slate-600 underline">Privacy Policy</Link>
-        {" "}¬∑{" "}
+        {" "}∑{" "}
         <Link href="/terms" className="hover:text-slate-600 underline">Terms of Service</Link>
       </footer>
     </div>
