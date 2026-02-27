@@ -106,7 +106,7 @@ export async function sendJobAssignmentEmail({
       </div>
 
       <p style="margin: 24px 0 0; font-size: 12px; color: rgba(0,212,255,0.3); text-align: center;">
-        Lumin Aerial LLC &nbsp;·&nbsp; luminaerial.com &nbsp;·&nbsp; <span style="color:rgba(0,212,255,0.3)">Powered by NyxCollective LLC</span>
+        Lumin Aerial LLC &nbsp;·&nbsp; luminaerial.com &nbsp;·&nbsp; <span style="color:rgba(0,212,255,0.3)">Powered by NyxAerial</span>
       </p>
     </div>
   </div>
@@ -323,7 +323,7 @@ export async function sendOverdueInvoiceEmail({
         <p>Please settle this invoice at your earliest convenience to avoid service interruptions.</p>
         <a href="${APP_URL}/client/invoices" style="display:inline-block; margin-top:16px; background:#ef4444; color:#fff; font-weight:900; padding:10px 24px; border-radius:8px; text-decoration:none;">View &amp; Pay Invoice</a>
         <p style="margin-top:24px; font-size:12px; color:#5b7a99;">Questions? Reply to this email or contact us at <a href="mailto:ops@luminaerial.com" style="color:#00d4ff;">ops@luminaerial.com</a>.</p>
-        <p style="font-size:11px; color:rgba(91,122,153,0.6); margin-top:16px;">Lumin Aerial LLC · luminaerial.com · Powered by NyxCollective LLC</p>
+        <p style="font-size:11px; color:rgba(91,122,153,0.6); margin-top:16px;">Lumin Aerial LLC · luminaerial.com · Powered by NyxAerial</p>
       </div>`,
     });
   } catch (err) {
@@ -368,7 +368,7 @@ export async function sendNewQuoteNotificationEmail({
           ${serviceType ? `<tr><td style="padding:6px 0; color:rgba(0,212,255,0.5); font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1px;">Service</td><td style="padding:6px 0;">${serviceType}</td></tr>` : ""}
         </table>
         <a href="${APP_URL}/admin/quotes" style="display:inline-block; margin-top:20px; background:#00d4ff; color:#04080f; font-weight:900; padding:10px 24px; border-radius:8px; text-decoration:none;">View in CRM ?</a>
-        <p style="font-size:11px; color:rgba(91,122,153,0.6); margin-top:16px;">Lumin Aerial LLC · luminaerial.com · Powered by NyxCollective LLC</p>
+        <p style="font-size:11px; color:rgba(91,122,153,0.6); margin-top:16px;">Lumin Aerial LLC · luminaerial.com · Powered by NyxAerial</p>
       </div>`,
     });
   } catch (err) {
@@ -413,7 +413,7 @@ export async function sendPaymentReceiptEmail({
         <p>Thank you for your business! Your project is in good hands.</p>
         <a href="${APP_URL}/client/invoices" style="display:inline-block; margin-top:16px; background:#4ade80; color:#04080f; font-weight:900; padding:10px 24px; border-radius:8px; text-decoration:none;">View Receipt</a>
         <p style="margin-top:24px; font-size:12px; color:#5b7a99;">Questions? Contact us at <a href="mailto:ops@luminaerial.com" style="color:#00d4ff;">ops@luminaerial.com</a>.</p>
-        <p style="font-size:11px; color:rgba(91,122,153,0.6); margin-top:16px;">Lumin Aerial LLC · luminaerial.com · Powered by NyxCollective LLC</p>
+        <p style="font-size:11px; color:rgba(91,122,153,0.6); margin-top:16px;">Lumin Aerial LLC · luminaerial.com · Powered by NyxAerial</p>
       </div>`,
     });
   } catch (err) {
@@ -456,7 +456,7 @@ export async function sendLeadFollowUpEmail({
           ${notes ? `<tr><td style="padding:6px 0; color:rgba(0,212,255,0.5); font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1px;">Notes</td><td style="padding:6px 0; color:rgba(216,232,244,0.6);">${notes}</td></tr>` : ""}
         </table>
         <a href="${APP_URL}/admin/leads/${leadId}" style="display:inline-block; margin-top:20px; background:${urgencyColor}; color:#04080f; font-weight:900; padding:10px 24px; border-radius:8px; text-decoration:none;">Open Lead ?</a>
-        <p style="font-size:11px; color:rgba(91,122,153,0.6); margin-top:16px;">Lumin Aerial LLC · luminaerial.com · Powered by NyxCollective LLC</p>
+        <p style="font-size:11px; color:rgba(91,122,153,0.6); margin-top:16px;">Lumin Aerial LLC · luminaerial.com · Powered by NyxAerial</p>
       </div>`,
     });
   } catch (err) {

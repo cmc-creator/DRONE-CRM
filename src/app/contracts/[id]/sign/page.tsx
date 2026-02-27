@@ -212,7 +212,7 @@ export default function SignContractPage({ params }: { params: Promise<{ id: str
         </Card>
 
         <p className="text-center text-xs text-muted-foreground">
-          © 2026 NyxCollective LLC · Built for Lumin Aerial LLC · For questions contact{" "}
+          © 2026 NyxAerial · Built for Lumin Aerial LLC · For questions contact{" "}
           <a href="mailto:bsargent@luminaerial.com" className="text-primary hover:underline">bsargent@luminaerial.com</a>
         </p>
       </div>

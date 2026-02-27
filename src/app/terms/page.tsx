@@ -102,8 +102,8 @@ export default function TermsPage() {
               <p>
                 The Lumin Aerial name, logo, and brand identity are trademarks of Lumin Aerial LLC.
                 The "Lumin Aerial™" mark is the exclusive property of Lumin Aerial LLC. Unauthorized use
-                is prohibited. This CRM platform is a proprietary product of NyxCollective LLC. All platform
-                software, design, and intellectual property are owned by NyxCollective LLC. Unauthorized use
+                is prohibited. This CRM platform is a proprietary product of NyxAerial. All platform
+                software, design, and intellectual property are owned by NyxAerial. Unauthorized use
                 of this trademark is prohibited.
               </p>
               <p className="mt-3">
@@ -112,7 +112,7 @@ export default function TermsPage() {
                 trade secret laws.
               </p>
               <p className="mt-3">
-                © 2026 NyxCollective LLC · All rights reserved. Built for Lumin Aerial LLC.
+                © 2026 NyxAerial · All rights reserved. Built for Lumin Aerial LLC.
               </p>
               <p className="mt-3">
                 Aerial content and deliverables produced under contract remain subject to the terms of
@@ -213,7 +213,7 @@ export default function TermsPage() {
       </main>
 
       <footer className="text-center text-slate-400 text-xs py-8">
-        © 2026 NyxCollective LLC · All Rights Reserved ·{" "}
+        © 2026 NyxAerial · All Rights Reserved ·{" "}
         <Link href="/privacy" className="hover:text-slate-600 underline">Privacy Policy</Link>
         {" "}·{" "}
         <Link href="/terms" className="hover:text-slate-600 underline">Terms of Service</Link>

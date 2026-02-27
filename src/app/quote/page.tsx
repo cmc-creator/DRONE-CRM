@@ -372,7 +372,7 @@ export default function QuotePage() {
             luminaerial.com
           </Link>{" "}
           &middot; Powered by{" "}
-          <span style={{ color: "#a78bfa" }}>NyxCollective LLC</span>
+          <span style={{ color: "#a78bfa" }}>NyxAerial</span>
         </p>
       </main>
     </div>
