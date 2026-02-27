@@ -19,5 +19,23 @@ export default async function IntegrationsPage() {
     ? gdriveAccount.expires_at < Math.floor(Date.now() / 1000)
     : false;
 
-  return <IntegrationsClient gdriveConnected={gdriveConnected && !gdriveExpired} />;
+  // Check if Microsoft OneDrive is connected
+  const oneDriveAccount = userId
+    ? await prisma.account.findUnique({
+        where: { provider_providerAccountId: { provider: "onedrive", providerAccountId: userId } },
+        select: { access_token: true, expires_at: true },
+      })
+    : null;
+
+  const oneDriveConnected  = !!oneDriveAccount?.access_token;
+  const oneDriveExpired    = oneDriveAccount?.expires_at
+    ? oneDriveAccount.expires_at < Math.floor(Date.now() / 1000)
+    : false;
+
+  return (
+    <IntegrationsClient
+      gdriveConnected={gdriveConnected && !gdriveExpired}
+      oneDriveConnected={oneDriveConnected && !oneDriveExpired}
+    />
+  );
 }
