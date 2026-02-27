@@ -1,9 +1,13 @@
-# Lumin Aerial CRM
+ï»¿# NyxAerial â€” Drone Business CRM Platform
 
-A full-stack CRM for **Lumin Aerial** ([luminaerial.com](https://luminaerial.com)) — a nationwide FAA Part 107 drone pilot network. Manages pilots, clients, jobs, deliverables, invoicing, compliance, leads, and automated communications.
+**The white-label operations platform built for drone service businesses.**
 
-> **Built by NyxAerial** — proprietary platform for **Lumin Aerial LLC** and Bailey Sargent.
-> © 2026 NyxAerial. All rights reserved. Lumin Aerial™ is a trademark of Lumin Aerial LLC.
+NyxAerial is a full-stack, rebrandable CRM engineered specifically for the drone industry. Whether you run a solo FAA Part 107 operation, a regional drone network, an aerial inspection company, or a nationwide fleet â€” NyxAerial handles every part of your business in one place: pilot dispatch, client management, job tracking, deliverables, invoicing, compliance, and automated communications.
+
+Currently deployed as **Lumin Aerial CRM** for [Lumin Aerial LLC](https://luminaerial.com) â€” rebrandable for any drone service operator.
+
+> **Built by NyxAerial** â€” a NyxCollective LLC product.
+> Â© 2026 NyxCollective LLC. All rights reserved.
 
 ---
 
@@ -28,32 +32,32 @@ A full-stack CRM for **Lumin Aerial** ([luminaerial.com](https://luminaerial.com
 
 | Role | Access |
 |---|---|
-| **Admin** | Full access — pilots, clients, jobs, invoices, compliance, leads, quotes |
-| **Pilot** | Portal — assigned jobs, compliance docs, payments, deliverables |
-| **Client** | Portal — projects, invoices, download deliverables, sign contracts |
+| **Admin** | Full access ï¿½ pilots, clients, jobs, invoices, compliance, leads, quotes |
+| **Pilot** | Portal ï¿½ assigned jobs, compliance docs, payments, deliverables |
+| **Client** | Portal ï¿½ projects, invoices, download deliverables, sign contracts |
 
 ---
 
 ## Implemented Modules
 
 ### Admin Portal (`/admin/*`)
-- **Dashboard** — live stats (jobs, revenue, pilots, compliance alerts)
-- **Pilots** — profiles, FAA certs, markets, equipment, availability, ratings/reviews
-- **Clients** — agencies, commercial, real estate; optional portal login
-- **Jobs** — full dispatch lifecycle, file uploads, pilot assignment, review widget
-- **Leads** — pipeline management, follow-up scheduling, status tracking
-- **Quotes** — public quote intake, admin review, one-click Lead conversion
-- **Invoices** — auto-numbered (LA-2025-0001), Stripe payment links, overdue reminders
-- **Compliance** — FAA Part 107, insurance COI, W-9 expiry tracking + alerts
-- **Deliverables** — all uploaded job files across pilots
-- **Contracts** — Adobe Sign integration, e-signature flow, client portal signing
-- **Calendar** — job scheduling overview
-- **Analytics** — revenue and job metrics
-- **Dispatch** — real-time job dispatch map view
-- **Integrations** — Google Drive, QuickBooks, Adobe Sign
-- **Settings / Team** — admin account management
-- **AI Assistant (Volo)** — context-aware CRM assistant via `/api/chat`
-- **Dev Tools** — seed + clear database (dev mode only)
+- **Dashboard** ï¿½ live stats (jobs, revenue, pilots, compliance alerts)
+- **Pilots** ï¿½ profiles, FAA certs, markets, equipment, availability, ratings/reviews
+- **Clients** ï¿½ agencies, commercial, real estate; optional portal login
+- **Jobs** ï¿½ full dispatch lifecycle, file uploads, pilot assignment, review widget
+- **Leads** ï¿½ pipeline management, follow-up scheduling, status tracking
+- **Quotes** ï¿½ public quote intake, admin review, one-click Lead conversion
+- **Invoices** ï¿½ auto-numbered (LA-2025-0001), Stripe payment links, overdue reminders
+- **Compliance** ï¿½ FAA Part 107, insurance COI, W-9 expiry tracking + alerts
+- **Deliverables** ï¿½ all uploaded job files across pilots
+- **Contracts** ï¿½ Adobe Sign integration, e-signature flow, client portal signing
+- **Calendar** ï¿½ job scheduling overview
+- **Analytics** ï¿½ revenue and job metrics
+- **Dispatch** ï¿½ real-time job dispatch map view
+- **Integrations** ï¿½ Google Drive, QuickBooks, Adobe Sign
+- **Settings / Team** ï¿½ admin account management
+- **AI Assistant (Volo)** ï¿½ context-aware CRM assistant via `/api/chat`
+- **Dev Tools** ï¿½ seed + clear database (dev mode only)
 
 ### Pilot Portal (`/pilot/*`)
 - Dashboard, jobs, compliance documents, payments, deliverables
@@ -62,9 +66,9 @@ A full-stack CRM for **Lumin Aerial** ([luminaerial.com](https://luminaerial.com
 - Dashboard, projects, invoices, deliverables, contract signing
 
 ### Public Pages
-- `/quote` — public quote request form (no auth required), 8 service types, 6 budget ranges
-- `/contracts/[id]/sign` — contract e-signature page
-- `/track/[token]` — job tracking by public token
+- `/quote` ï¿½ public quote request form (no auth required), 8 service types, 6 budget ranges
+- `/contracts/[id]/sign` ï¿½ contract e-signature page
+- `/track/[token]` ï¿½ job tracking by public token
 
 ---
 
@@ -83,7 +87,7 @@ All email via **Resend**. Functions live in `src/lib/email.ts`.
 | Lead follow-up overdue | Urgency-colored alert | Admin |
 | New public quote submitted | New quote notification | Admin |
 
-### Cron Jobs (Vercel — UTC)
+### Cron Jobs (Vercel ï¿½ UTC)
 
 | Schedule | Route | Purpose |
 |---|---|---|
@@ -98,7 +102,7 @@ All email via **Resend**. Functions live in `src/lib/email.ts`.
 ### 1. Prerequisites
 
 - Node.js 18+
-- A PostgreSQL database ([Neon](https://neon.tech) recommended — free tier)
+- A PostgreSQL database ([Neon](https://neon.tech) recommended ï¿½ free tier)
 - Git
 
 ### 2. Clone & Install
@@ -123,7 +127,7 @@ Required values:
 # Neon (or any PostgreSQL) connection string
 DATABASE_URL="postgresql://USER:PASSWORD@HOST:PORT/DATABASE?sslmode=require"
 
-# NextAuth — generate: openssl rand -base64 32
+# NextAuth ï¿½ generate: openssl rand -base64 32
 AUTH_SECRET="your-secret-here"
 
 # App URL
@@ -139,11 +143,11 @@ ADMIN_EMAIL="ops@luminaerial.com"
 STRIPE_SECRET_KEY="sk_live_xxxxxxxxxxxx"
 STRIPE_WEBHOOK_SECRET="whsec_xxxxxxxxxxxx"
 
-# Adobe Sign (optional — for contract e-signature)
+# Adobe Sign (optional ï¿½ for contract e-signature)
 ADOBE_SIGN_API_KEY=""
 ADOBE_SIGN_BASE_URI=""
 
-# Google Drive (optional — for deliverable storage)
+# Google Drive (optional ï¿½ for deliverable storage)
 GOOGLE_CLIENT_ID=""
 GOOGLE_CLIENT_SECRET=""
 GOOGLE_REDIRECT_URI=""
@@ -188,41 +192,41 @@ Open [http://localhost:3000](http://localhost:3000).
 ```
 src/
 +-- app/
-¦   +-- (admin)/admin/           # Admin portal (all modules)
-¦   +-- (pilot)/pilot/           # Pilot portal
-¦   +-- (client)/client/         # Client portal
-¦   +-- api/
-¦   ¦   +-- auth/[...nextauth]/  # NextAuth handler
-¦   ¦   +-- pilots/              # Pilot CRUD + reviews + score
-¦   ¦   +-- clients/             # Client CRUD
-¦   ¦   +-- jobs/                # Job CRUD + files + tracking
-¦   ¦   +-- leads/               # Lead CRUD
-¦   ¦   +-- quotes/              # Quote CRUD + /convert
-¦   ¦   +-- invoices/            # Invoice CRUD + Stripe payment link
-¦   ¦   +-- contracts/           # Contract CRUD + sign + download
-¦   ¦   +-- cron/                # compliance-check, invoice-check, lead-followup
-¦   ¦   +-- stripe/              # Checkout session
-¦   ¦   +-- webhooks/stripe/     # Stripe payment webhook
-¦   ¦   +-- webhooks/adobe-sign/ # Adobe Sign event webhook
-¦   ¦   +-- integrations/        # Google Drive auth + files
-¦   ¦   +-- export/              # CSV export (pilots, clients, invoices, contracts)
-¦   ¦   +-- import/              # CSV import (pilots, clients, invoices)
-¦   ¦   +-- chat/                # Volo AI assistant
-¦   ¦   +-- activities/          # Activity feed
-¦   ¦   +-- dev/                 # Seed + clear (dev only)
-¦   +-- contracts/[id]/sign/     # Public e-signature page
-¦   +-- quote/                   # Public quote request form
-¦   +-- track/[token]/           # Public job tracking
-¦   +-- login/
-¦   +-- unauthorized/
+ï¿½   +-- (admin)/admin/           # Admin portal (all modules)
+ï¿½   +-- (pilot)/pilot/           # Pilot portal
+ï¿½   +-- (client)/client/         # Client portal
+ï¿½   +-- api/
+ï¿½   ï¿½   +-- auth/[...nextauth]/  # NextAuth handler
+ï¿½   ï¿½   +-- pilots/              # Pilot CRUD + reviews + score
+ï¿½   ï¿½   +-- clients/             # Client CRUD
+ï¿½   ï¿½   +-- jobs/                # Job CRUD + files + tracking
+ï¿½   ï¿½   +-- leads/               # Lead CRUD
+ï¿½   ï¿½   +-- quotes/              # Quote CRUD + /convert
+ï¿½   ï¿½   +-- invoices/            # Invoice CRUD + Stripe payment link
+ï¿½   ï¿½   +-- contracts/           # Contract CRUD + sign + download
+ï¿½   ï¿½   +-- cron/                # compliance-check, invoice-check, lead-followup
+ï¿½   ï¿½   +-- stripe/              # Checkout session
+ï¿½   ï¿½   +-- webhooks/stripe/     # Stripe payment webhook
+ï¿½   ï¿½   +-- webhooks/adobe-sign/ # Adobe Sign event webhook
+ï¿½   ï¿½   +-- integrations/        # Google Drive auth + files
+ï¿½   ï¿½   +-- export/              # CSV export (pilots, clients, invoices, contracts)
+ï¿½   ï¿½   +-- import/              # CSV import (pilots, clients, invoices)
+ï¿½   ï¿½   +-- chat/                # Volo AI assistant
+ï¿½   ï¿½   +-- activities/          # Activity feed
+ï¿½   ï¿½   +-- dev/                 # Seed + clear (dev only)
+ï¿½   +-- contracts/[id]/sign/     # Public e-signature page
+ï¿½   +-- quote/                   # Public quote request form
+ï¿½   +-- track/[token]/           # Public job tracking
+ï¿½   +-- login/
+ï¿½   +-- unauthorized/
 +-- components/
-¦   +-- layout/sidebar.tsx       # Role-aware navigation
-¦   +-- ui/                      # shadcn/ui components
+ï¿½   +-- layout/sidebar.tsx       # Role-aware navigation
+ï¿½   +-- ui/                      # shadcn/ui components
 +-- lib/
-¦   +-- auth.ts                  # NextAuth config
-¦   +-- email.ts                 # All Resend email functions
-¦   +-- prisma.ts                # Prisma v7 client (PrismaPg adapter)
-¦   +-- utils.ts                 # formatCurrency, formatDate, etc.
+ï¿½   +-- auth.ts                  # NextAuth config
+ï¿½   +-- email.ts                 # All Resend email functions
+ï¿½   +-- prisma.ts                # Prisma v7 client (PrismaPg adapter)
+ï¿½   +-- utils.ts                 # formatCurrency, formatDate, etc.
 +-- types/
     +-- next-auth.d.ts           # Extended session types
 prisma/
@@ -241,12 +245,12 @@ vercel.json                      # Cron schedule config
 | `User` | Shared auth for all roles |
 | `Pilot` | FAA credentials, markets, equipment, insurance |
 | `PilotMarket` | Geographic service areas per pilot |
-| `PilotReview` | Post-job star ratings (1–5) from admin |
+| `PilotReview` | Post-job star ratings (1ï¿½5) from admin |
 | `Equipment` | Drone inventory per pilot |
 | `Client` | Companies (agencies, commercial, real estate) |
 | `Lead` | Pre-client sales pipeline |
 | `QuoteRequest` | Public quote intake (NEW/REVIEWED/CONVERTED/DISMISSED) |
-| `Job` | Dispatch record — links client + pilot(s) |
+| `Job` | Dispatch record ï¿½ links client + pilot(s) |
 | `JobAssignment` | Pilot ? job junction with payment link |
 | `JobFile` | Delivered photos, videos, reports |
 | `Invoice` | Client billing with Stripe payment link |
@@ -309,40 +313,63 @@ Events to subscribe: `checkout.session.completed`, `invoice.payment_succeeded`
 3. Upload compliance docs (FAA cert, insurance COI, W-9)
 
 ### Creating & Dispatching a Job
-1. Admin ? Jobs ? **Create Job** — select client, assign pilot, set price
+1. Admin ? Jobs ? **Create Job** ï¿½ select client, assign pilot, set price
 2. Status flow: `DRAFT ? PENDING_ASSIGNMENT ? ASSIGNED ? IN_PROGRESS ? CAPTURE_COMPLETE ? DELIVERED ? COMPLETED`
 3. Upload deliverable files ? client email fires automatically when `isDelivered=true`
-4. After completion — admin rates the pilot via the Review widget (1–5 stars)
+4. After completion ï¿½ admin rates the pilot via the Review widget (1ï¿½5 stars)
 
 ### Lead ? Client Pipeline
 1. Admin ? Leads ? **Add Lead** or convert from a public Quote
-2. Leads track `nextFollowUp` date — daily cron emails admin when overdue
+2. Leads track `nextFollowUp` date ï¿½ daily cron emails admin when overdue
 3. On WIN, convert to Client and create first Job
 
 ### Public Quote Flow
-1. Prospect fills `/quote` — no account required
+1. Prospect fills `/quote` ï¿½ no account required
 2. Admin sees new quote in Admin ? Quotes (email notification fires)
 3. Admin clicks **Convert to Lead** ? creates Lead record, marks quote CONVERTED
 
 ### Invoicing
-1. Admin ? Invoices ? **Create Invoice** — auto-number (LA-2025-0001)
+1. Admin ? Invoices ? **Create Invoice** ï¿½ auto-number (LA-2025-0001)
 2. **Send Payment Link** ? Stripe Checkout email to client
 3. Client pays online ? webhook marks invoice PAID + emails receipt
 4. Daily cron emails admin for any overdue unpaid invoices
 
 ---
 
+## White-Label Use Cases
+
+NyxAerial is designed to be rebranded and deployed for any drone-related service business:
+
+| Business Type | How It Fits |
+|---|---|
+| Solo FAA Part 107 Pilot | Job tracking, client portal, invoice + Stripe payments, compliance doc reminders |
+| Regional Drone Network | Multi-pilot dispatch, market territories, ratings, payout tracking |
+| Aerial Photography Studio | Client deliverables portal, contract e-signature, Google Drive integration |
+| Drone Inspection Company | Compliance management, job lifecycle tracking, report delivery |
+| Real Estate Media Company | Client self-service portal, quote intake form, Stripe billing |
+| Nationwide Fleet Operator | Full multi-portal platform â€” admin, pilot, and client roles out of the box |
+
+Every client-facing page, email template, and brand reference is configurable. Swap the logo, colors, company name, and domain â€” the platform operates identically under any brand.
+
+---
+
 ## Backlog
 
+### White-Label / Multi-Tenant
+- [ ] **Tenant config table** â€” store brand name, logo URL, primary color, domain per deployment
+- [ ] **Custom subdomain per client portal** â€” clients.yourdomain.com
+- [ ] **Onboarding wizard** â€” guided setup for new operators (company name, logo, first pilot, first client)
+- [ ] **Marketplace listing** â€” let operators self-serve sign up for a NyxAerial instance
+
 ### High Priority
-- [ ] **Guided Onboarding Tour** — Interactive step-by-step walkthrough for first login (tooltip overlays, feature highlights, localStorage completion flag)
-- [ ] **Volo live context** — Persist recent CRM activity (overdue invoices, unassigned jobs, hot leads) into Volo's context automatically
-- [ ] **Pilot mobile optimization** — Responsive pilot portal for field use
-- [ ] **SMS notifications** — Twilio integration for job assignment and status updates
-- [ ] **Bulk job import** — CSV upload for large event batches
+- [ ] **Guided Onboarding Tour** â€” Interactive step-by-step walkthrough for first login (tooltip overlays, feature highlights, localStorage completion flag)
+- [ ] **Volo live context** â€” Persist recent CRM activity (overdue invoices, unassigned jobs, hot leads) into Volo's context automatically
+- [ ] **Pilot mobile optimization** â€” Responsive pilot portal for field use
+- [ ] **SMS notifications** â€” Twilio integration for job assignment and status updates
+- [ ] **Bulk job import** â€” CSV upload for large event batches
 
 ### Nice to Have
-- [ ] White-label client portal (custom subdomain per client)
 - [ ] QuickBooks live sync (currently export-only)
 - [ ] Pilot availability self-scheduling calendar
 - [ ] Automated W-9 collection on pilot onboarding
+- [ ] Per-operator analytics dashboard (revenue, job volume, pilot utilization)
