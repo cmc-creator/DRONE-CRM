@@ -11,6 +11,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { formatDate } from "@/lib/utils";
+import W9SubmitForm from "@/components/pilot/W9SubmitForm";
 
 const docTypeLabels: Record<string, string> = {
   FAA_PART107: "FAA Part 107",
@@ -34,14 +35,21 @@ export default async function PilotDocumentsPage() {
 
   const pilot = await prisma.pilot.findFirst({
     where: { user: { id: session.user.id } },
-    include: { complianceDocs: { orderBy: { createdAt: "desc" } } },
+    include: {
+      complianceDocs: { orderBy: { createdAt: "desc" } },
+      w9Form: true,
+    },
   });
 
   if (!pilot) return <p className="text-muted-foreground">Profile not found.</p>;
 
+  const w9Approved = pilot.w9Form?.reviewStatus === "APPROVED";
   const requiredTypes = ["FAA_PART107", "INSURANCE_COI", "W9"];
   const missing = requiredTypes.filter(
-    (type) => !pilot.complianceDocs.some((d) => d.type === type && d.status === "APPROVED")
+    (type) => {
+      if (type === "W9") return !w9Approved;
+      return !pilot.complianceDocs.some((d) => d.type === type && d.status === "APPROVED");
+    }
   );
 
   return (
@@ -60,11 +68,16 @@ export default async function PilotDocumentsPage() {
               </Badge>
             ))}
           </div>
-          <p className="text-yellow-700 text-xs mt-2">
-            Please email your documents to ops@nyxaerial.com
-          </p>
+          {missing.filter((m) => m !== "W9").length > 0 && (
+            <p className="text-yellow-700 text-xs mt-2">
+              For FAA and insurance docs, email to ops@nyxaerial.com
+            </p>
+          )}
         </div>
       )}
+
+      {/* W-9 submission form */}
+      <W9SubmitForm pilotId={pilot.id} existing={pilot.w9Form as Parameters<typeof W9SubmitForm>[0]["existing"]} />
 
       <Card>
         <CardHeader>

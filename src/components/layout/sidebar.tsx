@@ -25,6 +25,7 @@ import {
   Beaker,
   MessageSquare,
   MessageCircle,
+  Receipt,
 } from "lucide-react";
 
 interface NavItem {
@@ -76,6 +77,7 @@ const adminGroups: NavGroup[] = [
     label: "Compliance & Intel",
     items: [
       { label: "Documents",      href: "/admin/compliance",      icon: ShieldCheck },
+      { label: "Tax / 1099",     href: "/admin/tax",             icon: Receipt },
       { label: "Analytics",      href: "/admin/analytics",       icon: TrendingUp },
       { label: "Dispatch Map",   href: "/admin/dispatch",        icon: Map },
     ],

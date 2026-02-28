@@ -169,6 +169,7 @@ model Pilot {
   activities      Activity[]
   reviews         PilotReview[]
   availability    PilotAvailability[]
+  w9Form          W9Form?
 
   @@map("pilots")
 }
@@ -711,4 +712,44 @@ model PilotAvailability {
 
   @@unique([pilotId, date])
   @@map("pilot_availability")
+}
+
+// ── W-9 Tax Forms ──────────────────────────────────────────────────────────────
+
+model W9Form {
+  id               String   @id @default(cuid())
+  pilotId          String   @unique
+  pilot            Pilot    @relation(fields: [pilotId], references: [id], onDelete: Cascade)
+
+  // IRS W-9 fields
+  legalName        String                       // Box 1: Name as shown on income tax return
+  businessName     String?                      // Box 2: Business/DBA (if different from above)
+  taxClassification String                      // INDIVIDUAL | C_CORP | S_CORP | PARTNERSHIP | LLC_C | LLC_S | LLC_P | TRUST | OTHER
+
+  // TIN — NEVER store full SSN/EIN; last 4 only for identification
+  tinType          String                       // SSN | EIN
+  tinLast4         String                       // last 4 digits, e.g. "1234"
+
+  // Address (Box 5-6 equivalent)
+  address          String
+  city             String
+  state            String
+  zip              String
+
+  // Signed W-9 PDF upload (optional — pilot can upload their own signed form)
+  docUrl           String?
+
+  // Certification (pilot checked "I certify under penalty of perjury")
+  certifiedAt      DateTime
+
+  // Admin review
+  reviewStatus     String   @default("PENDING") // PENDING | APPROVED | REJECTED
+  reviewedBy       String?
+  reviewedAt       DateTime?
+  reviewNotes      String?
+
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@map("w9_forms")
 }
