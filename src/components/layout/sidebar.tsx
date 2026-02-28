@@ -300,7 +300,7 @@ export function Sidebar({ role, userName, userEmail }: SidebarProps) {
           Sign out
         </button>
         <p className="text-[9px] mt-2 px-2" style={{ color: "rgba(0,212,255,0.15)" }}>
-          © {BRAND.year} {BRAND.name} · A NyxCollective LLC Product
+          © {BRAND.year} {BRAND.name}™ · NyxCollective LLC™
         </p>
       </div>
     </aside>

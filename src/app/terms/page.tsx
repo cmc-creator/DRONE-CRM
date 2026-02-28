@@ -100,19 +100,21 @@ export default function TermsPage() {
             <section>
               <h2 className="text-xl font-semibold text-slate-900 mb-3">6. Intellectual Property</h2>
               <p>
-                The NyxAerial name, logo, and brand identity are trademarks of NyxAerial.
-                The "NyxAerial�" mark is the exclusive property of NyxAerial. Unauthorized use
-                is prohibited. This CRM platform is a proprietary product of NyxAerial. All platform
-                software, design, and intellectual property are owned by NyxAerial. Unauthorized use
-                of this trademark is prohibited.
+                NyxAerial™ is a trademark of <strong>NyxCollective LLC™</strong>. The NyxAerial name,
+                logo, and brand identity are the exclusive property of NyxCollective LLC and are protected
+                under applicable trademark law. Unauthorized use of the NyxAerial™ mark is strictly prohibited.
+              </p>
+              <p className="mt-3">
+                This CRM platform is a proprietary product of NyxCollective LLC. All platform software,
+                design, architecture, and intellectual property are owned exclusively by NyxCollective LLC.
               </p>
               <p className="mt-3">
                 All content, code, design, and functionality of this Platform are the exclusive intellectual
-                property of NyxAerial and are protected under applicable copyright, trademark, and
+                property of NyxCollective LLC and are protected under applicable copyright, trademark, and
                 trade secret laws.
               </p>
-              <p className="mt-3">
-                � 2026 NyxAerial � All rights reserved. Built for NyxAerial.
+              <p className="mt-3 font-medium">
+                © 2026 NyxCollective LLC™. All rights reserved. NyxAerial is a product of NyxCollective LLC.
               </p>
               <p className="mt-3">
                 Aerial content and deliverables produced under contract remain subject to the terms of

@@ -1,4 +1,4 @@
-# NyxAerial — Drone Business CRM Platform
+﻿# NyxAerial — Drone Business CRM Platform
 
 **The white-label operations platform built for drone service businesses.**
 
@@ -6,8 +6,8 @@ NyxAerial is a full-stack, rebrandable CRM engineered specifically for the drone
 
 Currently deployed as **NyxAerial CRM** for [NyxAerial](https://nyxaerial.com) — rebrandable for any drone service operator.
 
-> **Built by NyxAerial** — a NyxCollective LLC product.
-> © 2026 NyxCollective LLC. All rights reserved.
+> **Built by NyxAerial™** — a NyxCollective LLC™ product.
+> © 2026 NyxCollective LLC™. All rights reserved. NyxAerial™ is a trademark of NyxCollective LLC.
 
 ---
 

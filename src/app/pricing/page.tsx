@@ -353,7 +353,7 @@ export default function PricingPage() {
         {/* Footer */}
         <div className="text-center border-t pt-8" style={{ borderColor: "rgba(0,212,255,0.08)" }}>
           <p className="text-xs" style={{ color: "rgba(0,212,255,0.3)" }}>
-            © 2026 NyxCollective LLC · NyxAerial is a product of NyxCollective LLC ·{" "}
+            © 2026 NyxCollective LLC™ · NyxAerial™ is a trademark of NyxCollective LLC ·{" "}
             <Link href="/privacy" className="hover:underline">Privacy</Link>
             {" · "}
             <Link href="/terms" className="hover:underline">Terms</Link>

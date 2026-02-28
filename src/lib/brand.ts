@@ -21,6 +21,10 @@ export const BRAND = {
   tagline: process.env.NEXT_PUBLIC_ORG_TAGLINE ?? "Drone Operations Platform",
   /** Copyright year */
   year: "2026",
+  /** Legal entity — owner of the NyxAerial™ trademark */
+  legalEntity: "NyxCollective LLC",
+  /** Full copyright line */
+  copyright: "© 2026 NyxCollective LLC. All rights reserved.",
 } as const;
 
 /** Server-only — safe to use in API routes and email.ts */
