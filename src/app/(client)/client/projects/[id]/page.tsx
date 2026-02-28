@@ -2,10 +2,11 @@ import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft, MapPin, Calendar, FileDown, CheckCircle, Clock, AlertCircle } from "lucide-react";
+import { ArrowLeft, MapPin, Calendar, FileDown, CheckCircle, Clock, AlertCircle, ThumbsUp, ThumbsDown } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { formatDate, formatCurrency } from "@/lib/utils";
+import MessageThread from "@/components/messaging/MessageThread";
 
 interface Props { params: Promise<{ id: string }> }
 
@@ -158,16 +159,37 @@ export default async function ClientProjectDetailPage({ params }: Props) {
                           {file.deliveredAt && (
                             <p className="text-xs text-muted-foreground">Delivered {formatDate(file.deliveredAt)}</p>
                           )}
+                          {file.approvalStatus !== "PENDING" && (
+                            <Badge className={`mt-1 text-[10px] ${file.approvalStatus === "APPROVED" ? "bg-green-100 text-green-700" : "bg-orange-100 text-orange-700"}`}>
+                              {file.approvalStatus === "APPROVED" ? "✓ Approved" : "↩ Revision Requested"}
+                            </Badge>
+                          )}
                         </div>
                       </div>
-                      <a
-                        href={file.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1.5 text-xs font-medium text-primary hover:underline"
-                      >
-                        <FileDown className="h-3.5 w-3.5" /> Download
-                      </a>
+                      <div className="flex items-center gap-2">
+                        {file.approvalStatus === "PENDING" && (
+                          <>
+                            <form action={`/api/jobs/${job.id}/files/${file.id}/approve`} method="POST">
+                              <button type="submit" title="Approve" className="inline-flex items-center gap-1 text-xs font-medium text-green-600 hover:underline">
+                                <ThumbsUp className="h-3.5 w-3.5" />
+                              </button>
+                            </form>
+                            <form action={`/api/jobs/${job.id}/files/${file.id}/request-revision`} method="POST">
+                              <button type="submit" title="Request revision" className="inline-flex items-center gap-1 text-xs font-medium text-orange-500 hover:underline">
+                                <ThumbsDown className="h-3.5 w-3.5" />
+                              </button>
+                            </form>
+                          </>
+                        )}
+                        <a
+                          href={file.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1.5 text-xs font-medium text-primary hover:underline"
+                        >
+                          <FileDown className="h-3.5 w-3.5" /> Download
+                        </a>
+                      </div>
                     </div>
                   ))}
                 </div>
@@ -202,6 +224,18 @@ export default async function ClientProjectDetailPage({ params }: Props) {
           </Card>
         </div>
       </div>
+
+      {/* Messaging thread */}
+      <Card>
+        <CardContent className="pt-4 pb-0 px-0">
+          <MessageThread
+            jobId={job.id}
+            jobTitle={job.title}
+            currentUserId={session.user.id}
+            currentRole="CLIENT"
+          />
+        </CardContent>
+      </Card>
     </div>
   );
 }

@@ -168,6 +168,7 @@ model Pilot {
   contracts       Contract[]
   activities      Activity[]
   reviews         PilotReview[]
+  availability    PilotAvailability[]
 
   @@map("pilots")
 }
@@ -328,6 +329,7 @@ model Job {
   invoices      Invoice[]
   activities    Activity[]
   reviews       PilotReview[]
+  messages      Message[]
 
   @@map("jobs")
 }
@@ -675,4 +677,38 @@ model QuoteRequest {
   updatedAt   DateTime @updatedAt
 
   @@map("quote_requests")
+}
+
+// ── In-app Messaging ───────────────────────────────────────────────────────────
+
+model Message {
+  id         String   @id @default(cuid())
+  jobId      String?
+  job        Job?     @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  senderId   String
+  senderName String?
+  senderRole String   // ADMIN | CLIENT | PILOT
+  body       String
+  readAt     DateTime?
+  createdAt  DateTime @default(now())
+
+  @@map("messages")
+}
+
+// ── Pilot Availability ─────────────────────────────────────────────────────────
+
+model PilotAvailability {
+  id        String   @id @default(cuid())
+  pilotId   String
+  pilot     Pilot    @relation(fields: [pilotId], references: [id], onDelete: Cascade)
+  date      DateTime
+  available Boolean  @default(true)
+  startTime String?  // "08:00"
+  endTime   String?  // "17:00"
+  notes     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([pilotId, date])
+  @@map("pilot_availability")
 }

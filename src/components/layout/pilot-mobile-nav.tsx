@@ -2,14 +2,14 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Briefcase, FileText, Upload, DollarSign, LayoutDashboard } from "lucide-react";
+import { Briefcase, FileText, Upload, DollarSign, LayoutDashboard, CalendarDays } from "lucide-react";
 
 const NAV = [
-  { href: "/pilot/dashboard",    label: "Home",       icon: LayoutDashboard },
-  { href: "/pilot/jobs",         label: "Jobs",       icon: Briefcase },
-  { href: "/pilot/deliverables", label: "Uploads",    icon: Upload },
-  { href: "/pilot/documents",    label: "Docs",       icon: FileText },
-  { href: "/pilot/payments",     label: "Pay",        icon: DollarSign },
+  { href: "/pilot/dashboard",    label: "Home",      icon: LayoutDashboard },
+  { href: "/pilot/jobs",         label: "Jobs",      icon: Briefcase },
+  { href: "/pilot/availability", label: "Schedule",  icon: CalendarDays },
+  { href: "/pilot/deliverables", label: "Uploads",   icon: Upload },
+  { href: "/pilot/payments",     label: "Pay",       icon: DollarSign },
 ];
 
 export function PilotMobileNav() {

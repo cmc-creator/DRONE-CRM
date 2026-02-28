@@ -24,6 +24,7 @@ import {
   Settings2,
   Beaker,
   MessageSquare,
+  MessageCircle,
 } from "lucide-react";
 
 interface NavItem {
@@ -95,6 +96,7 @@ const pilotGroups: NavGroup[] = [
     items: [
       { label: "Dashboard",    href: "/pilot/dashboard",    icon: LayoutDashboard },
       { label: "My Jobs",      href: "/pilot/jobs",         icon: Briefcase },
+      { label: "Availability", href: "/pilot/availability", icon: CalendarDays },
     ],
   },
   {
@@ -126,6 +128,7 @@ const clientGroups: NavGroup[] = [
       { label: "Deliverables", href: "/client/deliverables", icon: FolderOpen },
       { label: "Invoices",     href: "/client/invoices",     icon: FileText },
       { label: "Contracts",    href: "/client/contracts",    icon: FileSignature },
+      { label: "Messages",     href: "/client/messages",     icon: MessageCircle },
     ],
   },
 ];

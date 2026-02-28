@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { sendJobAssignmentEmail } from "@/lib/email";
+import { notifyJobAssigned } from "@/lib/notify";
 
 export async function GET() {
   const session = await auth();
@@ -83,7 +84,7 @@ export async function POST(req: NextRequest) {
     },
   });
 
-  // Fire-and-forget assignment email (never blocks response)
+  // Fire-and-forget assignment email + Slack/Teams/SMS
   if (pilotId) {
     prisma.pilot
       .findUnique({
@@ -104,8 +105,19 @@ export async function POST(req: NextRequest) {
             payout: job.pilotPayout ? Number(job.pilotPayout) : null,
           });
         }
+        // Slack / Teams / SMS notifications
+        notifyJobAssigned({
+          jobTitle:      job.title,
+          pilotName:     pilot?.user?.name ?? "Pilot",
+          pilotPhone:    (pilot as { phone?: string | null } | null)?.phone,
+          clientName:    (job.client as { companyName?: string })?.companyName ?? "N/A",
+          city:          job.city,
+          state:         job.state,
+          scheduledDate: job.scheduledDate,
+          jobId:         job.id,
+        });
       })
-      .catch(() => {}); // silently ignore lookup errors
+      .catch(() => {}); // silently ignore
   }
 
   return NextResponse.json(job, { status: 201 });

@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
 import { sendJobStatusEmail } from "@/lib/email";
+import { notifyJobStatusChange, notifyJobAssigned } from "@/lib/notify";
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -91,7 +92,7 @@ export async function PATCH(req: Request, { params }: Props) {
         ...(body.priority !== undefined && { priority: Number(body.priority) }),
       },
     });
-    // Fire-and-forget status email to assigned pilot
+    // Fire-and-forget status email + Slack/Teams blast
     if (body.status) {
       prisma.jobAssignment
         .findFirst({
@@ -109,6 +110,37 @@ export async function PATCH(req: Request, { params }: Props) {
               jobId: updated.id,
             });
           }
+        })
+        .catch(() => {});
+
+      // Slack / Teams status notification
+      notifyJobStatusChange({
+        jobTitle:  updated.title,
+        newStatus: body.status,
+        city:      updated.city,
+        state:     updated.state,
+        jobId:     updated.id,
+      }).catch(() => {});
+    }
+
+    // If a pilot is being assigned via PATCH, fire assignment notifications
+    if (body.pilotId) {
+      prisma.pilot
+        .findUnique({
+          where: { id: body.pilotId },
+          include: { user: { select: { name: true } } },
+        })
+        .then((pilot) => {
+          notifyJobAssigned({
+            jobTitle:      updated.title,
+            pilotName:     pilot?.user?.name ?? "Pilot",
+            pilotPhone:    (pilot as { phone?: string | null } | null)?.phone,
+            clientName:    "Client",
+            city:          updated.city,
+            state:         updated.state,
+            scheduledDate: updated.scheduledDate,
+            jobId:         updated.id,
+          });
         })
         .catch(() => {});
     }

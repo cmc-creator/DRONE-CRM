@@ -112,6 +112,36 @@ export default async function AnalyticsPage() {
     .sort((a, b) => b.revenue - a.revenue);
 
   // ── Summary stats ──────────────────────────────────────────────────
+  // ── Pilot performance ────────────────────────────────────────────
+  let pilotPerformance: { name: string; jobs: number; payout: number; rating: number | null }[] = [];
+  try {
+    const pilotList = await prisma.pilot.findMany({
+      where: { status: "ACTIVE" },
+      select: {
+        user: { select: { name: true } },
+        rating: true,
+        payments: {
+          where: { status: "PAID", createdAt: { gte: start } },
+          select: { amount: true },
+        },
+        jobAssignments: {
+          where: { job: { createdAt: { gte: start } } },
+          select: { id: true },
+        },
+      },
+      take: 20,
+    });
+    pilotPerformance = pilotList
+      .map((p) => ({
+        name:   p.user?.name ?? "Unknown",
+        jobs:   p.jobAssignments.length,
+        payout: p.payments.reduce((s, pay) => s + Number(pay.amount), 0),
+        rating: p.rating ?? null,
+      }))
+      .filter((p) => p.jobs > 0)
+      .sort((a, b) => b.jobs - a.jobs);
+  } catch { /* ignore */ }
+
   const totalRevenue     = invoices.filter((i) => i.status === "PAID").reduce((s, i) => s + Number(i.totalAmount), 0);
   const pipelineValue    = leads.filter((l) => !["WON","LOST"].includes(l.status)).reduce((s, l) => s + (l.value ?? 0), 0);
   const completedJobs    = jobs.filter((j) => j.status === "COMPLETED").length;
@@ -165,6 +195,46 @@ export default async function AnalyticsPage() {
         leadFunnel={leadFunnel}
         topClients={topClients}
       />
+
+      {/* Pilot performance table */}
+      {pilotPerformance.length > 0 && (
+        <div className="rounded-xl overflow-hidden" style={{ background:"rgba(255,255,255,0.015)", border:"1px solid rgba(0,212,255,0.07)" }}>
+          <div className="px-5 py-4" style={{ borderBottom:"1px solid rgba(0,212,255,0.07)" }}>
+            <h2 className="text-sm font-bold" style={{ color:"#d8e8f4" }}>Pilot Performance — {year}</h2>
+            <p className="text-xs mt-0.5" style={{ color:"rgba(0,212,255,0.35)" }}>Jobs, payouts, and ratings for active pilots</p>
+          </div>
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr style={{ borderBottom:"1px solid rgba(0,212,255,0.06)" }}>
+                  {["Pilot","Jobs","YTD Payout","Rating"].map((h) => (
+                    <th key={h} className="text-left px-5 py-3 text-xs font-bold uppercase tracking-wider" style={{ color:"rgba(0,212,255,0.4)" }}>{h}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {pilotPerformance.map((p, i) => (
+                  <tr key={i} style={{ borderBottom:"1px solid rgba(0,212,255,0.04)" }}>
+                    <td className="px-5 py-3 font-medium" style={{ color:"#d8e8f4" }}>{p.name}</td>
+                    <td className="px-5 py-3 font-bold" style={{ color:"#00d4ff" }}>{p.jobs}</td>
+                    <td className="px-5 py-3 font-bold" style={{ color:"#34d399" }}>{formatCurrency(p.payout)}</td>
+                    <td className="px-5 py-3">
+                      {p.rating != null ? (
+                        <span className="font-bold" style={{ color:"#fbbf24" }}>
+                          {"★".repeat(Math.round(p.rating))}{"☆".repeat(5 - Math.round(p.rating))}{" "}
+                          <span className="text-xs" style={{ color:"rgba(0,212,255,0.4)" }}>{p.rating.toFixed(1)}</span>
+                        </span>
+                      ) : (
+                        <span style={{ color:"rgba(0,212,255,0.25)" }}>—</span>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
