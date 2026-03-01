@@ -49,7 +49,7 @@ export async function GET() {
   return new NextResponse(iif, {
     headers: {
       "Content-Type": "text/plain",
-      "Content-Disposition": `attachment; filename="lumin-invoices-qb-${Date.now()}.iif"`,
+      "Content-Disposition": `attachment; filename="nyxaerial-invoices-qb-${Date.now()}.iif"`,
     },
   });
 }

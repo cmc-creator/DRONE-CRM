@@ -26,6 +26,9 @@ type ImportResult = {
 type Props = {
   gdriveConnected: boolean;
   oneDriveConnected: boolean;
+  qbConnected: boolean;
+  qbSyncedCount: number;
+  qbUnsyncedCount: number;
 };
 
 // ─── Helper components ────────────────────────────────────────────────────────
@@ -392,11 +395,40 @@ function ImportCard({
 
 // ─── Main page ────────────────────────────────────────────────────────────────
 
-export default function IntegrationsClient({ gdriveConnected, oneDriveConnected }: Props) {
+export default function IntegrationsClient({ gdriveConnected, oneDriveConnected, qbConnected, qbSyncedCount, qbUnsyncedCount }: Props) {
   const searchParams = useSearchParams();
   const gdriveStatus = searchParams.get("gdrive");
+  const qbStatus     = searchParams.get("qb");
+  const [qbSyncing,       setQbSyncing]      = useState(false);
+  const [qbSyncResult,    setQbSyncResult]   = useState<{ synced: number; skipped: number; errors: string[] } | null>(null);
+  const [qbDisconnecting, setQbDisconnecting] = useState(false);
   const origin =
     typeof window !== "undefined" ? window.location.origin : "https://your-domain.com";
+
+  async function handleQBSync() {
+    setQbSyncing(true);
+    setQbSyncResult(null);
+    try {
+      const res = await fetch("/api/integrations/quickbooks/sync", { method: "POST" });
+      const data = await res.json();
+      setQbSyncResult(data);
+    } catch {
+      setQbSyncResult({ synced: 0, skipped: 0, errors: ["Network error"] });
+    } finally {
+      setQbSyncing(false);
+    }
+  }
+
+  async function handleQBDisconnect() {
+    if (!confirm("Disconnect QuickBooks Online? You can reconnect at any time.")) return;
+    setQbDisconnecting(true);
+    try {
+      await fetch("/api/integrations/quickbooks/disconnect", { method: "DELETE" });
+      window.location.reload();
+    } finally {
+      setQbDisconnecting(false);
+    }
+  }
 
   return (
     <div className="space-y-10 max-w-5xl">
@@ -455,6 +487,31 @@ export default function IntegrationsClient({ gdriveConnected, oneDriveConnected 
           }}
         >
           <CheckCircle className="w-4 h-4" /> Microsoft OneDrive connected successfully!
+        </div>
+      )}
+      {qbStatus === "connected" && (
+        <div
+          className="flex items-center gap-2 text-sm px-4 py-3 rounded-lg"
+          style={{
+            background: "rgba(52,211,153,0.08)",
+            border: "1px solid rgba(52,211,153,0.2)",
+            color: "#34d399",
+          }}
+        >
+          <CheckCircle className="w-4 h-4" /> QuickBooks Online connected successfully!
+        </div>
+      )}
+      {qbStatus === "error" && (
+        <div
+          className="flex items-center gap-2 text-sm px-4 py-3 rounded-lg"
+          style={{
+            background: "rgba(248,113,113,0.08)",
+            border: "1px solid rgba(248,113,113,0.2)",
+            color: "#f87171",
+          }}
+        >
+          <XCircle className="w-4 h-4" /> QuickBooks connection failed:{" "}
+          {searchParams.get("msg") ?? "unknown error"}
         </div>
       )}
 
@@ -1435,8 +1492,10 @@ export default function IntegrationsClient({ gdriveConnected, oneDriveConnected 
           {/* QuickBooks */}
           <IntegrationCard
             title="QuickBooks Online"
-            description="Export invoices, clients, and pilot payouts to QuickBooks for your accountant"
+            description="Live invoice + client sync — push invoices to QBO automatically"
             color="#2CA01C"
+            connected={qbConnected}
+            connectHref="/api/integrations/quickbooks/connect"
             docsHref="https://developer.intuit.com"
           >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -1463,24 +1522,74 @@ export default function IntegrationsClient({ gdriveConnected, oneDriveConnected 
                   className="text-xs font-semibold uppercase tracking-wider mb-2"
                   style={{ color: "rgba(0,212,255,0.5)" }}
                 >
-                  Features
+                  {qbConnected ? "Sync Status" : "Features"}
                 </p>
-                {[
-                  "Sync invoices as QuickBooks Invoices",
-                  "Map clients to QuickBooks Customers",
-                  "Push pilot payouts as Vendor Bills",
-                  "Reconcile payment status automatically",
-                ].map((s) => (
-                  <div key={s} className="flex items-start gap-2 mb-1.5">
-                    <CheckCircle
-                      className="w-3.5 h-3.5 mt-0.5 flex-shrink-0"
-                      style={{ color: "#34d399" }}
-                    />
-                    <p className="text-xs" style={{ color: "#94a3b8" }}>
-                      {s}
-                    </p>
+                {qbConnected ? (
+                  <div className="space-y-3">
+                    <div className="flex gap-4 text-xs">
+                      <div>
+                        <p style={{ color: "#34d399", fontWeight: 700, fontSize: "1.1rem" }}>{qbSyncedCount}</p>
+                        <p style={{ color: "rgba(0,212,255,0.4)" }}>Synced</p>
+                      </div>
+                      <div>
+                        <p style={{ color: qbUnsyncedCount > 0 ? "#fbbf24" : "#34d399", fontWeight: 700, fontSize: "1.1rem" }}>{qbUnsyncedCount}</p>
+                        <p style={{ color: "rgba(0,212,255,0.4)" }}>Pending sync</p>
+                      </div>
+                    </div>
+
+                    <div className="flex gap-2 flex-wrap">
+                      <button
+                        onClick={handleQBSync}
+                        disabled={qbSyncing || qbUnsyncedCount === 0}
+                        className="inline-flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg font-semibold disabled:opacity-50"
+                        style={{ background: "rgba(44,160,28,0.12)", border: "1px solid rgba(44,160,28,0.3)", color: "#2CA01C" }}
+                      >
+                        {qbSyncing ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <RefreshCw className="w-3.5 h-3.5" />}
+                        {qbSyncing ? "Syncing…" : `Sync ${qbUnsyncedCount} invoices`}
+                      </button>
+                      <button
+                        onClick={handleQBDisconnect}
+                        disabled={qbDisconnecting}
+                        className="inline-flex items-center gap-1 text-xs px-2 py-1.5 rounded-lg font-semibold disabled:opacity-50"
+                        style={{ background: "rgba(248,113,113,0.08)", border: "1px solid rgba(248,113,113,0.2)", color: "#f87171" }}
+                      >
+                        <XCircle className="w-3.5 h-3.5" /> Disconnect
+                      </button>
+                    </div>
+
+                    {qbSyncResult && (
+                      <div
+                        className="rounded-lg px-3 py-2 text-xs space-y-1"
+                        style={{ background: "rgba(0,0,0,0.3)", border: "1px solid rgba(0,212,255,0.1)" }}
+                      >
+                        <p style={{ color: "#34d399" }}>{qbSyncResult.synced} invoices synced</p>
+                        {qbSyncResult.skipped > 0 && (
+                          <p style={{ color: "#f87171" }}>{qbSyncResult.skipped} failed</p>
+                        )}
+                        {qbSyncResult.errors.map((e, i) => (
+                          <p key={i} className="font-mono" style={{ color: "rgba(248,113,113,0.7)" }}>{e}</p>
+                        ))}
+                      </div>
+                    )}
                   </div>
-                ))}
+                ) : (
+                  [
+                    "Sync invoices as QuickBooks Invoices",
+                    "Map clients to QuickBooks Customers",
+                    "Reconcile payment status automatically",
+                    "One-click IIF export for QB Desktop below",
+                  ].map((s) => (
+                    <div key={s} className="flex items-start gap-2 mb-1.5">
+                      <CheckCircle
+                        className="w-3.5 h-3.5 mt-0.5 flex-shrink-0"
+                        style={{ color: "#34d399" }}
+                      />
+                      <p className="text-xs" style={{ color: "#94a3b8" }}>
+                        {s}
+                      </p>
+                    </div>
+                  ))
+                )}
               </div>
             </div>
           </IntegrationCard>

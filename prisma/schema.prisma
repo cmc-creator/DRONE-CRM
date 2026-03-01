@@ -247,6 +247,9 @@ model Client {
   // Stripe
   stripeCustomerId String?
 
+  // QuickBooks Online
+  qboCustomerId String?   // QBO Customer ID (set after first sync)
+
   // Timestamps
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -427,6 +430,9 @@ model Invoice {
 
   notes         String?
   lineItems     Json?         // array of {description, qty, unitPrice, total}
+
+  // QuickBooks Online sync
+  qboId         String?       // QBO Invoice ID (set after first sync)
 
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt

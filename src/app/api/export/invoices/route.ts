@@ -68,7 +68,7 @@ export async function GET() {
   ];
 
   const csv = lines.join("\r\n");
-  const filename = `lumin-invoices-${new Date().toISOString().split("T")[0]}.csv`;
+  const filename = `nyxaerial-invoices-${new Date().toISOString().split("T")[0]}.csv`;
 
   return new NextResponse(csv, {
     headers: {
