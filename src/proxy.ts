@@ -14,7 +14,7 @@ function getRoleHome(role?: string) {
   }
 }
 
-export async function proxy(req: NextRequest) {
+export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
   // Always allow public routes through — no auto-redirect away from /login
@@ -23,8 +23,15 @@ export async function proxy(req: NextRequest) {
     pathname === "/login" ||
     pathname === "/terms" ||
     pathname === "/privacy" ||
+    pathname === "/pricing" ||
+    pathname === "/quote" ||
     pathname === "/unauthorized" ||
+    pathname.startsWith("/track") ||
+    pathname.startsWith("/contracts") ||
     pathname.startsWith("/api/auth") ||
+    pathname.startsWith("/api/stripe") ||
+    pathname.startsWith("/api/webhooks") ||
+    pathname.startsWith("/api/quotes") ||
     pathname.startsWith("/_next") ||
     pathname.startsWith("/favicon");
 
