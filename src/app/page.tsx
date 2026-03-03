@@ -16,7 +16,7 @@ const FEATURES = [
     icon: Users,
     color: "#a78bfa",
     title: "Pilot Network Management",
-    desc: "Manage your entire pilot roster — certifications, W-9s, availability, and payouts — all in one place.",
+    desc: "Manage your entire pilot roster including certifications, W-9s, availability, and payouts, all in one place.",
   },
   {
     icon: FileText,
@@ -40,7 +40,7 @@ const FEATURES = [
     icon: TrendingUp,
     color: "#f472b6",
     title: "Analytics & Reports",
-    desc: "Revenue trends, lead source attribution, win-rate by channel, and quarterly summaries — with CSV exports.",
+    desc: "Revenue trends, lead source attribution, win-rate by channel, and quarterly summaries. CSV exports included.",
   },
   {
     icon: MessageSquare,
@@ -79,7 +79,7 @@ const TESTIMONIALS = [
   {
     name: "Apex Drone Solutions",
     role: "Commercial Real Estate Imaging",
-    text: "Clients love their portal — they can see job progress, download deliverables, and pay invoices without calling us.",
+    text: "Clients love their portal. They can see job progress, download deliverables, and pay invoices without ever calling us.",
     stars: 5,
   },
 ];
@@ -204,7 +204,7 @@ export default function LandingPage() {
             maxWidth: 620, margin: "0 auto 40px", lineHeight: 1.7,
           }}
         >
-          Manage jobs, pilots, clients, invoices, compliance docs, and 1099s — all in one platform
+          Manage jobs, pilots, clients, invoices, compliance docs, and 1099s in one platform
           designed around how aerial service businesses actually work.
         </p>
 
@@ -260,7 +260,7 @@ export default function LandingPage() {
             Everything your operation needs
           </h2>
           <p style={{ color: "rgba(216,232,244,0.55)", fontSize: 15, maxWidth: 560, margin: "0 auto" }}>
-            Not a generic CRM bolted onto drones — every feature is built around Part 107 workflows.
+            Not a generic CRM bolted onto drones. Every feature is built around Part 107 workflows.
           </p>
         </div>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: 20 }}>
