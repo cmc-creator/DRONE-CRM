@@ -12,6 +12,7 @@ import {
 import { AlertTriangle, CheckCircle2, Download, Receipt, XCircle } from "lucide-react";
 import { formatCurrency } from "@/lib/utils";
 import Link from "next/link";
+import { YearSelector } from "./YearSelector";
 
 const CURRENT_YEAR = new Date().getFullYear();
 const YEARS = Array.from({ length: 5 }, (_, i) => CURRENT_YEAR - i);
@@ -124,20 +125,7 @@ export default async function TaxPage({ searchParams }: PageProps) {
 
         {/* Year selector */}
         <div className="flex items-center gap-3">
-          <form method="GET">
-            <select
-              name="year"
-              defaultValue={year}
-              onChange={(e) => {
-                (e.target.closest("form") as HTMLFormElement).submit();
-              }}
-              className="border rounded-md px-3 py-1.5 text-sm bg-white"
-            >
-              {YEARS.map((y) => (
-                <option key={y} value={y}>{y}</option>
-              ))}
-            </select>
-          </form>
+          <YearSelector years={YEARS} current={year} />
 
           {requires1099.length > 0 && (
             <Link
