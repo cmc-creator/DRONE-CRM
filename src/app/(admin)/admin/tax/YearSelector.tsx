@@ -14,7 +14,7 @@ export function YearSelector({ years, current }: YearSelectorProps) {
         onChange={(e) => {
           (e.target.closest("form") as HTMLFormElement).submit();
         }}
-        className="border rounded-md px-3 py-1.5 text-sm bg-white"
+        className="border border-border rounded-md px-3 py-1.5 text-sm bg-background text-foreground"
       >
         {years.map((y) => (
           <option key={y} value={y}>{y}</option>

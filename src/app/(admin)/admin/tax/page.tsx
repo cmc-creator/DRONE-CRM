@@ -142,10 +142,10 @@ export default async function TaxPage({ searchParams }: PageProps) {
       {/* Summary cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {[
-          { label: "Total Payouts",     value: formatCurrency(totalPayouts),    color: "text-slate-900" },
-          { label: "Pilots Paid",       value: String(pilots.length),           color: "text-slate-900" },
-          { label: "1099 Required",     value: String(requires1099.length),     color: requires1099.length > 0 ? "text-amber-600" : "text-slate-900" },
-          { label: "Missing W-9",       value: String(missingW9.length),        color: missingW9.length > 0 ? "text-destructive" : "text-green-600" },
+          { label: "Total Payouts",     value: formatCurrency(totalPayouts),    color: "text-foreground" },
+          { label: "Pilots Paid",       value: String(pilots.length),           color: "text-foreground" },
+          { label: "1099 Required",     value: String(requires1099.length),     color: requires1099.length > 0 ? "text-amber-500" : "text-foreground" },
+          { label: "Missing W-9",       value: String(missingW9.length),        color: missingW9.length > 0 ? "text-destructive" : "text-green-500" },
         ].map((s) => (
           <Card key={s.label}>
             <CardContent className="p-5">
@@ -158,13 +158,13 @@ export default async function TaxPage({ searchParams }: PageProps) {
 
       {/* Missing W-9 alert */}
       {missingW9.length > 0 && (
-        <div className="flex items-start gap-3 bg-red-50 border border-red-200 rounded-xl p-4 text-sm">
+        <div className="flex items-start gap-3 bg-destructive/10 border border-destructive/30 rounded-xl p-4 text-sm">
           <AlertTriangle className="w-5 h-5 text-destructive mt-0.5 shrink-0" />
           <div>
             <p className="font-semibold text-destructive">
               {missingW9.length} pilot{missingW9.length > 1 ? "s" : ""} require a 1099 but have no approved W-9
             </p>
-            <p className="text-red-700 mt-1 text-xs">
+            <p className="text-destructive/80 mt-1 text-xs">
               Reach out to collect W-9s before filing. Pilots can submit via their Documents page.
             </p>
             <div className="flex flex-wrap gap-1.5 mt-2">
@@ -172,7 +172,7 @@ export default async function TaxPage({ searchParams }: PageProps) {
                 <Link
                   key={p.pilotId}
                   href={`/admin/pilots/${p.pilotId}`}
-                  className="text-xs bg-red-100 hover:bg-red-200 text-destructive px-2 py-0.5 rounded-full transition-colors"
+                  className="text-xs bg-destructive/15 hover:bg-destructive/25 text-destructive px-2 py-0.5 rounded-full transition-colors"
                 >
                   {p.name}
                 </Link>
@@ -209,7 +209,7 @@ export default async function TaxPage({ searchParams }: PageProps) {
                 {pilots.map((p) => {
                   const needs1099 = p.totalPaid >= 600;
                   return (
-                    <TableRow key={p.pilotId} className={needs1099 && p.w9Status !== "APPROVED" ? "bg-red-50/40" : undefined}>
+                    <TableRow key={p.pilotId} className={needs1099 && p.w9Status !== "APPROVED" ? "bg-destructive/8" : undefined}>
                       <TableCell>
                         <div>
                           <Link
