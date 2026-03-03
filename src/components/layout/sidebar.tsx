@@ -113,6 +113,9 @@ const pilotGroups: NavGroup[] = [
     items: [
       { label: "Payments",     href: "/pilot/payments",     icon: FileText },
       { label: "Tax / 1099",   href: "/pilot/tax",          icon: Receipt },
+    ],
+  },
+];
 
 const clientGroups: NavGroup[] = [
   {
