@@ -1,8 +1,8 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Briefcase, FileText, Upload, DollarSign, LayoutDashboard, CalendarDays } from "lucide-react";
+import { Briefcase, FileText, Upload, DollarSign, LayoutDashboard, CalendarDays, Receipt } from "lucide-react";
 
 const NAV = [
   { href: "/pilot/dashboard",    label: "Home",      icon: LayoutDashboard },
@@ -10,6 +10,7 @@ const NAV = [
   { href: "/pilot/availability", label: "Schedule",  icon: CalendarDays },
   { href: "/pilot/deliverables", label: "Uploads",   icon: Upload },
   { href: "/pilot/payments",     label: "Pay",       icon: DollarSign },
+  { href: "/pilot/tax",          label: "Tax",       icon: Receipt },
 ];
 
 export function PilotMobileNav() {
