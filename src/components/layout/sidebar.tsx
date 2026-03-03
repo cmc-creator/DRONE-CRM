@@ -26,6 +26,8 @@ import {
   MessageSquare,
   MessageCircle,
   Receipt,
+  BarChart2,
+  MapPinned,
 } from "lucide-react";
 
 interface NavItem {
@@ -67,6 +69,7 @@ const adminGroups: NavGroup[] = [
     label: "Business",
     items: [
       { label: "Clients",        href: "/admin/clients",         icon: Building2 },
+      { label: "Client Map",      href: "/admin/clients/map",     icon: MapPinned },
       { label: "Leads",          href: "/admin/leads",           icon: Target },
       { label: "Quotes",         href: "/admin/quotes",          icon: MessageSquare },
       { label: "Invoices",       href: "/admin/invoices",        icon: FileText },
@@ -79,6 +82,7 @@ const adminGroups: NavGroup[] = [
       { label: "Documents",      href: "/admin/compliance",      icon: ShieldCheck },
       { label: "Tax / 1099",     href: "/admin/tax",             icon: Receipt },
       { label: "Analytics",      href: "/admin/analytics",       icon: TrendingUp },
+      { label: "Reports",        href: "/admin/reports",         icon: BarChart2 },
       { label: "Dispatch Map",   href: "/admin/dispatch",        icon: Map },
     ],
   },
