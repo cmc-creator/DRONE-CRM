@@ -11,7 +11,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Plus, Download } from "lucide-react";
+import { Plus, Download, Map } from "lucide-react";
 import { formatDate } from "@/lib/utils";
 import { CsvImportButton } from "@/components/admin/csv-import-button";
 
@@ -57,6 +57,12 @@ export default async function ClientsPage() {
               Export CSV
             </Button>
           </a>
+          <Link href="/admin/clients/map">
+            <Button variant="outline" size="sm">
+              <Map className="w-4 h-4 mr-2" />
+              Map View
+            </Button>
+          </Link>
           <Link href="/admin/clients/new">
             <Button>
               <Plus className="w-4 h-4 mr-2" />
