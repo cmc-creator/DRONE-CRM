@@ -40,7 +40,7 @@ const TIERS = [
       "Analytics dashboard",
       "Volo AI assistant",
       "Overdue lead follow-up automation",
-      "Full white-label (your logo & brand — NyxAerial badge removed)",
+      "Full white-label: your logo, brand colors, and NyxAerial badge removed",
     ],
     cta: "Start Free Trial",
     ctaHref: "mailto:ops@nyxaerial.com?subject=NyxAerial Network Plan",
@@ -77,12 +77,12 @@ const ADD_ONS = [
 ];
 
 const USE_CASES = [
-  { type: "Solo Part 107 Pilot", desc: "Track jobs, bill clients, stay compliant — all from your phone." },
+  { type: "Solo Part 107 Pilot", desc: "Track jobs, bill clients, and stay compliant, all from your phone." },
   { type: "Regional Drone Network", desc: "Dispatch multiple pilots, manage territories, track payouts." },
   { type: "Aerial Photography Studio", desc: "Client delivery portal, contracts, and Stripe billing." },
   { type: "Drone Inspection Company", desc: "Compliance docs, job lifecycle, report delivery." },
   { type: "Real Estate Media Company", desc: "Client self-service portal, quote intake, automated reminders." },
-  { type: "Nationwide Fleet Operator", desc: "Full multi-portal platform — admin, pilot, and client roles." },
+  { type: "Nationwide Fleet Operator", desc: "Full multi-portal platform with separate admin, pilot, and client roles." },
 ];
 
 export default function PricingPage() {
@@ -141,10 +141,10 @@ export default function PricingPage() {
           </h1>
           <p className="text-lg max-w-2xl mx-auto" style={{ color: "rgba(148,163,184,0.8)" }}>
             The only CRM engineered specifically for drone service businesses.
-            White-label ready — deploy under your brand for any drone operation.
+            White-label ready. Deploy under your brand for any drone operation.
           </p>
           <p className="text-sm" style={{ color: "rgba(0,212,255,0.5)" }}>
-            Annual plans available — 2 months free (pay for 10, get 12)
+            Annual plans available: 2 months free (pay for 10, get 12)
           </p>
         </div>
 
@@ -267,7 +267,7 @@ export default function PricingPage() {
             Built for every drone business model
           </h2>
           <p className="text-center text-sm mb-10" style={{ color: "rgba(148,163,184,0.6)" }}>
-            One platform, six deployment types — rebrand it and ship it in days.
+            One platform, six deployment types. Rebrand it and ship it in days.
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
             {USE_CASES.map((uc) => (
@@ -334,7 +334,7 @@ export default function PricingPage() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a
-              href="mailto:ops@nyxaerial.com?subject=NyxAerial — I%27m interested"
+              href="mailto:ops@nyxaerial.com?subject=I%27m interested in NyxAerial"
               className="inline-flex items-center justify-center gap-2 px-8 py-3 rounded-xl font-bold text-sm"
               style={{ background: "#00d4ff", color: "#0a0f1e" }}
             >

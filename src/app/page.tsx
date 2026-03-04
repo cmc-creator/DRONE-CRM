@@ -65,10 +65,10 @@ const FEATURES = [
 ];
 
 const STATS = [
-  { value: "10 min", label: "Average setup time" },
-  { value: "100%", label: "FAA-focused workflows" },
-  { value: "3", label: "Portals: Admin, Pilot, Client" },
-  { value: "0 code", label: "No tech skills required" },
+  { value: "Part 107", label: "Compliance built in from day one" },
+  { value: "3 Portals", label: "Admin, Pilot, and Client roles" },
+  { value: "1099-Ready", label: "Reports auto-generated at tax time" },
+  { value: "24 hr", label: "Account activated within 24 hours" },
 ];
 
 const TESTIMONIALS = [
@@ -269,8 +269,7 @@ export default function LandingPage() {
             maxWidth: 600, margin: "0 auto 44px", lineHeight: 1.75,
           }}
         >
-          Manage jobs, pilots, clients, invoices, compliance docs, and 1099s in one platform
-          designed around how aerial service businesses actually work.
+          Manage jobs, pilots, clients, invoices, compliance docs, and 1099s in one platform designed around how aerial service businesses actually work.
         </p>
 
         <div style={{ display: "flex", gap: 14, justifyContent: "center", flexWrap: "wrap" }}>
@@ -335,8 +334,8 @@ export default function LandingPage() {
           <h2 style={{ fontSize: "clamp(1.7rem, 4vw, 2.5rem)", fontWeight: 900, marginBottom: 16, letterSpacing: "-0.02em" }}>
             Everything your operation needs
           </h2>
-          <p style={{ color: "rgba(216,232,244,0.5)", fontSize: 15, maxWidth: 520, margin: "0 auto", lineHeight: 1.7 }}>
-            Not a generic CRM bolted onto drones. Every feature is built around Part 107 workflows.
+          <p style={{ color: "rgba(216,232,244,0.5)", fontSize: 15, maxWidth: 640, margin: "0 auto", lineHeight: 1.7 }}>
+            Not a generic CRM retrofitted for drones. Every single feature is purpose-built for Part 107 aerial service operations.
           </p>
         </div>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(265px, 1fr))", gap: 18 }}>

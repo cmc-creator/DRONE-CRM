@@ -10,7 +10,7 @@ const STEPS = [
   {
     icon: "🚁",
     title: "Welcome to NyxAerial Command Center",
-    body: "This is your ops hub. Every stat, job, lead, and alert lives here. Bailey — you're running a nationwide drone network from this screen. Let's do a quick flight check.",
+    body: "This is your ops hub. Every stat, job, lead, and alert lives here. Bailey, you're running a nationwide drone network from this screen. Let's do a quick flight check.",
     cta: null,
   },
   {
@@ -22,7 +22,7 @@ const STEPS = [
   {
     icon: "🎯",
     title: "Lead Pipeline",
-    body: "Every new client starts as a lead. Move them through stages — New → Contacted → Proposal Sent → Negotiating → Won. Never lose track of a follow-up again.",
+    body: "Every new client starts as a lead. Move them through stages: New, Contacted, Proposal Sent, Negotiating, and Won. Never lose track of a follow-up again.",
     cta: { label: "Open Pipeline", href: "/admin/leads" },
   },
   {
@@ -34,12 +34,12 @@ const STEPS = [
   {
     icon: "🔔",
     title: "Smart Notifications",
-    body: "Overdue invoices, unassigned jobs, overdue follow-ups, expiring pilot certs — NyxAerial surfaces everything that needs your attention so nothing slips.",
+    body: "Overdue invoices, unassigned jobs, overdue follow-ups, and expiring pilot certs. NyxAerial surfaces everything that needs your attention so nothing slips.",
     cta: { label: "Check Alerts", href: "/admin/notifications" },
   },
   {
     icon: "⚡",
-    title: "Meet Volo — Your AI Co-Pilot",
+    title: "Meet Volo, Your AI Co-Pilot",
     body: "Volo knows your entire CRM in real time. Ask it what to work on, have it draft a client proposal, or just ask it to remind you your mom loves you, BoBo. Hit the lightning bolt to open Volo anytime.",
     cta: null,
   },
@@ -124,7 +124,7 @@ export function TourGuide() {
             <div className="flex items-center gap-2">
               <Rocket className="w-3.5 h-3.5" style={{ color: "#00d4ff" }} />
               <span className="text-xs font-bold tracking-widest uppercase" style={{ color: "#00d4ff" }}>
-                NyxAerial Tour — {step + 1} of {STEPS.length}
+                NyxAerial Tour, Step {step + 1} of {STEPS.length}
               </span>
             </div>
             <button

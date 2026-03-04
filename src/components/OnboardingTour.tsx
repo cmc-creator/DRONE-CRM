@@ -51,7 +51,7 @@ const STEPS: Step[] = [
   {
     emoji: "🔗",
     title: "Integrations",
-    body:  "Connect Google Drive, OneDrive, Slack, Twilio SMS, DocuSign, and more. All wired — just add your API keys in Settings → Integrations.",
+    body:  "Connect Google Drive, OneDrive, Slack, Twilio SMS, DocuSign, and more. All wired up. Just add your API keys in Settings, then Integrations.",
     link:  "/admin/integrations",
     linkText: "Open Integrations →",
   },
@@ -77,7 +77,7 @@ export default function OnboardingTour() {
   const [dismissed, setDismissed] = useState(false);
 
   useEffect(() => {
-    // Only show on first visit — check localStorage
+    // Only show on first visit, check localStorage
     try {
       if (!localStorage.getItem(STORAGE_KEY)) {
         // Delay slightly so the page content renders first
