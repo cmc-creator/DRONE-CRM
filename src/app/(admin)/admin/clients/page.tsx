@@ -101,6 +101,8 @@ export default async function ClientsPage({
       <Suspense>
         <SearchFilterBar
           placeholder="Search clients by company, contact, email…"
+          resultCount={clients.length}
+          resultLabel="clients"
           filters={[
             {
               key: "status",

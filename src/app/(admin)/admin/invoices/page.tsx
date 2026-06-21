@@ -133,6 +133,8 @@ export default async function InvoicesPage({
       <Suspense>
         <SearchFilterBar
           placeholder="Search invoice #, client, job…"
+          resultCount={invoices.length}
+          resultLabel="invoices"
           filters={[
             {
               key: "status",

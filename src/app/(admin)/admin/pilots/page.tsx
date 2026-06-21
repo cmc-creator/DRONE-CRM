@@ -100,6 +100,8 @@ export default async function PilotsPage({
       <Suspense>
         <SearchFilterBar
           placeholder="Search pilots by name, email, market…"
+          resultCount={pilots.length}
+          resultLabel="pilots"
           filters={[
             {
               key: "status",

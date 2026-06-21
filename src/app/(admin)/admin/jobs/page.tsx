@@ -105,6 +105,8 @@ export default async function JobsPage({
       <Suspense>
         <SearchFilterBar
           placeholder="Search jobs, clients, locations…"
+          resultCount={jobs.length}
+          resultLabel="jobs"
           filters={[
             {
               key: "status",
