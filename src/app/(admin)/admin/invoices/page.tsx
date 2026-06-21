@@ -15,6 +15,8 @@ import { Plus, DollarSign, Download } from "lucide-react";
 import { formatDate, formatCurrency } from "@/lib/utils";
 import { SendPaymentLinkButton } from "./SendPaymentLinkButton";
 import { CsvImportButton } from "@/components/admin/csv-import-button";
+import { SearchFilterBar } from "@/components/admin/search-filter-bar";
+import { Suspense } from "react";
 
 const statusConfig = {
   DRAFT:    { label: "Draft",    variant: "outline" as const },
@@ -25,9 +27,29 @@ const statusConfig = {
   REFUNDED: { label: "Refunded", variant: "secondary" as const },
 };
 
-export default async function InvoicesPage() {
+export default async function InvoicesPage({
+  searchParams,
+}: {
+  searchParams: Promise<Record<string, string>>;
+}) {
+  const params = await searchParams;
+  const q = params.q?.toLowerCase();
+  const statusFilter = params.status;
+
   const invoices = await prisma.invoice.findMany({
     orderBy: { createdAt: "desc" },
+    where: {
+      ...(statusFilter ? { status: statusFilter as never } : {}),
+      ...(q
+        ? {
+            OR: [
+              { invoiceNumber: { contains: q, mode: "insensitive" } },
+              { client: { companyName: { contains: q, mode: "insensitive" } } },
+              { job: { title: { contains: q, mode: "insensitive" } } },
+            ],
+          }
+        : {}),
+    },
     include: {
       client: { select: { companyName: true } },
       job: { select: { title: true } },
@@ -116,6 +138,19 @@ export default async function InvoicesPage() {
           </Card>
         ))}
       </div>
+
+      <Suspense>
+        <SearchFilterBar
+          placeholder="Search invoice #, client, job…"
+          filters={[
+            {
+              key: "status",
+              label: "Status",
+              options: Object.entries(statusConfig).map(([value, cfg]) => ({ value, label: cfg.label })),
+            },
+          ]}
+        />
+      </Suspense>
 
       <Card>
         <CardHeader>
