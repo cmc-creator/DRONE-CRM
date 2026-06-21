@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
+import { Suspense } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -13,6 +14,7 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Plus } from "lucide-react";
 import { formatDate, formatCurrency } from "@/lib/utils";
+import { SearchFilterBar } from "@/components/admin/search-filter-bar";
 
 const statusConfig: Record<
   string,
@@ -38,9 +40,32 @@ const typeLabels: Record<string, string> = {
   OTHER: "Other",
 };
 
-export default async function JobsPage() {
+export default async function JobsPage({
+  searchParams,
+}: {
+  searchParams: Promise<Record<string, string>>;
+}) {
+  const params = await searchParams;
+  const q = params.q?.toLowerCase();
+  const statusFilter = params.status;
+  const typeFilter = params.type;
+
   const jobs = await prisma.job.findMany({
     orderBy: { createdAt: "desc" },
+    where: {
+      ...(statusFilter ? { status: statusFilter as never } : {}),
+      ...(typeFilter ? { type: typeFilter as never } : {}),
+      ...(q
+        ? {
+            OR: [
+              { title: { contains: q, mode: "insensitive" } },
+              { city: { contains: q, mode: "insensitive" } },
+              { state: { contains: q, mode: "insensitive" } },
+              { client: { companyName: { contains: q, mode: "insensitive" } } },
+            ],
+          }
+        : {}),
+    },
     include: {
       client: { select: { companyName: true } },
       assignments: {
@@ -76,6 +101,24 @@ export default async function JobsPage() {
           </Button>
         </Link>
       </div>
+
+      <Suspense>
+        <SearchFilterBar
+          placeholder="Search jobs, clients, locations…"
+          filters={[
+            {
+              key: "status",
+              label: "Status",
+              options: Object.entries(statusConfig).map(([v, c]) => ({ value: v, label: c.label })),
+            },
+            {
+              key: "type",
+              label: "Type",
+              options: Object.entries(typeLabels).map(([v, l]) => ({ value: v, label: l })),
+            },
+          ]}
+        />
+      </Suspense>
 
       {/* Quick status filters */}
       <div className="flex flex-wrap gap-2">

@@ -467,3 +467,114 @@ export async function sendLeadFollowUpEmail({
     console.error("[email] Failed to send lead follow-up reminder:", err);
   }
 }
+
+// -- Password Reset ------------------------------------------------------------
+
+export async function sendPasswordResetEmail({
+  email,
+  name,
+  token,
+}: {
+  email: string;
+  name?: string;
+  token: string;
+}) {
+  const resend = getResend();
+  if (!resend) return;
+  const resetUrl = `${APP_URL}/reset-password?token=${token}`;
+  const greeting = name ? `Hi ${name},` : "Hi,";
+  try {
+    await resend.emails.send({
+      from: FROM,
+      to: email,
+      subject: `Reset your ${ORG_NAME} password`,
+      html: `<div style="font-family: sans-serif; max-width: 480px; margin: 40px auto; background: #080f1e; border: 1px solid rgba(0,212,255,0.15); border-radius: 12px; padding: 28px; color: #d8e8f4;">
+        <p style="margin:0 0 8px; font-size:11px; font-weight:700; letter-spacing:2px; color:#00d4ff; text-transform:uppercase;">${ORG_NAME}</p>
+        <h2 style="margin:0 0 16px; color:#d8e8f4;">Password Reset Request</h2>
+        <p>${greeting}</p>
+        <p>We received a request to reset your password. Click the button below to set a new one. This link expires in <strong>1 hour</strong>.</p>
+        <a href="${resetUrl}" style="display:inline-block; margin-top:16px; background:linear-gradient(135deg,#0052cc,#00d4ff); color:#fff; font-weight:900; padding:12px 28px; border-radius:8px; text-decoration:none;">Reset Password</a>
+        <p style="margin-top:20px; font-size:12px; color:#5b7a99;">If you did not request this, you can safely ignore this email. Your password will not change.</p>
+        <p style="font-size:11px; color:rgba(91,122,153,0.6); margin-top:16px;">${ORG_NAME} · ${ORG_WEBSITE}</p>
+      </div>`,
+    });
+  } catch (err) {
+    console.error("[email] Failed to send password reset email:", err);
+  }
+}
+
+// -- Pilot Welcome / Onboarding -----------------------------------------------
+
+export async function sendPilotWelcomeEmail({
+  email,
+  name,
+  password,
+}: {
+  email: string;
+  name: string;
+  password: string;
+}) {
+  const resend = getResend();
+  if (!resend) return;
+  try {
+    await resend.emails.send({
+      from: FROM,
+      to: email,
+      subject: `Welcome to ${ORG_NAME} — Your pilot account is ready`,
+      html: `<div style="font-family: sans-serif; max-width: 480px; margin: 40px auto; background: #080f1e; border: 1px solid rgba(0,212,255,0.15); border-radius: 12px; padding: 28px; color: #d8e8f4;">
+        <p style="margin:0 0 8px; font-size:11px; font-weight:700; letter-spacing:2px; color:#00d4ff; text-transform:uppercase;">${ORG_NAME}</p>
+        <h2 style="margin:0 0 16px; color:#d8e8f4;">Welcome aboard, ${name}!</h2>
+        <p>Your pilot account for the <strong>${ORG_NAME}</strong> network has been created. Here are your login credentials:</p>
+        <table style="width:100%; border-collapse:collapse; font-size:14px; margin:16px 0; background:rgba(0,212,255,0.04); border-radius:8px; overflow:hidden;">
+          <tr><td style="padding:10px 14px; color:rgba(0,212,255,0.5); font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1px; width:35%;">Email</td><td style="padding:10px 14px;">${email}</td></tr>
+          <tr style="border-top:1px solid rgba(0,212,255,0.06);"><td style="padding:10px 14px; color:rgba(0,212,255,0.5); font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1px;">Temp Password</td><td style="padding:10px 14px; font-family:monospace; color:#fbbf24;">${password}</td></tr>
+        </table>
+        <p style="font-size:13px; color:rgba(216,232,244,0.6);">Please log in and change your password immediately.</p>
+        <a href="${APP_URL}/login" style="display:inline-block; margin-top:16px; background:linear-gradient(135deg,#0052cc,#00d4ff); color:#fff; font-weight:900; padding:12px 28px; border-radius:8px; text-decoration:none;">Log In to Pilot Portal</a>
+        <p style="margin-top:20px; font-size:12px; color:#5b7a99;">Questions? Contact us at <a href="mailto:${ORG_EMAIL}" style="color:#00d4ff;">${ORG_EMAIL}</a>.</p>
+        <p style="font-size:11px; color:rgba(91,122,153,0.6); margin-top:16px;">${ORG_NAME} · ${ORG_WEBSITE}</p>
+      </div>`,
+    });
+  } catch (err) {
+    console.error("[email] Failed to send pilot welcome email:", err);
+  }
+}
+
+// -- Client Portal Welcome ----------------------------------------------------
+
+export async function sendClientWelcomeEmail({
+  email,
+  name,
+  companyName,
+  password,
+}: {
+  email: string;
+  name: string;
+  companyName: string;
+  password: string;
+}) {
+  const resend = getResend();
+  if (!resend) return;
+  try {
+    await resend.emails.send({
+      from: FROM,
+      to: email,
+      subject: `Your ${ORG_NAME} client portal is ready`,
+      html: `<div style="font-family: sans-serif; max-width: 480px; margin: 40px auto; background: #080f1e; border: 1px solid rgba(0,212,255,0.15); border-radius: 12px; padding: 28px; color: #d8e8f4;">
+        <p style="margin:0 0 8px; font-size:11px; font-weight:700; letter-spacing:2px; color:#00d4ff; text-transform:uppercase;">${ORG_NAME}</p>
+        <h2 style="margin:0 0 16px; color:#d8e8f4;">Welcome, ${name}!</h2>
+        <p>Your client portal for <strong>${companyName}</strong> on <strong>${ORG_NAME}</strong> is ready. Use it to track your projects, download deliverables, view invoices, and pay online.</p>
+        <table style="width:100%; border-collapse:collapse; font-size:14px; margin:16px 0; background:rgba(0,212,255,0.04); border-radius:8px; overflow:hidden;">
+          <tr><td style="padding:10px 14px; color:rgba(0,212,255,0.5); font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1px; width:35%;">Email</td><td style="padding:10px 14px;">${email}</td></tr>
+          <tr style="border-top:1px solid rgba(0,212,255,0.06);"><td style="padding:10px 14px; color:rgba(0,212,255,0.5); font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1px;">Temp Password</td><td style="padding:10px 14px; font-family:monospace; color:#fbbf24;">${password}</td></tr>
+        </table>
+        <p style="font-size:13px; color:rgba(216,232,244,0.6);">Please log in and change your password at your earliest convenience.</p>
+        <a href="${APP_URL}/login" style="display:inline-block; margin-top:16px; background:linear-gradient(135deg,#0052cc,#00d4ff); color:#fff; font-weight:900; padding:12px 28px; border-radius:8px; text-decoration:none;">Access Client Portal</a>
+        <p style="margin-top:20px; font-size:12px; color:#5b7a99;">Questions? Contact us at <a href="mailto:${ORG_EMAIL}" style="color:#00d4ff;">${ORG_EMAIL}</a>.</p>
+        <p style="font-size:11px; color:rgba(91,122,153,0.6); margin-top:16px;">${ORG_NAME} · ${ORG_WEBSITE}</p>
+      </div>`,
+    });
+  } catch (err) {
+    console.error("[email] Failed to send client welcome email:", err);
+  }
+}

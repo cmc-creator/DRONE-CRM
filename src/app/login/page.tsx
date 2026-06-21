@@ -582,6 +582,18 @@ function LoginForm() {
                   "Launch Mission Control ?"
                 )}
               </button>
+
+              <div className="text-center mt-2">
+                <a
+                  href="/forgot-password"
+                  className="text-xs transition-colors"
+                  style={{ color: "rgba(0,212,255,0.4)" }}
+                  onMouseEnter={(e) => { e.currentTarget.style.color = "rgba(0,212,255,0.8)"; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.color = "rgba(0,212,255,0.4)"; }}
+                >
+                  Forgot password?
+                </a>
+              </div>
             </form>
           </div>
         </div>

@@ -72,5 +72,10 @@ export async function POST(req: NextRequest, { params }: Params) {
     },
   });
 
+  // Auto-recalculate pilot rating average
+  const allReviews = await prisma.pilotReview.findMany({ where: { pilotId }, select: { rating: true } });
+  const avgRating = allReviews.reduce((s, r) => s + r.rating, 0) / allReviews.length;
+  await prisma.pilot.update({ where: { id: pilotId }, data: { rating: Math.round(avgRating * 10) / 10 } });
+
   return NextResponse.json(review, { status: 201 });
 }

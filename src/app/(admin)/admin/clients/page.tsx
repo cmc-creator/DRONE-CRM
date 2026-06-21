@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
+import { Suspense } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -14,6 +15,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Plus, Download, Map } from "lucide-react";
 import { formatDate } from "@/lib/utils";
 import { CsvImportButton } from "@/components/admin/csv-import-button";
+import { SearchFilterBar } from "@/components/admin/search-filter-bar";
 
 const statusConfig = {
   LEAD: { label: "Lead", variant: "outline" as const },
@@ -29,9 +31,33 @@ const typeConfig = {
   OTHER: { label: "Other", variant: "outline" as const },
 };
 
-export default async function ClientsPage() {
+export default async function ClientsPage({
+  searchParams,
+}: {
+  searchParams: Promise<Record<string, string>>;
+}) {
+  const params = await searchParams;
+  const q = params.q?.toLowerCase();
+  const statusFilter = params.status;
+  const typeFilter = params.type;
+
   const clients = await prisma.client.findMany({
     orderBy: { createdAt: "desc" },
+    where: {
+      ...(statusFilter ? { status: statusFilter as never } : {}),
+      ...(typeFilter ? { type: typeFilter as never } : {}),
+      ...(q
+        ? {
+            OR: [
+              { companyName: { contains: q, mode: "insensitive" } },
+              { contactName: { contains: q, mode: "insensitive" } },
+              { email: { contains: q, mode: "insensitive" } },
+              { city: { contains: q, mode: "insensitive" } },
+              { state: { contains: q, mode: "insensitive" } },
+            ],
+          }
+        : {}),
+    },
     include: {
       _count: { select: { jobs: true, invoices: true } },
     },
@@ -71,6 +97,24 @@ export default async function ClientsPage() {
           </Link>
         </div>
       </div>
+
+      <Suspense>
+        <SearchFilterBar
+          placeholder="Search clients by company, contact, email…"
+          filters={[
+            {
+              key: "status",
+              label: "Status",
+              options: Object.entries(statusConfig).map(([v, c]) => ({ value: v, label: c.label })),
+            },
+            {
+              key: "type",
+              label: "Type",
+              options: Object.entries(typeConfig).map(([v, c]) => ({ value: v, label: c.label })),
+            },
+          ]}
+        />
+      </Suspense>
 
       <Card>
         <CardHeader>

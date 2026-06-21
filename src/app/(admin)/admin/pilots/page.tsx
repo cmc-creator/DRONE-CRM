@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
+import { Suspense } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -15,6 +16,7 @@ import { Plus, UserCheck, UserX, Clock, Download } from "lucide-react";
 import { formatDate } from "@/lib/utils";
 import { AutoScoreButton } from "./AutoScoreButton";
 import { CsvImportButton } from "@/components/admin/csv-import-button";
+import { SearchFilterBar } from "@/components/admin/search-filter-bar";
 
 const statusConfig = {
   ACTIVE: { label: "Active", variant: "success" as const },
@@ -23,9 +25,32 @@ const statusConfig = {
   SUSPENDED: { label: "Suspended", variant: "destructive" as const },
 };
 
-export default async function PilotsPage() {
+export default async function PilotsPage({
+  searchParams,
+}: {
+  searchParams: Promise<Record<string, string>>;
+}) {
+  const params = await searchParams;
+  const q = params.q?.toLowerCase();
+  const statusFilter = params.status;
+
   const pilots = await prisma.pilot.findMany({
     orderBy: { createdAt: "desc" },
+    where: {
+      ...(statusFilter ? { status: statusFilter as never } : {}),
+      ...(q
+        ? {
+            OR: [
+              { user: { name: { contains: q, mode: "insensitive" } } },
+              { user: { email: { contains: q, mode: "insensitive" } } },
+              { city: { contains: q, mode: "insensitive" } },
+              { state: { contains: q, mode: "insensitive" } },
+              { businessName: { contains: q, mode: "insensitive" } },
+              { markets: { some: { state: { contains: q, mode: "insensitive" } } } },
+            ],
+          }
+        : {}),
+    },
     include: {
       user: { select: { name: true, email: true } },
       markets: true,
@@ -71,6 +96,19 @@ export default async function PilotsPage() {
           </Link>
         </div>
       </div>
+
+      <Suspense>
+        <SearchFilterBar
+          placeholder="Search pilots by name, email, market…"
+          filters={[
+            {
+              key: "status",
+              label: "Status",
+              options: Object.entries(statusConfig).map(([v, c]) => ({ value: v, label: c.label })),
+            },
+          ]}
+        />
+      </Suspense>
 
       {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">

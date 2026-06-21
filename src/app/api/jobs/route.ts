@@ -84,6 +84,26 @@ export async function POST(req: NextRequest) {
     },
   });
 
+  // Auto-create a DRAFT invoice when clientPrice is provided
+  if (clientPrice && Number(clientPrice) > 0) {
+    const year = new Date().getFullYear();
+    const count = await prisma.invoice.count();
+    const invoiceNumber = `NY-${year}-${String(count + 1).padStart(4, "0")}`;
+    await prisma.invoice.create({
+      data: {
+        clientId,
+        jobId: job.id,
+        invoiceNumber,
+        status: "DRAFT",
+        amount: clientPrice,
+        totalAmount: clientPrice,
+        issueDate: new Date(),
+        dueDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+        lineItems: [{ description: job.title, qty: 1, unitPrice: Number(clientPrice), total: Number(clientPrice) }],
+      },
+    }).catch(() => {}); // non-fatal
+  }
+
   // Fire-and-forget assignment email + Slack/Teams/SMS
   if (pilotId) {
     prisma.pilot
