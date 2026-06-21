@@ -7,6 +7,10 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const viewport: Viewport = {
   themeColor: "#00d4ff",
+  width: "device-width",
+  initialScale: 1,
+  minimumScale: 1,
+  viewportFit: "cover",
 };
 
 export const metadata: Metadata = {
@@ -16,12 +20,12 @@ export const metadata: Metadata = {
   icons: {
     icon: "/icon.svg",
     shortcut: "/icon.svg",
-    apple: "/icon.svg",
+    apple: "/icons/apple-touch-icon.png",
   },
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
-    title: "Lumin CRM",
+    title: "NyxAerial",
   },
 };
 
@@ -34,11 +38,12 @@ export default function RootLayout({
     <html lang="en">
       <head>
         <link rel="icon" href="/icon.svg" type="image/svg+xml" />
+        <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
         <link rel="manifest" href="/manifest.json" />
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-        <meta name="apple-mobile-web-app-title" content="Lumin CRM" />
+        <meta name="apple-mobile-web-app-title" content="NyxAerial" />
         <meta name="theme-color" content="#00d4ff" />
       </head>
       <body className={inter.className}>
