@@ -11,7 +11,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { Loader2, Search, X } from "lucide-react";
+import { Bookmark, Loader2, Rows3, Save, Search, Trash2, X } from "lucide-react";
 
 interface FilterOption {
   value: string;
@@ -22,6 +22,7 @@ interface SearchFilterBarProps {
   placeholder?: string;
   resultCount?: number;
   resultLabel?: string;
+  savedViews?: boolean;
   filters?: {
     key: string;
     label: string;
@@ -29,10 +30,17 @@ interface SearchFilterBarProps {
   }[];
 }
 
+type SavedView = {
+  id: string;
+  name: string;
+  query: string;
+};
+
 export function SearchFilterBar({
   placeholder = "Search...",
   resultCount,
   resultLabel = "results",
+  savedViews = true,
   filters = [],
 }: SearchFilterBarProps) {
   const router = useRouter();
@@ -42,6 +50,11 @@ export function SearchFilterBar({
   const inputRef = useRef<HTMLInputElement>(null);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [queryInput, setQueryInput] = useState(searchParams.get("q") ?? "");
+  const [views, setViews] = useState<SavedView[]>([]);
+  const [selectedViewId, setSelectedViewId] = useState<string>("NONE");
+  const [density, setDensity] = useState<"cozy" | "compact">("cozy");
+
+  const savedViewsKey = `crm-saved-views:${pathname}`;
 
   useEffect(() => {
     setQueryInput(searchParams.get("q") ?? "");
@@ -53,6 +66,29 @@ export function SearchFilterBar({
         clearTimeout(debounceRef.current);
       }
     };
+  }, []);
+
+  useEffect(() => {
+    const raw = localStorage.getItem(savedViewsKey);
+    if (!raw) {
+      setViews([]);
+      return;
+    }
+
+    try {
+      const parsed = JSON.parse(raw) as SavedView[];
+      if (Array.isArray(parsed)) setViews(parsed);
+    } catch {
+      setViews([]);
+    }
+  }, [savedViewsKey]);
+
+  useEffect(() => {
+    const rawDensity = localStorage.getItem("crm-table-density");
+    const nextDensity = rawDensity === "compact" ? "compact" : "cozy";
+    setDensity(nextDensity);
+    document.documentElement.classList.remove("table-density-cozy", "table-density-compact");
+    document.documentElement.classList.add(`table-density-${nextDensity}`);
   }, []);
 
   useEffect(() => {
@@ -95,9 +131,64 @@ export function SearchFilterBar({
 
   function clearAll() {
     setQueryInput("");
+    setSelectedViewId("NONE");
     startTransition(() => {
       router.replace(pathname);
     });
+  }
+
+  function persistViews(nextViews: SavedView[]) {
+    setViews(nextViews);
+    localStorage.setItem(savedViewsKey, JSON.stringify(nextViews));
+  }
+
+  function saveCurrentView() {
+    const query = searchParams.toString();
+    if (!query) return;
+
+    const input = window.prompt("Name this saved view:");
+    const name = input?.trim();
+    if (!name) return;
+
+    const nextView: SavedView = {
+      id: `${Date.now()}`,
+      name,
+      query,
+    };
+
+    const nextViews = [nextView, ...views].slice(0, 12);
+    persistViews(nextViews);
+    setSelectedViewId(nextView.id);
+  }
+
+  function applySavedView(viewId: string) {
+    setSelectedViewId(viewId);
+    if (viewId === "NONE") {
+      startTransition(() => router.replace(pathname));
+      return;
+    }
+
+    const view = views.find((v) => v.id === viewId);
+    if (!view) return;
+    setQueryInput(new URLSearchParams(view.query).get("q") ?? "");
+
+    startTransition(() => {
+      router.replace(view.query ? `${pathname}?${view.query}` : pathname);
+    });
+  }
+
+  function deleteSavedView() {
+    if (selectedViewId === "NONE") return;
+    const nextViews = views.filter((v) => v.id !== selectedViewId);
+    persistViews(nextViews);
+    setSelectedViewId("NONE");
+  }
+
+  function setTableDensity(nextDensity: "cozy" | "compact") {
+    setDensity(nextDensity);
+    localStorage.setItem("crm-table-density", nextDensity);
+    document.documentElement.classList.remove("table-density-cozy", "table-density-compact");
+    document.documentElement.classList.add(`table-density-${nextDensity}`);
   }
 
   const hasFilters = searchParams.toString().length > 0;
@@ -164,11 +255,69 @@ export function SearchFilterBar({
             Reset
           </Button>
         )}
+
+        {savedViews && (
+          <>
+            <Select value={selectedViewId} onValueChange={applySavedView}>
+              <SelectTrigger className="w-[190px] bg-background">
+                <SelectValue placeholder="Saved views" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="NONE">No saved view</SelectItem>
+                {views.map((view) => (
+                  <SelectItem key={view.id} value={view.id}>
+                    {view.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={saveCurrentView}
+              disabled={!hasFilters}
+            >
+              <Save className="w-4 h-4 mr-1" />
+              Save View
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={deleteSavedView}
+              disabled={selectedViewId === "NONE"}
+            >
+              <Trash2 className="w-4 h-4 mr-1" />
+              Delete
+            </Button>
+          </>
+        )}
+
+        <div className="ml-auto inline-flex items-center rounded-md border bg-background p-1">
+          <Button
+            size="sm"
+            variant={density === "cozy" ? "secondary" : "ghost"}
+            className="h-7 px-2"
+            onClick={() => setTableDensity("cozy")}
+          >
+            <Rows3 className="w-4 h-4" />
+            <span className="ml-1">Cozy</span>
+          </Button>
+          <Button
+            size="sm"
+            variant={density === "compact" ? "secondary" : "ghost"}
+            className="h-7 px-2"
+            onClick={() => setTableDensity("compact")}
+          >
+            <Rows3 className="w-4 h-4" />
+            <span className="ml-1">Compact</span>
+          </Button>
+        </div>
       </div>
 
       <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-muted-foreground">
         <div className="flex flex-wrap items-center gap-2">
           <span>Press / to focus search</span>
+          {savedViews && <span className="inline-flex items-center gap-1"><Bookmark className="w-3 h-3" /> Views are saved per page</span>}
           {activeItems.map((chip) => (
             <button
               key={`${chip.key}-${chip.value}`}

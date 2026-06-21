@@ -173,3 +173,26 @@
 .login-orbit-dot { animation: orbit-dot 6s linear infinite; }
 .login-orbit-dot-2 { animation: orbit-dot-2 4s linear infinite; }
 .login-grid-flow { animation: grid-flow 3s linear infinite; }
+
+/* Table density controls (applied from SearchFilterBar) */
+html.table-density-cozy .crm-table-head {
+  height: 3rem;
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+}
+
+html.table-density-cozy .crm-table-cell {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+
+html.table-density-compact .crm-table-head {
+  height: 2.4rem;
+  padding-top: 0.4rem;
+  padding-bottom: 0.4rem;
+}
+
+html.table-density-compact .crm-table-cell {
+  padding-top: 0.45rem;
+  padding-bottom: 0.45rem;
+}
