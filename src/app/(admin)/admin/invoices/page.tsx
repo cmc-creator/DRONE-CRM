@@ -17,6 +17,7 @@ import { SendPaymentLinkButton } from "./SendPaymentLinkButton";
 import { CsvImportButton } from "@/components/admin/csv-import-button";
 import { SearchFilterBar } from "@/components/admin/search-filter-bar";
 import { Suspense } from "react";
+import { buildInvoiceWhere } from "@/lib/invoice-filters";
 
 const statusConfig = {
   DRAFT:    { label: "Draft",    variant: "outline" as const },
@@ -33,23 +34,13 @@ export default async function InvoicesPage({
   searchParams: Promise<Record<string, string>>;
 }) {
   const params = await searchParams;
-  const q = params.q?.toLowerCase();
-  const statusFilter = params.status;
 
   const invoices = await prisma.invoice.findMany({
     orderBy: { createdAt: "desc" },
-    where: {
-      ...(statusFilter ? { status: statusFilter as never } : {}),
-      ...(q
-        ? {
-            OR: [
-              { invoiceNumber: { contains: q, mode: "insensitive" } },
-              { client: { companyName: { contains: q, mode: "insensitive" } } },
-              { job: { title: { contains: q, mode: "insensitive" } } },
-            ],
-          }
-        : {}),
-    },
+    where: buildInvoiceWhere({
+      q: params.q,
+      status: params.status,
+    }),
     include: {
       client: { select: { companyName: true } },
       job: { select: { title: true } },
