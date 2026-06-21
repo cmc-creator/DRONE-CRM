@@ -28,6 +28,7 @@ import {
   Receipt,
   BarChart2,
   MapPinned,
+  Wallet,
 } from "lucide-react";
 
 interface NavItem {
@@ -46,6 +47,7 @@ interface SidebarProps {
   role: "ADMIN" | "PILOT" | "CLIENT";
   userName?: string | null;
   userEmail?: string | null;
+  adminAlertCount?: number;
 }
 
 const adminGroups: NavGroup[] = [
@@ -73,6 +75,7 @@ const adminGroups: NavGroup[] = [
       { label: "Leads",          href: "/admin/leads",           icon: Target },
       { label: "Quotes",         href: "/admin/quotes",          icon: MessageSquare },
       { label: "Invoices",       href: "/admin/invoices",        icon: FileText },
+      { label: "Payouts",        href: "/admin/payouts",         icon: Wallet },
       { label: "Contracts",      href: "/admin/contracts",       icon: FileSignature },
     ],
   },
@@ -164,7 +167,7 @@ function DroneIcon({ size = 18 }: { size?: number }) {
   );
 }
 
-export function Sidebar({ role, userName, userEmail }: SidebarProps) {
+export function Sidebar({ role, userName, userEmail, adminAlertCount = 0 }: SidebarProps) {
   const pathname = usePathname();
   const groups   = groupsByRole[role];
   const rConf    = roleConfig[role];
@@ -246,12 +249,12 @@ export function Sidebar({ role, userName, userEmail }: SidebarProps) {
                       style={isActive ? { color: "#00d4ff" } : {}}
                     />
                     <span className="flex-1">{item.label}</span>
-                    {item.badge && (
+                    {(item.badge || (role === "ADMIN" && item.href === "/admin/notifications" && adminAlertCount > 0)) && (
                       <span
                         className="text-[9px] font-bold px-1.5 py-0.5 rounded-full"
                         style={{ background: "rgba(0,212,255,0.15)", color: "#00d4ff" }}
                       >
-                        {item.badge}
+                        {item.badge ?? adminAlertCount}
                       </span>
                     )}
                   </Link>

@@ -16,6 +16,8 @@ import {
   ClipboardList,
   Map,
   Plug,
+  Bell,
+  Wallet,
   X,
 } from "lucide-react";
 import { useState } from "react";
@@ -29,8 +31,10 @@ const NAV = [
 ];
 
 const MORE_ITEMS = [
+  { href: "/admin/notifications", label: "Notifications", icon: Bell },
   { href: "/admin/settings",     label: "Settings",     icon: Settings },
   { href: "/admin/compliance",   label: "Compliance",   icon: ShieldCheck },
+  { href: "/admin/payouts",      label: "Payouts",      icon: Wallet },
   { href: "/admin/tax",          label: "Tax",          icon: Receipt },
   { href: "/admin/analytics",    label: "Analytics",    icon: BarChart2 },
   { href: "/admin/reports",      label: "Reports",      icon: ClipboardList },
@@ -38,7 +42,7 @@ const MORE_ITEMS = [
   { href: "/admin/integrations", label: "Integrations", icon: Plug },
 ];
 
-export function AdminMobileNav() {
+export function AdminMobileNav({ alertCount = 0 }: { alertCount?: number }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
 
@@ -139,6 +143,14 @@ export function AdminMobileNav() {
                     <span className="text-[10px] font-semibold tracking-wide text-center leading-tight">
                       {label}
                     </span>
+                    {href === "/admin/notifications" && alertCount > 0 && (
+                      <span
+                        className="text-[9px] font-bold px-1.5 py-0.5 rounded-full"
+                        style={{ background: "rgba(248,113,113,0.18)", color: "#f87171" }}
+                      >
+                        {alertCount}
+                      </span>
+                    )}
                   </Link>
                 );
               })}

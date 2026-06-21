@@ -11,6 +11,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { formatDate, formatCurrency } from "@/lib/utils";
+import { PayInvoiceButton } from "@/components/client/pay-invoice-button";
 
 export default async function ClientInvoicesPage() {
   const session = await auth();
@@ -64,6 +65,7 @@ export default async function ClientInvoicesPage() {
                   <TableHead>Issue Date</TableHead>
                   <TableHead>Due Date</TableHead>
                   <TableHead>Status</TableHead>
+                  <TableHead></TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -98,6 +100,15 @@ export default async function ClientInvoicesPage() {
                       >
                         {inv.status}
                       </Badge>
+                    </TableCell>
+                    <TableCell>
+                      {(inv.status === "SENT" || inv.status === "OVERDUE" || inv.status === "DRAFT") && (
+                        <PayInvoiceButton
+                          invoiceId={inv.id}
+                          paymentUrl={inv.stripePaymentUrl}
+                          className="h-7 text-xs"
+                        />
+                      )}
                     </TableCell>
                   </TableRow>
                 ))}

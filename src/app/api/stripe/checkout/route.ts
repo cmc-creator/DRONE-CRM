@@ -17,12 +17,22 @@ function getStripe() {
  */
 export async function POST(req: NextRequest) {
   const session = await auth();
-  // Admins create checkout links; clients can pay via a direct link (unauthenticated POST with invoiceId)
-  // We allow both — just verify the invoice exists.
-
-  const { invoiceId } = await req.json();
+  const { invoiceId, internalToken } = await req.json();
   if (!invoiceId) {
     return NextResponse.json({ error: "invoiceId required" }, { status: 400 });
+  }
+
+  const isInternalCall =
+    typeof internalToken === "string" &&
+    typeof process.env.AUTH_SECRET === "string" &&
+    internalToken === process.env.AUTH_SECRET;
+
+  if (!session && !isInternalCall) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  if (session && session.user.role !== "ADMIN" && session.user.role !== "CLIENT") {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
   const stripe = getStripe();
@@ -35,7 +45,7 @@ export async function POST(req: NextRequest) {
 
   const invoice = await prisma.invoice.findUnique({
     where: { id: invoiceId },
-    include: { client: { select: { companyName: true, email: true } } },
+    include: { client: { select: { id: true, userId: true, companyName: true, email: true } } },
   });
 
   if (!invoice) {
@@ -44,6 +54,10 @@ export async function POST(req: NextRequest) {
 
   if (invoice.status === "PAID") {
     return NextResponse.json({ error: "Invoice already paid" }, { status: 400 });
+  }
+
+  if (session?.user.role === "CLIENT" && invoice.client?.userId !== session.user.id) {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
   const appUrl = process.env.NEXTAUTH_URL ?? "https://drone-crm-theta.vercel.app";
@@ -76,7 +90,11 @@ export async function POST(req: NextRequest) {
   // Store the checkout session ID on the invoice for webhook matching
   await prisma.invoice.update({
     where: { id: invoice.id },
-    data: { stripeCheckoutSessionId: checkoutSession.id },
+    data: {
+      stripeCheckoutSessionId: checkoutSession.id,
+      stripePaymentUrl: checkoutSession.url ?? null,
+      ...(invoice.status === "DRAFT" ? { status: "SENT" } : {}),
+    },
   });
 
   return NextResponse.json({ url: checkoutSession.url });

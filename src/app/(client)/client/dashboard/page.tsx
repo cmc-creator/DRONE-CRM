@@ -13,6 +13,7 @@ import {
 import { Briefcase, FolderOpen, DollarSign } from "lucide-react";
 import { formatDate, formatCurrency } from "@/lib/utils";
 import Link from "next/link";
+import { PayInvoiceButton } from "@/components/client/pay-invoice-button";
 
 const statusConfig: Record<
   string,
@@ -199,6 +200,7 @@ export default async function ClientDashboard() {
                   <TableHead>Amount</TableHead>
                   <TableHead>Due</TableHead>
                   <TableHead>Status</TableHead>
+                  <TableHead></TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -227,6 +229,15 @@ export default async function ClientDashboard() {
                       >
                         {inv.status}
                       </Badge>
+                    </TableCell>
+                    <TableCell>
+                      {(inv.status === "SENT" || inv.status === "OVERDUE" || inv.status === "DRAFT") && (
+                        <PayInvoiceButton
+                          invoiceId={inv.id}
+                          paymentUrl={inv.stripePaymentUrl}
+                          className="h-7 text-xs"
+                        />
+                      )}
                     </TableCell>
                   </TableRow>
                 ))}

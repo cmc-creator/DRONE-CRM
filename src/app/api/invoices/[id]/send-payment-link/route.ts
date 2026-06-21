@@ -32,7 +32,7 @@ export async function POST(
     {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ invoiceId: id }),
+      body: JSON.stringify({ invoiceId: id, internalToken: process.env.AUTH_SECRET }),
     }
   );
 
@@ -52,11 +52,6 @@ export async function POST(
       dueDate: invoice.dueDate,
       paymentUrl,
     });
-  }
-
-  // Mark invoice as SENT if it was DRAFT
-  if (invoice.status === "DRAFT") {
-    await prisma.invoice.update({ where: { id }, data: { status: "SENT" } });
   }
 
   return NextResponse.json({ ok: true, paymentUrl });
