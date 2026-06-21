@@ -1,18 +1,53 @@
+"use client";
+
 import * as React from "react";
 import { cn } from "@/lib/utils";
 
 const Table = React.forwardRef<
   HTMLTableElement,
   React.HTMLAttributes<HTMLTableElement>
->(({ className, ...props }, ref) => (
-  <div className="relative w-full overflow-auto">
-    <table
-      ref={ref}
-      className={cn("w-full caption-bottom text-sm crm-table", className)}
-      {...props}
-    />
-  </div>
-));
+>(({ className, ...props }, ref) => {
+  const scrollRef = React.useRef<HTMLDivElement>(null);
+  const tableRef = React.useRef<HTMLTableElement>(null);
+
+  React.useImperativeHandle(ref, () => tableRef.current as HTMLTableElement);
+
+  const updateShadows = React.useCallback(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    const hasLeft = el.scrollLeft > 4;
+    const hasRight = el.scrollLeft + el.clientWidth < el.scrollWidth - 4;
+    el.setAttribute("data-left-shadow", String(hasLeft));
+    el.setAttribute("data-right-shadow", String(hasRight));
+  }, []);
+
+  React.useEffect(() => {
+    updateShadows();
+    window.addEventListener("resize", updateShadows);
+    return () => window.removeEventListener("resize", updateShadows);
+  }, [updateShadows]);
+
+  return (
+    <div
+      ref={scrollRef}
+      className={cn(
+        "relative w-full overflow-auto crm-table-scroll",
+        "before:pointer-events-none before:absolute before:left-0 before:top-0 before:z-20 before:h-full before:w-5 before:bg-gradient-to-r before:from-background/90 before:to-transparent",
+        "after:pointer-events-none after:absolute after:right-0 after:top-0 after:z-20 after:h-full after:w-5 after:bg-gradient-to-l after:from-background/90 after:to-transparent",
+        "[&:not([data-left-shadow='true'])]:before:opacity-0 [&:not([data-right-shadow='true'])]:after:opacity-0"
+      )}
+      data-left-shadow="false"
+      data-right-shadow="false"
+      onScroll={updateShadows}
+    >
+      <table
+        ref={tableRef}
+        className={cn("w-full caption-bottom text-sm crm-table", className)}
+        {...props}
+      />
+    </div>
+  );
+});
 Table.displayName = "Table";
 
 const TableHeader = React.forwardRef<

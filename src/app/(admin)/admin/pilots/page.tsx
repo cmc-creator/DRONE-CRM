@@ -17,6 +17,7 @@ import { formatDate } from "@/lib/utils";
 import { AutoScoreButton } from "./AutoScoreButton";
 import { CsvImportButton } from "@/components/admin/csv-import-button";
 import { SearchFilterBar } from "@/components/admin/search-filter-bar";
+import { MobileRowActions } from "@/components/admin/mobile-row-actions";
 
 const statusConfig = {
   ACTIVE: { label: "Active", variant: "success" as const },
@@ -166,7 +167,7 @@ export default async function PilotsPage({
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Name</TableHead>
+                  <TableHead className="sticky left-0 z-20">Name</TableHead>
                   <TableHead>Email</TableHead>
                   <TableHead>Markets</TableHead>
                   <TableHead>FAA Cert</TableHead>
@@ -184,18 +185,30 @@ export default async function PilotsPage({
                     pilot.faaExpiry && new Date(pilot.faaExpiry) > new Date();
                   return (
                     <TableRow key={pilot.id}>
-                      <TableCell>
-                        <Link
-                          href={`/admin/pilots/${pilot.id}`}
-                          className="font-medium text-primary hover:underline"
-                        >
-                          {pilot.user.name ?? "—"}
-                        </Link>
-                        {pilot.businessName && (
-                          <p className="text-xs text-muted-foreground">
-                            {pilot.businessName}
-                          </p>
-                        )}
+                      <TableCell className="sticky left-0 z-10 bg-card">
+                        <div className="flex items-start justify-between gap-2">
+                          <div>
+                            <Link
+                              href={`/admin/pilots/${pilot.id}`}
+                              className="font-medium text-primary hover:underline"
+                            >
+                              {pilot.user.name ?? "—"}
+                            </Link>
+                            {pilot.businessName && (
+                              <p className="text-xs text-muted-foreground">
+                                {pilot.businessName}
+                              </p>
+                            )}
+                          </div>
+                          <MobileRowActions
+                            title={pilot.user.name ?? "Pilot"}
+                            subtitle={pilot.user.email}
+                            actions={[
+                              { label: "View Pilot", href: `/admin/pilots/${pilot.id}` },
+                              { label: "Edit Pilot", href: `/admin/pilots/${pilot.id}/edit` },
+                            ]}
+                          />
+                        </div>
                       </TableCell>
                       <TableCell className="text-sm text-muted-foreground">
                         {pilot.user.email}

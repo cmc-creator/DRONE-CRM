@@ -196,3 +196,7 @@ html.table-density-compact .crm-table-cell {
   padding-top: 0.45rem;
   padding-bottom: 0.45rem;
 }
+
+.crm-table .sticky.left-0 {
+  box-shadow: 8px 0 12px rgba(0, 0, 0, 0.18);
+}

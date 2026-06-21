@@ -16,6 +16,7 @@ import { Plus, Download, Map } from "lucide-react";
 import { formatDate } from "@/lib/utils";
 import { CsvImportButton } from "@/components/admin/csv-import-button";
 import { SearchFilterBar } from "@/components/admin/search-filter-bar";
+import { MobileRowActions } from "@/components/admin/mobile-row-actions";
 
 const statusConfig = {
   LEAD: { label: "Lead", variant: "outline" as const },
@@ -137,7 +138,7 @@ export default async function ClientsPage({
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Company</TableHead>
+                  <TableHead className="sticky left-0 z-20">Company</TableHead>
                   <TableHead>Contact</TableHead>
                   <TableHead>Type</TableHead>
                   <TableHead>Location</TableHead>
@@ -153,13 +154,23 @@ export default async function ClientsPage({
                   const tc = typeConfig[client.type];
                   return (
                     <TableRow key={client.id}>
-                      <TableCell>
-                        <Link
-                          href={`/admin/clients/${client.id}`}
-                          className="font-medium text-primary hover:underline"
-                        >
-                          {client.companyName}
-                        </Link>
+                      <TableCell className="sticky left-0 z-10 bg-card">
+                        <div className="flex items-center justify-between gap-2">
+                          <Link
+                            href={`/admin/clients/${client.id}`}
+                            className="font-medium text-primary hover:underline"
+                          >
+                            {client.companyName}
+                          </Link>
+                          <MobileRowActions
+                            title={client.companyName}
+                            subtitle={client.contactName ?? undefined}
+                            actions={[
+                              { label: "View Client", href: `/admin/clients/${client.id}` },
+                              { label: "Edit Client", href: `/admin/clients/${client.id}/edit` },
+                            ]}
+                          />
+                        </div>
                       </TableCell>
                       <TableCell className="text-sm">
                         <div>{client.contactName ?? "—"}</div>

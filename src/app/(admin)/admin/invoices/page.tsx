@@ -18,6 +18,7 @@ import { CsvImportButton } from "@/components/admin/csv-import-button";
 import { SearchFilterBar } from "@/components/admin/search-filter-bar";
 import { Suspense } from "react";
 import { buildInvoiceWhere } from "@/lib/invoice-filters";
+import { MobileRowActions } from "@/components/admin/mobile-row-actions";
 
 const statusConfig = {
   DRAFT:    { label: "Draft",    variant: "outline" as const },
@@ -158,7 +159,7 @@ export default async function InvoicesPage({
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Invoice #</TableHead>
+                  <TableHead className="sticky left-0 z-20">Invoice #</TableHead>
                   <TableHead>Client</TableHead>
                   <TableHead>Job</TableHead>
                   <TableHead>Amount</TableHead>
@@ -173,13 +174,22 @@ export default async function InvoicesPage({
                   const sc = statusConfig[inv.status];
                   return (
                     <TableRow key={inv.id}>
-                      <TableCell>
-                        <Link
-                          href={`/admin/invoices/${inv.id}`}
-                          className="font-medium font-mono text-primary hover:underline"
-                        >
-                          {inv.invoiceNumber}
-                        </Link>
+                      <TableCell className="sticky left-0 z-10 bg-card">
+                        <div className="flex items-center justify-between gap-2">
+                          <Link
+                            href={`/admin/invoices/${inv.id}`}
+                            className="font-medium font-mono text-primary hover:underline"
+                          >
+                            {inv.invoiceNumber}
+                          </Link>
+                          <MobileRowActions
+                            title={inv.invoiceNumber}
+                            subtitle={inv.client.companyName}
+                            actions={[
+                              { label: "View Invoice", href: `/admin/invoices/${inv.id}` },
+                            ]}
+                          />
+                        </div>
                       </TableCell>
                       <TableCell className="text-sm">
                         {inv.client.companyName}

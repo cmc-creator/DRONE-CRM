@@ -15,6 +15,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Plus } from "lucide-react";
 import { formatDate, formatCurrency } from "@/lib/utils";
 import { SearchFilterBar } from "@/components/admin/search-filter-bar";
+import { MobileRowActions } from "@/components/admin/mobile-row-actions";
 
 const statusConfig: Record<
   string,
@@ -156,7 +157,7 @@ export default async function JobsPage({
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Title</TableHead>
+                  <TableHead className="sticky left-0 z-20">Title</TableHead>
                   <TableHead>Client</TableHead>
                   <TableHead>Type</TableHead>
                   <TableHead>Location</TableHead>
@@ -172,13 +173,23 @@ export default async function JobsPage({
                   const pilot = job.assignments[0]?.pilot?.user?.name;
                   return (
                     <TableRow key={job.id}>
-                      <TableCell>
-                        <Link
-                          href={`/admin/jobs/${job.id}`}
-                          className="font-medium text-primary hover:underline"
-                        >
-                          {job.title}
-                        </Link>
+                      <TableCell className="sticky left-0 z-10 bg-card">
+                        <div className="flex items-center justify-between gap-2">
+                          <Link
+                            href={`/admin/jobs/${job.id}`}
+                            className="font-medium text-primary hover:underline"
+                          >
+                            {job.title}
+                          </Link>
+                          <MobileRowActions
+                            title={job.title}
+                            subtitle={job.client.companyName}
+                            actions={[
+                              { label: "View Job", href: `/admin/jobs/${job.id}` },
+                              { label: "Edit Job", href: `/admin/jobs/${job.id}/edit` },
+                            ]}
+                          />
+                        </div>
                       </TableCell>
                       <TableCell className="text-sm text-muted-foreground">
                         {job.client.companyName}
