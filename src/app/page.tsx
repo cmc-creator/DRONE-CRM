@@ -36,9 +36,9 @@ const TIERS = [
 ];
 
 const STEPS = [
-  { num: "01", color: "#00d4ff", title: "Set up your roster",         desc: "Add pilots, upload Part 107 certs and W-9s, configure your client list and service rates in under 10 minutes."      },
-  { num: "02", color: "#a78bfa", title: "Dispatch and track flights",  desc: "Create jobs, assign pilots, and share flight details with clients. Everyone stays in sync through their own portal." },
-  { num: "03", color: "#34d399", title: "Invoice and close the books", desc: "Generate and send invoices in one click, collect via Stripe, and export 1099s at tax time."                         },
+  { num: "01", color: "#00d4ff", title: "Set up your roster",         desc: "Add pilots, upload Part 107 certs and W-9s, and configure service rates in under 10 minutes."           },
+  { num: "02", color: "#a78bfa", title: "Dispatch and track flights",  desc: "Create jobs, assign pilots, and keep everyone synced through their own portal."                          },
+  { num: "03", color: "#34d399", title: "Invoice and close the books", desc: "Generate invoices, collect via Stripe, and export 1099s come tax season."                                },
 ];
 
 const MOCK_JOBS = [
@@ -77,6 +77,10 @@ export default function LandingPage() {
         @keyframes fade-in-up {
           from { opacity: 0; transform: translateY(16px); }
           to   { opacity: 1; transform: translateY(0);    }
+        }
+        @keyframes tracer {
+          0%   { transform: translateX(-200%); }
+          100% { transform: translateX(300%);  }
         }
       `}</style>
 
@@ -163,7 +167,7 @@ export default function LandingPage() {
               </h1>
 
               <p style={{ fontSize: "clamp(1rem,1.7vw,1.16rem)", color: "rgba(216,232,244,0.55)", maxWidth: 500, lineHeight: 1.82, marginBottom: 42, animation: "fade-in-up 0.7s 0.2s ease both" }}>
-                NyxAerial is the only CRM purpose-built for aerial service operators. Jobs, pilots, clients, compliance, and payouts in one platform built around how drone businesses work.
+                The only CRM built for aerial service operators. Jobs, pilots, compliance, and payouts — one platform built for how drone businesses work.
               </p>
 
               <div style={{ display: "flex", gap: 14, flexWrap: "wrap", marginBottom: 44, animation: "fade-in-up 0.7s 0.3s ease both" }}>
@@ -463,14 +467,14 @@ export default function LandingPage() {
           <div style={{ textAlign: "center", marginBottom: 64 }}>
             <p style={{ fontSize: 11, fontWeight: 700, color: "rgba(0,212,255,0.6)", letterSpacing: "0.14em", textTransform: "uppercase", marginBottom: 14 }}>Feature Set</p>
             <h2 style={{ fontSize: "clamp(1.9rem,5vw,3.2rem)", fontWeight: 900, marginBottom: 18, letterSpacing: "-0.03em" }}>
-              Everything your operation needs
+              Built for every part of your operation
             </h2>
-            <p style={{ color: "rgba(216,232,244,0.5)", fontSize: 16, maxWidth: 600, margin: "0 auto", lineHeight: 1.72 }}>
-              Not a generic CRM retrofitted for drones. Every feature is purpose-built for Part 107 aerial service businesses.
+            <p style={{ color: "rgba(216,232,244,0.5)", fontSize: 16, maxWidth: 560, margin: "0 auto", lineHeight: 1.72 }}>
+              Not a generic CRM retrofitted for drones — every feature is built for Part 107 aerial operators.
             </p>
           </div>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(270px,1fr))", gap: 20 }}>
-            {FEATURES.map((f) => (
+            {FEATURES.map((f, i) => (
               <div key={f.title} style={{
                 background: "linear-gradient(145deg,rgba(255,255,255,0.05),rgba(255,255,255,0.014))",
                 backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)",
@@ -479,8 +483,9 @@ export default function LandingPage() {
                 boxShadow: `0 8px 40px rgba(0,0,0,0.38),inset 0 1px 0 rgba(255,255,255,0.07)`,
                 position: "relative", overflow: "hidden",
               }}>
-                {/* Top accent */}
-                <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 1, background: `linear-gradient(90deg,transparent,${f.color}45,transparent)` }} />
+                {/* Top accent + tracer */}
+                <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 1, background: `linear-gradient(90deg,transparent,${f.color}22,transparent)` }} />
+                <div style={{ position: "absolute", top: 0, left: 0, width: "50%", height: 2, background: `linear-gradient(90deg,transparent,${f.color}cc,rgba(255,255,255,0.88),${f.color}cc,transparent)`, animation: `tracer ${3.5 + i * 0.35}s linear ${i * 0.55}s infinite` }} />
                 <div style={{ position: "absolute", top: -42, left: -42, width: 140, height: 140, borderRadius: "50%", background: `radial-gradient(circle,${f.glow} 0%,transparent 70%)`, pointerEvents: "none" }} />
                 <div style={{
                   width: 52, height: 52, borderRadius: 14, marginBottom: 20,
@@ -508,7 +513,7 @@ export default function LandingPage() {
               </h2>
             </div>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(280px,1fr))", gap: 28 }}>
-              {STEPS.map((step) => (
+              {STEPS.map((step, i) => (
                 <div key={step.num} style={{
                   background: "linear-gradient(145deg,rgba(255,255,255,0.042),rgba(255,255,255,0.012))",
                   backdropFilter: "blur(20px)",
@@ -517,7 +522,9 @@ export default function LandingPage() {
                   boxShadow: `0 12px 44px rgba(0,0,0,0.32),inset 0 1px 0 rgba(255,255,255,0.06)`,
                   position: "relative", overflow: "hidden",
                 }}>
-                  <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 1, background: `linear-gradient(90deg,transparent,${step.color}48,transparent)` }} />
+                  {/* Top accent + tracer */}
+                  <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 1, background: `linear-gradient(90deg,transparent,${step.color}22,transparent)` }} />
+                  <div style={{ position: "absolute", top: 0, left: 0, width: "50%", height: 2, background: `linear-gradient(90deg,transparent,${step.color}cc,rgba(255,255,255,0.88),${step.color}cc,transparent)`, animation: `tracer ${4 + i * 0.4}s linear ${i * 0.8}s infinite` }} />
                   <div style={{ position: "absolute", top: -20, right: -20, width: 130, height: 130, borderRadius: "50%", background: `radial-gradient(circle,${step.color}12 0%,transparent 70%)`, pointerEvents: "none" }} />
                   <div style={{ fontFamily: "monospace", fontSize: "4.2rem", fontWeight: 900, color: `${step.color}1c`, lineHeight: 1, marginBottom: 22, letterSpacing: "-0.04em" }}>{step.num}</div>
                   <h3 style={{ fontWeight: 800, fontSize: 20, marginBottom: 13, color: step.color }}>{step.title}</h3>
@@ -537,11 +544,11 @@ export default function LandingPage() {
                 Built for every tier of drone business
               </h2>
               <p style={{ color: "rgba(216,232,244,0.5)", fontSize: 15, maxWidth: 500, margin: "0 auto", lineHeight: 1.65 }}>
-                From solo Part 107 pilots to multi-state enterprise fleets, NyxAerial scales with your operation.
+                From solo Part 107 operators to enterprise fleets, NyxAerial scales with you.
               </p>
             </div>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(300px,1fr))", gap: 24 }}>
-              {TIERS.map((t) => (
+              {TIERS.map((t, i) => (
                 <div key={t.title} style={{
                   background: "linear-gradient(145deg,rgba(255,255,255,0.052),rgba(255,255,255,0.014))",
                   backdropFilter: "blur(24px)", WebkitBackdropFilter: "blur(24px)",
@@ -550,7 +557,9 @@ export default function LandingPage() {
                   boxShadow: `0 16px 52px rgba(0,0,0,0.4),inset 0 1px 0 rgba(255,255,255,0.08)`,
                   position: "relative", overflow: "hidden",
                 }}>
-                  <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 1, background: `linear-gradient(90deg,transparent,${t.color}55,transparent)` }} />
+                  {/* Top accent + tracer */}
+                  <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 1, background: `linear-gradient(90deg,transparent,${t.color}28,transparent)` }} />
+                  <div style={{ position: "absolute", top: 0, left: 0, width: "50%", height: 2, background: `linear-gradient(90deg,transparent,${t.color}cc,rgba(255,255,255,0.88),${t.color}cc,transparent)`, animation: `tracer ${3.8 + i * 0.45}s linear ${i * 0.7}s infinite` }} />
                   <div style={{ position: "absolute", top: -50, right: -50, width: 180, height: 180, borderRadius: "50%", background: `radial-gradient(circle,${t.glow} 0%,transparent 70%)`, pointerEvents: "none" }} />
                   <div style={{
                     width: 54, height: 54, borderRadius: 15, marginBottom: 24,
@@ -588,7 +597,7 @@ export default function LandingPage() {
             </p>
           </div>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(295px,1fr))", gap: 22 }}>
-            {TESTIMONIALS.map((t) => (
+            {TESTIMONIALS.map((t, i) => (
               <div key={t.name} style={{
                 background: "linear-gradient(145deg,rgba(255,255,255,0.052),rgba(255,255,255,0.014))",
                 backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)",
@@ -597,7 +606,9 @@ export default function LandingPage() {
                 boxShadow: "0 10px 44px rgba(0,0,0,0.4),inset 0 1px 0 rgba(255,255,255,0.07)",
                 position: "relative", overflow: "hidden",
               }}>
-                <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 1, background: `linear-gradient(90deg,transparent,${t.color}45,transparent)` }} />
+                {/* Top accent + tracer */}
+                <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 1, background: `linear-gradient(90deg,transparent,${t.color}22,transparent)` }} />
+                <div style={{ position: "absolute", top: 0, left: 0, width: "50%", height: 2, background: `linear-gradient(90deg,transparent,${t.color}cc,rgba(255,255,255,0.88),${t.color}cc,transparent)`, animation: `tracer ${3.6 + i * 0.4}s linear ${i * 0.65}s infinite` }} />
                 <div style={{ position: "absolute", bottom: -20, right: 10, fontSize: "7rem", fontWeight: 900, color: `${t.color}09`, lineHeight: 1, pointerEvents: "none", userSelect: "none" }}>&ldquo;</div>
                 <div style={{ display: "flex", gap: 3, marginBottom: 20 }}>
                   {Array.from({ length: t.stars }).map((_, i) => (
@@ -642,7 +653,7 @@ export default function LandingPage() {
               Ready to run a tighter operation?
             </h2>
             <p style={{ color: "rgba(216,232,244,0.6)", fontSize: 16, maxWidth: 500, margin: "0 auto 48px", lineHeight: 1.74 }}>
-              Fill out the request form and we will get your account set up within 24 hours.
+              Submit a request and we will have your account live within 24&nbsp;hours.
             </p>
             <div style={{ display: "flex", gap: 16, justifyContent: "center", flexWrap: "wrap" }}>
               <Link href="/signup" style={{
