@@ -167,7 +167,7 @@ export default function LandingPage() {
               </h1>
 
               <p style={{ fontSize: "clamp(1rem,1.7vw,1.16rem)", color: "rgba(216,232,244,0.55)", maxWidth: 500, lineHeight: 1.82, marginBottom: 42, animation: "fade-in-up 0.7s 0.2s ease both" }}>
-                The only CRM built for aerial service operators. Jobs, pilots, compliance, and payouts — one platform built for how drone businesses work.
+                The only CRM built for aerial service operators. Jobs, pilots, compliance, and payouts in one platform.
               </p>
 
               <div style={{ display: "flex", gap: 14, flexWrap: "wrap", marginBottom: 44, animation: "fade-in-up 0.7s 0.3s ease both" }}>
@@ -593,7 +593,7 @@ export default function LandingPage() {
               Trusted by drone operators
             </h2>
             <p style={{ color: "rgba(216,232,244,0.5)", fontSize: 15, maxWidth: 440, margin: "0 auto" }}>
-              Operators across the country use NyxAerial to run leaner, faster businesses.
+              Aerial operators across the country use NyxAerial to run tighter, more profitable operations.
             </p>
           </div>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(295px,1fr))", gap: 22 }}>
