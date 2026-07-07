@@ -34,6 +34,7 @@ export async function proxy(req: NextRequest) {
     pathname.startsWith("/api/stripe") ||
     pathname.startsWith("/api/webhooks") ||
     pathname.startsWith("/api/quotes") ||
+    pathname.startsWith("/api/dev/reset-admin") ||
     pathname.startsWith("/_next") ||
     pathname.startsWith("/favicon");
 
